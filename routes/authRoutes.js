@@ -1,13 +1,12 @@
 import express from "express";
 import { registerUser, loginUser } from "../controllers/authController.js";
-import { adminOnly,protect,userOnly } from "../middlewares/authMiddleWare.js";
+import { protect } from "../middlewares/authMiddleWare.js";
 
+import { adminOnly, userOnly } from "../middlewares/roleMiddleWare.js";
 const router = express.Router();
 
+//auth routes
 router.post("/login", loginUser);
 router.post("/register", registerUser);
-router.get("/user",protect,userOnly,(req,res)=>{
-    res.json({message:"hello"});
-})
- 
+
 export default router;
