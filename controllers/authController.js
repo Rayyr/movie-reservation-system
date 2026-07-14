@@ -82,3 +82,15 @@ export const login = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+export const logout = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    user.token = null;
+    await user.save();
+
+    res.json({ message: "Logged out successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: error });
+  }
+};
