@@ -3,16 +3,16 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 //generate jwt token
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: "15m",
+const generateToken = (user) => {
+  return jwt.sign({ id:user._id ,role:user.role}, process.env.JWT_SECRET, {
+    expiresIn: "2m",
   });
 };
 
 //register
 export const registerUser = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password,role } = req.body;
 
     //check if user exists
     const isExist = await User.findOne({ email });
@@ -30,13 +30,14 @@ export const registerUser = async (req, res) => {
       username: username,
       email: email,
       password: hashedPassword,
+      role:role||"USER"
     });
 
     return res.status(201).json({
       _id: newUser._id,
       username: newUser.username,
       email: newUser.email,
-      token: generateToken(newUser._id),
+      token: generateToken(newUser),
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -61,7 +62,7 @@ export const loginUser = async (req, res) => {
         _id: user._id,
         username: user.username,
         email: user.email,
-        token: generateToken(user._id),
+        token: generateToken(user),
       });
     } else {
       return res.status(400).json({ message: "Invalid credentials" });
