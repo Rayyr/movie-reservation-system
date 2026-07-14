@@ -1,10 +1,12 @@
 import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
-import { adminOnly, userOnly } from "./middlewares/roleMiddleWare.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import movieRoutes from "./routes/movieRoutes.js";
 import { protect } from "./middlewares/authMiddleWare.js";
+import { adminOnly, userOnly } from "./middlewares/roleMiddleWare.js";
+
 
 const app=express();
 
@@ -14,12 +16,15 @@ app.use(cors());
 
 
 //use routes --auth routes
-app.use("/auth",authRoutes);
+app.use("/api/auth",authRoutes);
 
 // admin routes
-app.use("/admin",protect,adminOnly,adminRoutes);
+app.use("/api/admin",protect,adminOnly,adminRoutes);
 
 //user routes
-app.use("/user",protect,userOnly,userRoutes);
+app.use("/api/user",protect,userOnly,userRoutes);
+
+//movie routes
+app.use("/api/movies",movieRoutes);//internally i specify the ACL and route protection
 
 export default app;
