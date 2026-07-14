@@ -1,18 +1,24 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { validationResult } from "express-validator";
 
 //generate jwt token
 const generateToken = (user) => {
-  return jwt.sign({ id:user._id ,role:user.role}, process.env.JWT_SECRET, {
+  return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
     expiresIn: "2m",
   });
 };
 
 //register
-export const registerUser = async (req, res) => {
+export const register = async (req, res) => {
   try {
-    const { username, email, password,role } = req.body;
+    //inputs validation
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+      return res.status(400).json({ errors: errors.array() });
+
+    const { username, email, password, role } = req.body;
 
     //check if user exists
     const isExist = await User.findOne({ email });
@@ -30,7 +36,7 @@ export const registerUser = async (req, res) => {
       username: username,
       email: email,
       password: hashedPassword,
-      role:role||"USER"
+      role: role || "USER",
     });
 
     return res.status(201).json({
@@ -45,8 +51,13 @@ export const registerUser = async (req, res) => {
 };
 
 //login
-export const loginUser = async (req, res) => {
+export const login = async (req, res) => {
   try {
+    //input validation
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+      return res.status(400).json({ errors: errors.array() });
+
     const { email, password } = req.body;
 
     //find user
@@ -58,7 +69,7 @@ export const loginUser = async (req, res) => {
     //compare now password
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
-        return res.json({
+      return res.json({
         _id: user._id,
         username: user.username,
         email: user.email,
