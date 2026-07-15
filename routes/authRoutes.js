@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login,logout } from "../controllers/authController.js";
+import { register, login, logout } from "../controllers/authController.js";
 import { protect } from "../middlewares/authMiddleWare.js";
 import { body } from "express-validator";
 
@@ -20,30 +20,7 @@ router.post(
   login,
 );
 
-router.post(
-  "/register",
-  [
-    body("username")
-      .notEmpty()
-      .withMessage("Username is required!")
-      .isLength({ min: 3 })
-      .withMessage("Username must be at least 3 characters"),
+router.post("/register", register);
 
-    body("email")
-      .isEmail()
-      .withMessage("Vali email is required")
-      .notEmpty()
-      .withMessage("Email is required!"),
-
-    body("password")
-      .isAlphanumeric()
-      .withMessage("Password must have letters and numbers")
-      .isLength({ min: 6 })
-      .withMessage("Password must be at least 6 characters"),
-  ],
-  register,
-);
-
-
-router.post("/logout",protect,logout);
+router.post("/logout", protect, logout);
 export default router;
