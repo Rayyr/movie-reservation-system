@@ -9,8 +9,9 @@ const movieSchema = new mongoose.Schema(
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required:true
     },
-    duration: {
+    duration_min: {
       type: Number,
       required: true,
       min:[1,"Duration must be positive"],
