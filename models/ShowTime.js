@@ -23,7 +23,7 @@ const showTimeSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    price: {
+    price: {/* (per seat) */
       type: Number,
       required: true,
       min: [, "Price must be positive"],
