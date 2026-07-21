@@ -7,7 +7,7 @@ const screenSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    theater: {//store a reference
+    theater: {//store a reference(Id)
       type: mongoose.Schema.Types.ObjectId,
       ref: "Theater",
       required: true,

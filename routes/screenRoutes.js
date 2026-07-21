@@ -8,7 +8,7 @@ import { adminOnly } from '../middlewares/roleMiddleWare.js';
 
 import express from 'express';
 
-const router=ExpressValidator.Router();
+const router=express.Router();
 
 //create screen by admin only
 router.post('/create',protect,adminOnly,createScreen);
@@ -16,4 +16,4 @@ router.post('/create',protect,adminOnly,createScreen);
 //get screen' seats  
 router.get("/:screenId/seats/getSeats",protect,getScreenSeats);
 
-export default router;
+export default router; 

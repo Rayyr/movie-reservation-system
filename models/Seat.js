@@ -11,7 +11,7 @@ const seatSchema = new mongoose.Schema(
       row: String, //A,B
       required: true,
       uppercase:true,
-     match:[/^[A-Z]$/,"Row must be 1 letter"]
+      match:[/^[A-Z]$/,"Row must be 1 letter"]
     },
     number: {
       type: Number, // 1,2,3...

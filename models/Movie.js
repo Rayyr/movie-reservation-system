@@ -9,17 +9,17 @@ const movieSchema = new mongoose.Schema(
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required:true
+      required: true,
     },
     duration_min: {
       type: Number,
       required: true,
-      min:[1,"Duration must be positive"],
-      validate:{
-        validator:function(value){
+      min: [1, "Duration must be positive"],
+      validate: {
+        validator: function (value) {
           return /^\d+(\.\d{1,2})?$/.test(value.toString());
         },
-        message :"Duration must have max 2 decimal places",
+        message: "Duration must have max 2 decimal places",
       },
     },
     genre: {
