@@ -1,0 +1,71 @@
+ 
+body {
+  margin: 0;
+  font-family: "Outfit", sans-serif;
+  background: #09090b;
+  color: white;
+  overflow: hidden; /* 🚀 no scrolling */
+}
+
+/* Full screen container */
+.home {
+  height: 100vh;
+}
+
+/* Hero Section */
+.hero {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.7) 100%
+    ),
+ url("../../../../../../../Desktop/backgroundImage.png");
+  background-size: cover;
+  background-position: center;
+}
+
+/* Text */
+.overlay h1 {
+  font-size: 50px;
+  margin-bottom: 50px;
+  
+}
+
+ 
+
+/* Navbar */
+.navbar {
+  position: fixed;
+  top: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 10;
+  
+}
+
+.nav-links {
+  display: flex;
+  gap: 40px;
+  padding: 12px 40px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(6px);
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none; /* optional: remove underline */
+   font-size: 30px;    
+}
+
+.nav-links a:hover {
+  opacity: .8; /* optional hover effect */
+  color: #7B1025;
+}
