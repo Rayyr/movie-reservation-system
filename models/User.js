@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      match: [/@gmail\.com$/, "Please enter valid email : example@gmail.com"],
+      match: [/@gmail\.com$/, "Please enter valid email : example@gmail.com"],//only gmail domanis' emails are valid
     },
     password: {
       type: String,
@@ -34,6 +34,12 @@ const userSchema = new mongoose.Schema(
       enum: ["USER", "ADMIN"],
       default: "USER",
     },
+    passwordResetToken:{
+      type:String,
+    },
+    passwordResetExpires:{
+      type:Date,
+    }
   },
   { timestamps: true },
 );

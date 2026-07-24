@@ -15,16 +15,16 @@ app.use(express.json());
 app.use(cors());
 
 
-//use routes --auth routes
+//use routes --auth routes http://localhost:5000/api/auth
 app.use("/api/auth",authRoutes);
 
 // admin routes
-app.use("/api/admin",protect,adminOnly,adminRoutes);
+app.use("/admin",protect,adminOnly,adminRoutes);
 
 //user routes
-app.use("/api/user",protect,userOnly,userRoutes);
+app.use("/user",protect,userOnly,userRoutes);
 
 //movie routes
-app.use("/api/movies",movieRoutes);//internally i specify the ACL and route protection
+app.use("/movies",movieRoutes);//internally i specify the ACL and route protection
 
 export default app;

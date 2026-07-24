@@ -36,14 +36,20 @@ export const register = async (req, res) => {
       username: username,
       email: email,
       password: hashedPassword,
-      role: role || "USER",
+      role: toUpperCase(role)|| "USER",
+    });
+
+    // Set cookie on registration so they are automatically logged in safely
+    res.cookie("authToken", generateToken(newUser), {
+      httpOnly: true,
+      sameSite: "strict",
+      maxAge: 3600000, // 1 hour matching JWT expiration
     });
 
     return res.status(201).json({
       _id: newUser._id,
       username: newUser.username,
       email: newUser.email,
-      token: generateToken(newUser),
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -60,23 +66,33 @@ export const login = async (req, res) => {
 
     const { email, password } = req.body;
 
-    //find user
+    //find user based to email since it is unique
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "Invalid credentials , there is no assiciated user with this email" });
     }
 
     //compare now password
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
-      return res.json({
+      res.cookie("authToken", generateToken(user), {
+        httpOnly: true, // Prevents XSS attacks
+        secure: false, // Ensures cookie is sent over HTTP
+        sameSite: "strict", // Protects against CSRF attacks
+        maxAge: 3600000, // Cookie expiration (e.g., 1 hours)
+      });
+
+      //success login
+      return res.status(200).json({
         _id: user._id,
         username: user.username,
         email: user.email,
-        token: generateToken(user),
+        role: user.role,
       });
-    } else {
-      return res.status(400).json({ message: "Invalid credentials" });
+    } 
+    //wrong password
+    else {
+      return res.status(400).json({ message: "Invalid credentials , wrong password" });
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -88,6 +104,12 @@ export const logout = async (req, res) => {
     const user = await User.findById(req.user._id);
     user.token = null;
     await user.save();
+
+    // Clear the cookie directly on the browser
+    res.clearCookie("authToken", {
+      httpOnly: true,
+      sameSite: "strict",
+    });
 
     res.json({ message: "Logged out successfully" });
   } catch (error) {
