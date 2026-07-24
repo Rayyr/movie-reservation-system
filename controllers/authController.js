@@ -2,6 +2,10 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
+import crypto from "crypto";
+import nodemailer from "nodemailer";
+import SMTPConnection from "nodemailer/lib/smtp-connection/index.js";
+import SMTPTransport from "nodemailer/lib/smtp-transport/index.js";
 
 //generate jwt token
 const generateToken = (user) => {
@@ -36,7 +40,7 @@ export const register = async (req, res) => {
       username: username,
       email: email,
       password: hashedPassword,
-      role: toUpperCase(role)|| "USER",
+      role: toUpperCase(role) || "USER",
     });
 
     // Set cookie on registration so they are automatically logged in safely
@@ -69,7 +73,10 @@ export const login = async (req, res) => {
     //find user based to email since it is unique
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials , there is no assiciated user with this email" });
+      return res.status(400).json({
+        message:
+          "Invalid credentials , there is no assiciated user with this email",
+      });
     }
 
     //compare now password
@@ -89,10 +96,12 @@ export const login = async (req, res) => {
         email: user.email,
         role: user.role,
       });
-    } 
+    }
     //wrong password
     else {
-      return res.status(400).json({ message: "Invalid credentials , wrong password" });
+      return res
+        .status(400)
+        .json({ message: "Invalid credentials , wrong password" });
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -112,6 +121,91 @@ export const logout = async (req, res) => {
     });
 
     res.json({ message: "Logged out successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: error });
+  }
+};
+
+//generate reset link for forgot password + nodemail configs
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "Sorry,there isnt a user with this email" });
+    }
+
+    //token generation
+    const token = crypto.randomBytes(32).toString("hex");
+    user.passwordResetToken = crypto
+      .createHash("sha256")
+      .update(token)
+      .digest("hex");
+
+    //token expiration period
+    user.passwordResetExpires = Date.now() + 15 * 60 * 1000; //valid for 15-mins
+    await user.save();
+
+    //reset link sth like this : http:localhost:3000/reset-password/token
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+
+    //email sender configs
+    const sender = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: Number(process.env.EMAIL_PORT),
+      secure: true,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD, // The 16-character App Password
+      },
+    });
+
+    await sender.sendMail({
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: "Reset your Movie Reservation password",
+      text: `Reset your password: ${resetUrl}`,
+    });
+
+    return res
+      .status(200)
+      .json({ message: "Reset link was successfully being send to it" });
+  } catch (error) {
+    return res.status(500).json({ message: error });
+  }
+};
+
+//resetPassword : check passwordToken expiration + password update if evrything is ok
+export const resetPassword = async (req, res) => {
+  try {
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(req.params.token)
+      .digest("hex");
+
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passswordResetExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "This reset link is invalid or has expired.",
+      });
+    }
+
+    user.password = await bycrypt.hash(req.body.password, 10);
+    user.passwordResetExpires = undefined;
+    user.passwordResetToken = undefined;
+
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ message: "Password reset successfully. Please sign in" });
   } catch (error) {
     return res.status(500).json({ message: error });
   }
