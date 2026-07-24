@@ -59,12 +59,12 @@ export default function Login() {
     setIsLoading(true);
     setIsBlocking(true);
     try {
-      //success login,the returned value is =res.data directlly from the interceptor before its arrival here
-      const res = await api.post("/api/auth/login", data);
+      //success login
+      const res = await api.post("/api/auth/login", data);//data==req.body
 
-      if (res.role === roles.user)
+      if (res.data.role === roles.user)
         navigate("/userDashboard", { replace: true });
-      if (res.role === roles.admin)
+      if (res.data.role === roles.admin)
         navigate("/adminDashboard", { replace: true });
     } catch (err) {
       // api network error connection 
@@ -73,10 +73,16 @@ export default function Login() {
           style: {
             width: "500px",
           },
+          onOpen: () => {
+            setIsBlocking(true);
+          },
+          onClose: () => {
+            setIsBlocking(false);
+          },
         });
       //invalid login error | api error
       else if (err.response.status === 400 || err.response.status === 500) {
-        //  console.log(err.response.status);
+        
         toast.error(err.response.data.message, {
           style: {
             width: "500px",
@@ -91,7 +97,7 @@ export default function Login() {
       }
     } finally {
       setIsLoading(false);
-      setIsBlocking(false);
+      
       reset();
       clearErrors();
     }
@@ -218,7 +224,7 @@ export default function Login() {
                     )}
                   />
 
-                  <Link /* href={forgotPasswordHref} */ underline="hover">
+                  <Link /* href={forgotPasswordHref} */ href="/forgot-password" underline="hover">
                     Forgot Password?
                   </Link>
                 </Box>
