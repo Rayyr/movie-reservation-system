@@ -22,16 +22,7 @@ import {
 import api from "../services/api";
 import { roles } from "../constants/systemRoles";
 
-export default function Login({
-  logo,
-  title,
-  description,
-  imageSrc,
-  imageAlt,
-  onSubmit,
-  forgotPasswordHref,
-  createAccountHref,
-}) {
+export default function Login() {
   const navigate = useNavigate();
 
   const loginFormSchema = yup.object({
@@ -151,7 +142,7 @@ export default function Login({
                 Sign in
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {description}
+                 
               </Typography>
             </motion.div>
 
@@ -227,7 +218,7 @@ export default function Login({
                     )}
                   />
 
-                  <Link href={forgotPasswordHref} underline="hover">
+                  <Link /* href={forgotPasswordHref} */ underline="hover">
                     Forgot Password?
                   </Link>
                 </Box>
@@ -255,7 +246,7 @@ export default function Login({
             <motion.div variants={itemVariants}>
               <Typography variant="body2" align="center" sx={{ mt: 2 }}>
                 Don't have an account?{" "}
-                <Link href={createAccountHref} underline="hover">
+                <Link sx={{ color: "var(--blue)" }} /* href={createAccountHref} */ href={"/signUp"} underline="hover">
                   Create one
                 </Link>
               </Typography>
