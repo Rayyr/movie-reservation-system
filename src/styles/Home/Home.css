@@ -1,16 +1,15 @@
  
-body {
+ /* Full screen container */
+.home {
   margin: 0;
   font-family: "Outfit", sans-serif;
   background: #09090b;
   color: white;
   overflow: hidden; /* 🚀 no scrolling */
+    height: 100vh;
 }
 
-/* Full screen container */
-.home {
-  height: 100vh;
-}
+ 
 
 /* Hero Section */
 .hero {

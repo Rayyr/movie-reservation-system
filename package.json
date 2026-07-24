@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^5.4.0",
     "@mui/material": "^9.2.0",
@@ -13,12 +15,14 @@
     "axios": "^1.18.1",
     "eslint": "^8.57.1",
     "framer-motion": "^12.42.2",
+    "lucide-react": "^1.26.0",
     "nodemon": "^3.1.14",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-hook-form": "^7.82.0",
     "react-router-dom": "^7.18.1",
     "react-scripts": "5.0.1",
+    "react-toastify": "^11.1.0",
     "web-vitals": "^2.1.4",
     "yup": "^1.7.1"
   },
