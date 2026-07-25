@@ -22,6 +22,7 @@ import { toast } from "react-toastify";
 function ForgotPassword() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [isBlocked, setIsBlocking] = useState(false);
 
   const formSchema = yup.object({
     email: yup
@@ -34,6 +35,7 @@ function ForgotPassword() {
     register,
     handleSubmit,
     reset,
+    clearErrors,
     formState: { errors, isValid },
   } = useForm({
     defaultValues: { email: "" },
@@ -42,15 +44,54 @@ function ForgotPassword() {
   });
 
   const makeSubmission = async (data) => {
+     setIsLoading(true);
     try {
-      setIsLoading(true);
-      await api.post("/api/auth/forgot-password", data);
-      toast.success("If that email exists, a reset link has been sent.");
-      reset();
-    } catch (error) {
-      toast.error("Something went wrong");
+     
+     const res= await api.post("/api/auth/forgot-password", data);
+        toast.success(res.data.message, {
+        style: {
+          width: "500px",
+        },
+        onOpen: () => {
+          setIsBlocking(true);
+        },
+        onClose: () => {
+          setIsBlocking(false);
+        },
+      });
+     } catch (err) {
+       // api network error connection 
+           if (err.code === "ERR_NETWORK")
+             toast.error("No network connection", {
+               style: {
+                 width: "500px",
+               },
+               onOpen: () => {
+                 setIsBlocking(true);
+               },
+               onClose: () => {
+                 setIsBlocking(false);
+            },
+             });
+           //invalid email error | api error
+           else if (err.response.status === 400 || err.response.status === 500) {
+             
+             toast.error(err.response.data.message, {
+               style: {
+                 width: "500px",
+               },
+               onOpen: () => {
+                 setIsBlocking(true);
+               },
+               onClose: () => {
+                 setIsBlocking(false);
+               },
+             });
+           }
     } finally {
       setIsLoading(false);
+      reset();
+      clearErrors();
     }
   };
 
@@ -119,7 +160,7 @@ function ForgotPassword() {
                   {...register("email")}
                   error={!!errors.email}
                   helperText={errors.email?.message}
-                  disabled={isLoading}
+                  disabled={isBlocked || isLoading}
                 />
               </motion.div>
 
@@ -128,7 +169,7 @@ function ForgotPassword() {
                 <Button
                   type="submit"
                   variant="contained"
-                  disabled={!isValid || isLoading}
+                  disabled={isLoading || !isValid || isBlocked}
                   fullWidth
                 >
                   {isLoading ? (
