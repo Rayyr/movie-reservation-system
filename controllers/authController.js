@@ -197,7 +197,7 @@ export const resetPassword = async (req, res) => {
 
     const user = await User.findOne({
       passwordResetToken: hashedToken,
-      passswordResetExpires: { $gt: Date.now() },
+      passwordResetExpires: { $gt: Date.now() },
     });
 
     if (!user) {
@@ -207,7 +207,7 @@ export const resetPassword = async (req, res) => {
     }
 
     //new updated password
-    user.password = await bycrypt.hash(req.body.password, 10);
+    user.password = await bcrypt.hash(req.body.password, 10);
     user.passwordResetExpires = undefined;
     user.passwordResetToken = undefined;
 
