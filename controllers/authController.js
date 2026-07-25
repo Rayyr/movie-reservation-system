@@ -6,6 +6,10 @@ import crypto from "crypto";
 import nodemailer from "nodemailer";
 import SMTPConnection from "nodemailer/lib/smtp-connection/index.js";
 import SMTPTransport from "nodemailer/lib/smtp-transport/index.js";
+import dotenv from 'dotenv';
+
+
+dotenv.config();
 
 //generate jwt token
 const generateToken = (user) => {
@@ -40,7 +44,7 @@ export const register = async (req, res) => {
       username: username,
       email: email,
       password: hashedPassword,
-      role: toUpperCase(role) || "USER",
+      role: role.toUpperCase() || "USER",
     });
 
     // Set cookie on registration so they are automatically logged in safely
@@ -129,13 +133,15 @@ export const logout = async (req, res) => {
 //generate reset link for forgot password + nodemail configs
 export const forgotPassword = async (req, res) => {
   try {
+    
     const { email } = req.body;
+    
     const user = await User.findOne({ email });
 
     if (!user) {
       return res
         .status(400)
-        .json({ message: "Sorry,there isnt a user with this email" });
+        .json({ message: "Sorry,there isn't a user with this email" });
     }
 
     //token generation
@@ -149,9 +155,11 @@ export const forgotPassword = async (req, res) => {
     user.passwordResetExpires = Date.now() + 15 * 60 * 1000; //valid for 15-mins
     await user.save();
 
+    
     //reset link sth like this : http:localhost:3000/reset-password/token
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${token}`;
 
+    
     //email sender configs
     const sender = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
@@ -172,8 +180,9 @@ export const forgotPassword = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Reset link was successfully being send to it" });
+      .json({ message: "Reset link was successfully being sent" });
   } catch (error) {
+     console.log(error);
     return res.status(500).json({ message: error });
   }
 };
@@ -197,6 +206,7 @@ export const resetPassword = async (req, res) => {
       });
     }
 
+    //new updated password
     user.password = await bycrypt.hash(req.body.password, 10);
     user.passwordResetExpires = undefined;
     user.passwordResetToken = undefined;
@@ -205,7 +215,7 @@ export const resetPassword = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Password reset successfully. Please sign in" });
+      .json({ message: "Password has been updated successfully. Go and sign in" });
   } catch (error) {
     return res.status(500).json({ message: error });
   }
