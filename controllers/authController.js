@@ -213,6 +213,26 @@ export const resetPassword = async (req, res) => {
 
     await user.save();
 
+
+        //email sender configs
+    const sender = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: Number(process.env.EMAIL_PORT),
+      secure: true,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD, // The 16-character App Password
+      },
+    });
+
+    await sender.sendMail({
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: "Follow up : Reset your Movie Reservation password",
+      text: `Your password has been updated successfully , go and sign in : ${process.env.FRONTEND_URL}/login`,
+    });
+
+
     return res
       .status(200)
       .json({ message: "Password has been updated successfully. Go and sign in" });
