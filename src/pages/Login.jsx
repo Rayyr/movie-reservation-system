@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import ImageMasonry from "../components/built-in/ImageMasonry";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
+ 
 import {
   TextField,
   Checkbox,
@@ -224,7 +224,7 @@ export default function Login() {
                     )}
                   />
 
-                  <Link /* href={forgotPasswordHref} */ href="/forgot-password" underline="hover">
+                  <Link  sx={{ color: "var(--blue)" }}  href="/forgot-password" underline="hover">
                     Forgot Password?
                   </Link>
                 </Box>
@@ -252,7 +252,7 @@ export default function Login() {
             <motion.div variants={itemVariants}>
               <Typography variant="body2" align="center" sx={{ mt: 2 }}>
                 Don't have an account?{" "}
-                <Link sx={{ color: "var(--blue)" }} /* href={createAccountHref} */ href={"/signUp"} underline="hover">
+                <Link sx={{ color: "var(--blue)" }}  href={"/signUp"} underline="hover">
                   Create one
                 </Link>
               </Typography>
@@ -270,6 +270,7 @@ export default function Login() {
           overflow: "hidden",
           bgcolor: "white",
         }}
+        
       >
         <ImageMasonry />
         <Box

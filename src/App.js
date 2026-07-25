@@ -6,6 +6,7 @@ import AdminDashboard from './pages/AdminDashboard.jsx';
 import UserDashboard from './pages/UserDashboard.jsx';
 import Home from './pages/Home.jsx';
 import { ToastContainer ,Bounce} from 'react-toastify';
+import ForgotPassword from './pages/ForgotPassword.jsx';
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
       <Route path="/adminDashboard" element={<AdminDashboard></AdminDashboard>}></Route>
     
       <Route path="/userDashboard" element={<UserDashboard></UserDashboard>}></Route>
+
+      <Route path="/forgot-password" element={<ForgotPassword></ForgotPassword>}></Route>
 
      </Routes>
      </BrowserRouter>
