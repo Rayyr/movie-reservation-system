@@ -45,9 +45,13 @@ function ForgotPassword() {
 
   const makeSubmission = async (data) => {
      setIsLoading(true);
+     setIsBlocking(true);
     try {
      
+       
      const res= await api.post("/api/auth/forgot-password", data);
+      console.log(res);
+
         toast.success(res.data.message, {
         style: {
           width: "500px",
@@ -60,7 +64,7 @@ function ForgotPassword() {
         },
       });
      } catch (err) {
-       // api network error connection 
+        // api network error connection 
            if (err.code === "ERR_NETWORK")
              toast.error("No network connection", {
                style: {

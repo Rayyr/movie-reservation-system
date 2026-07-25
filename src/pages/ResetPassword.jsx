@@ -50,7 +50,7 @@ function ResetPassword() {
     setIsBlocking(true);
     try {
       //data=password
-      const res = await api.post(`/api/auth/forgot-password/${token}`, data);
+      const res = await api.post(`/api/auth/reset-password/${token}`, data);
       toast.success(res.data.message, {
         style: {
           width: "500px",
@@ -77,9 +77,25 @@ function ResetPassword() {
             setIsBlocking(false);
           },
         });
-      //token's time has been expired error | api error
-      else if (err.response.status === 400 || err.response.status === 500) {
+      //token's time has been expired error 
+      else if (err.response.status === 400 )  {
         toast.error(err.response.data.message, {
+          style: {
+            width: "500px",
+          },
+          onOpen: () => {
+            setIsBlocking(true);
+          },
+          onClose: () => {
+            setIsBlocking(false);
+          },
+        });
+        navigate("/forgot-password");
+      }
+
+      // api error
+      else if (err.response.status === 500){
+           toast.error(err.response.data.message, {
           style: {
             width: "500px",
           },
@@ -158,6 +174,7 @@ function ResetPassword() {
               {/* password Field */}
               <motion.div variants={itemVariants}>
                 <TextField
+                 type="password"
                   label="Password "
                   fullWidth
                   {...register("password")}

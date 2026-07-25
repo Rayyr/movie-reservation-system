@@ -80,7 +80,7 @@ export default function Login() {
             setIsBlocking(false);
           },
         });
-      //invalid login error | api error
+      //invalid login(invalid crediantial) error | api error
       else if (err.response.status === 400 || err.response.status === 500) {
         
         toast.error(err.response.data.message, {
