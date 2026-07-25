@@ -12,7 +12,7 @@ import {
 import { GoChevronLeft } from "react-icons/go";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -24,11 +24,13 @@ function ResetPassword() {
   const [isLoading, setIsLoading] = useState(false);
   const [isBlocked, setIsBlocking] = useState(false);
 
+  const { token } = useParams();
+
   const formSchema = yup.object({
-      password: yup
-          .string()
-          .required("Password is required")
-          .min(6, "Password must be at least 6 charcters"),
+    password: yup
+      .string()
+      .required("Password is required")
+      .min(6, "Password must be at least 6 charcters"),
   });
 
   const {
@@ -44,11 +46,12 @@ function ResetPassword() {
   });
 
   const makeSubmission = async (data) => {
-     setIsLoading(true);
+    setIsLoading(true);
+    setIsBlocking(true);
     try {
-     
-     const res= await api.post("/api/auth/forgot-password", data);
-        toast.success(res.data.message, {
+      //data=password
+      const res = await api.post(`/api/auth/forgot-password/${token}`, data);
+      toast.success(res.data.message, {
         style: {
           width: "500px",
         },
@@ -59,35 +62,35 @@ function ResetPassword() {
           setIsBlocking(false);
         },
       });
-     } catch (err) {
-       // api network error connection 
-           if (err.code === "ERR_NETWORK")
-             toast.error("No network connection", {
-               style: {
-                 width: "500px",
-               },
-               onOpen: () => {
-                 setIsBlocking(true);
-               },
-               onClose: () => {
-                 setIsBlocking(false);
-            },
-             });
-           //invalid email error | api error
-           else if (err.response.status === 400 || err.response.status === 500) {
-             
-             toast.error(err.response.data.message, {
-               style: {
-                 width: "500px",
-               },
-               onOpen: () => {
-                 setIsBlocking(true);
-               },
-               onClose: () => {
-                 setIsBlocking(false);
-               },
-             });
-           }
+      navigate("/login");
+    } catch (err) {
+      // api network error connection so there is no senr req so no res thats why i depend on .code not .status
+      if (err.code === "ERR_NETWORK")
+        toast.error("No network connection", {
+          style: {
+            width: "500px",
+          },
+          onOpen: () => {
+            setIsBlocking(true);
+          },
+          onClose: () => {
+            setIsBlocking(false);
+          },
+        });
+      //token's time has been expired error | api error
+      else if (err.response.status === 400 || err.response.status === 500) {
+        toast.error(err.response.data.message, {
+          style: {
+            width: "500px",
+          },
+          onOpen: () => {
+            setIsBlocking(true);
+          },
+          onClose: () => {
+            setIsBlocking(false);
+          },
+        });
+      }
     } finally {
       setIsLoading(false);
       reset();
@@ -112,14 +115,13 @@ function ResetPassword() {
   return (
     <Box
       sx={{
-          height: "100vh",        // ✅ MUST be height, not minHeight
-  width: "100%",
-      /*   minHeight: "100vh", */
+        height: "100vh",
+        width: "100%",
+        /*   minHeight: "100vh", */
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "white",
-        
       }}
     >
       {/*  Animated Card */}
@@ -139,9 +141,7 @@ function ResetPassword() {
           }}
         >
           <motion.div variants={itemVariants}>
-            <CardHeader
-              title="Confirm Password"
-             />
+            <CardHeader title="New Password" />
           </motion.div>
 
           <CardContent>
@@ -184,7 +184,14 @@ function ResetPassword() {
               </motion.div>
 
               {/* Back to Login */}
-              <motion.div variants={itemVariants} style={{   textAlign: "center",alignItems: "center",justifyContent: "center",}}>
+              <motion.div
+                variants={itemVariants}
+                style={{
+                  textAlign: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <Box
                   onClick={() => navigate("/login")}
                   sx={{
