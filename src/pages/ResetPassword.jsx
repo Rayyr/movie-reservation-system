@@ -60,9 +60,10 @@ function ResetPassword() {
         },
         onClose: () => {
           setIsBlocking(false);
+          navigate("/login",{replace:true});
         },
       });
-      navigate("/login");
+      
     } catch (err) {
       // api network error connection so there is no senr req so no res thats why i depend on .code not .status
       if (err.code === "ERR_NETWORK")
@@ -220,7 +221,9 @@ function ResetPassword() {
                     textAlign: "center",
                     mt: 2,
                     color: "var(--blue)",
+                   
                   }}
+                   disabled={isLoading || isBlocked}
                 >
                   <GoChevronLeft size={18} style={{ display: "block" }} />
                   <Typography

@@ -198,6 +198,7 @@ function ForgotPassword() {
                     mt: 2,
                     color: "var(--blue)",
                   }}
+                   disabled={isLoading || isBlocked}
                 >
                   <GoChevronLeft size={18} style={{ display: "block" }} />
                   <Typography
