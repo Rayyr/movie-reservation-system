@@ -200,6 +200,7 @@ export const resetPassword = async (req, res) => {
       passwordResetExpires: { $gt: Date.now() },
     });
 
+    //invalid resetUrL:when user enters invalid token specially if reset-password route is manually entered by user not from the one from the email
     if (!user) {
       return res.status(400).json({
         message: "This reset link is invalid or has expired.",
