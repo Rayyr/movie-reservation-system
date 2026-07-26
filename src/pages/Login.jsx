@@ -8,7 +8,8 @@ import { motion } from "framer-motion";
 import ImageMasonry from "../components/built-in/ImageMasonry";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
- 
+ import {logoName} from '../constants/systemLogo.js';
+
 import {
   TextField,
   Checkbox,
@@ -21,7 +22,7 @@ import {
 } from "@mui/material";
 import api from "../services/api";
 import { roles } from "../constants/systemRoles";
-import AuthButton from "../components/customized/AuthButton";
+import AuthButton from "../components/user-defined/AuthButton";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -56,13 +57,15 @@ export default function Login() {
     mode: "onChange",
   });
 
-  const handleFormSubmit = async (data) => {
+  const makeSubmission = async (data) => {
     setIsLoading(true);
     setIsBlocking(true);
     try {
       //success login
       const res = await api.post("/api/auth/login", data);//data==req.body
 
+      localStorage.setItem("user",JSON.stringify(res.data));
+     
       if (res.data.role === roles.user)
         navigate("/userDashboard", { replace: true });
       if (res.data.role === roles.admin)
@@ -142,11 +145,11 @@ export default function Login() {
             initial="hidden"
             animate="visible"
           >
-            <motion.div variants={itemVariants}>MRS</motion.div>
+            <motion.div variants={itemVariants}>{logoName}</motion.div>
 
             <motion.div variants={itemVariants}>
               <Typography variant="h5" fontWeight="600">
-                Sign in
+                 Welcome back
               </Typography>
               <Typography variant="body2" color="text.secondary">
                  
@@ -155,7 +158,7 @@ export default function Login() {
 
             <Box
               component="form"
-              onSubmit={handleSubmit(handleFormSubmit)}
+              onSubmit={handleSubmit(makeSubmission)}
               noValidate
               sx={{ mt: 3 }}
             >
@@ -242,7 +245,7 @@ export default function Login() {
                   {isLoading ? (
                     <CircularProgress size={20} color="inherit" />
                   ) : (
-                    "Continue"
+                    "Sign in"
                   )}
                 </AuthButton>
               </motion.div>
@@ -252,7 +255,7 @@ export default function Login() {
             <motion.div variants={itemVariants}>
               <Typography variant="body2" align="center" sx={{ mt: 2 }}>
                 Don't have an account?{" "}
-                <Link sx={{ color: "var(--blue)" }}  href={"/signUp"} underline="hover">
+                <Link sx={{ color: "var(--blue)" }}  href={"/sign-up"} underline="hover">
                   Create one
                 </Link>
               </Typography>

@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import api from "../services/api";
 import { toast } from "react-toastify";
-import AuthButton from "../components/customized/AuthButton";
+import AuthButton from "../components/user-defined/AuthButton";
 
 function ForgotPassword() {
   const navigate = useNavigate();

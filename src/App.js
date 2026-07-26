@@ -17,7 +17,7 @@ function App() {
 
        {/* accesasable by puplic */}
       <Route path="/" element={<Home></Home>}></Route>
-      <Route path="/signUp" element={<SignUp></SignUp>}></Route>
+      <Route path="/sign-up" element={<SignUp></SignUp>}></Route>
       <Route path="/login" element={<Login></Login>}></Route>
       <Route path="/forgot-password" element={<ForgotPassword></ForgotPassword>}></Route>
       <Route path="/reset-password/:token" element={<ResetPassword></ResetPassword>}></Route>

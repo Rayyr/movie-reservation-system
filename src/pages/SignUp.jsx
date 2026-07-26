@@ -1,4 +1,14 @@
-import { Box, Button, Card, CardContent, CardHeader, CircularProgress, Link, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CircularProgress,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -11,19 +21,17 @@ import { roles } from "../constants/systemRoles";
 import { logoName } from "../constants/systemLogo";
 import AuthButton from "../components/user-defined/AuthButton";
 
- 
-
 export default function SignUp() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [isBlocked,setIsBlocking]=useState(false);
+  const [isBlocked, setIsBlocking] = useState(false);
 
   //animation
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: { y: 0, opacity: 1 },
-};
- 
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 },
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -32,42 +40,47 @@ const itemVariants = {
     },
   };
 
-  const formSchema=yup.object({
+  const formSchema = yup.object({
+    username: yup
+      .string()
+      .required("Username is required")
+      .min(3, "Username must be at least 3 characters")
+      .matches(
+        /^[a-zA-Z][a-zA-Z0-9]*$/,
+        "Username must not contain special characters or start with them",
+      ),
 
-    username:yup
-    .string()
-    .required("Username is required")
-    .min(3,"Username must be at least 3 characters")
-    .matches(/^[a-zA-Z][a-zA-Z0-9]*$/,"Username must not contain special characters or start with them"),
+    email: yup
+      .string()
+      .required("Email is required")
+      .matches(/@gmail\.com$/, "Please enter valid email : example@gmail.com"),
 
-    email:yup 
-    .string()
-    .required("Email is required")
-    .matches(/@gmail\.com$/,"Please enter valid email : example@gmail.com"),
-
-    password:yup 
-    .string()
-    .required("Password is required")
-    .min(6,"Password must be at least 6 charcters")
-    .test(
+    password: yup
+      .string()
+      .required("Password is required")
+      .min(6, "Password must be at least 6 charcters")
+      .test(
         "Is have username",
         "Password nust not contain username",
-        (value)=>{
-          if(value.includes(this.parent.username)) return false;
-          return true
-        }
-    ),
+        function (value) {
+          let x = this.parent.username;
+          if (value.includes(x)) return false;
+          return true;
+        },
+      ),
 
-    confirmPassword:yup 
-    .string()
-    .required("Please confirm your password")
-    .oneOf([yup.ref("password")], "Passwords must match"),
+    confirmPassword: yup
+      .string()
+      .required("Please confirm your password")
+      .oneOf([yup.ref("password")], "Passwords must match"),
   });
 
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
+    reset,
+    clearErrors,
   } = useForm({
     resolver: yupResolver(formSchema),
     mode: "onChange",
@@ -81,17 +94,52 @@ const itemVariants = {
 
   const makeSubmission = async ({ confirmPassword, ...data }) => {
     setIsLoading(true);
-
+    setIsBlocking(true);
     try {
-      await api.post("/api/auth/register", { ...data, role: roles.user });
-      toast.success("Account created successfully. Please sign in.");
-      navigate("/login", { replace: true });
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Unable to create your account."
-      );
+      const res = await api.post("/api/auth/signup", data);
+      toast.success(res.data.message, {
+        style: {
+          width: "500px",
+        },
+        onOpen: () => {
+          setIsBlocking(true);
+        },
+        onClose: () => {
+          setIsBlocking(false);
+        },
+      });
+    } catch (err) {
+      // api network error connection
+      if (err.code === "ERR_NETWORK")
+        toast.error("No network connection", {
+          style: {
+            width: "500px",
+          },
+          onOpen: () => {
+            setIsBlocking(true);
+          },
+          onClose: () => {
+            setIsBlocking(false);
+          },
+        });
+      //user exists error | api error
+      else if (err.response.status === 400 || err.response.status === 500) {
+        toast.error(err.response.data.message, {
+          style: {
+            width: "500px",
+          },
+          onOpen: () => {
+            setIsBlocking(true);
+          },
+          onClose: () => {
+            setIsBlocking(false);
+          },
+        });
+      }
     } finally {
       setIsLoading(false);
+      reset();
+      clearErrors();
     }
   };
 
@@ -134,7 +182,7 @@ const itemVariants = {
                   {...register("username")}
                   label="Username"
                   fullWidth
-                   disabled={isBlocked || isLoading}
+                  disabled={isBlocked || isLoading}
                   error={!!errors.username}
                   helperText={errors.username?.message}
                 />
@@ -178,18 +226,26 @@ const itemVariants = {
 
               <motion.div variants={itemVariants}>
                 <AuthButton
-                isBlocked={isBlocked}
-                isLoading={isLoading}
-                isValid={isValid}
+                  isBlocked={isBlocked}
+                  isLoading={isLoading}
+                  isValid={isValid}
                 >
-                  {isLoading ? <CircularProgress size={20} color="inherit" /> : "Create account"}
+                  {isLoading ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : (
+                    "Create account"
+                  )}
                 </AuthButton>
               </motion.div>
 
               <motion.div variants={itemVariants}>
                 <Typography align="center" variant="body2" sx={{ mt: 1 }}>
                   Already have an account?{" "}
-                  <Link component={RouterLink} to="/login" sx={{ color: "var(--blue)", fontWeight: 600 }}>
+                  <Link
+                    component={RouterLink}
+                    to="/login"
+                    sx={{ color: "var(--blue)", fontWeight: 600 }}
+                  >
                     Sign in
                   </Link>
                 </Typography>
