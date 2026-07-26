@@ -23,6 +23,7 @@ function ForgotPassword() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isBlocked, setIsBlocking] = useState(false);
+  const [isEmailSent, setIsEmailSent] = useState(false);
 
   const formSchema = yup.object({
     email: yup
@@ -44,15 +45,11 @@ function ForgotPassword() {
   });
 
   const makeSubmission = async (data) => {
-     setIsLoading(true);
-     setIsBlocking(true);
+    setIsLoading(true);
+    setIsBlocking(true);
     try {
-     
-       
-     const res= await api.post("/api/auth/forgot-password", data);
-      console.log(res);
-
-        toast.success(res.data.message, {
+      const res = await api.post("/api/auth/forgot-password", data);
+      toast.success(res.data.message, {
         style: {
           width: "500px",
         },
@@ -61,37 +58,37 @@ function ForgotPassword() {
         },
         onClose: () => {
           setIsBlocking(false);
+          setIsEmailSent(true);
         },
       });
-     } catch (err) {
-        // api network error connection 
-           if (err.code === "ERR_NETWORK")
-             toast.error("No network connection", {
-               style: {
-                 width: "500px",
-               },
-               onOpen: () => {
-                 setIsBlocking(true);
-               },
-               onClose: () => {
-                 setIsBlocking(false);
-            },
-             });
-           //invalid email error | api error
-           else if (err.response.status === 400 || err.response.status === 500) {
-             
-             toast.error(err.response.data.message, {
-               style: {
-                 width: "500px",
-               },
-               onOpen: () => {
-                 setIsBlocking(true);
-               },
-               onClose: () => {
-                 setIsBlocking(false);
-               },
-             });
-           }
+    } catch (err) {
+      // api network error connection
+      if (err.code === "ERR_NETWORK")
+        toast.error("No network connection", {
+          style: {
+            width: "500px",
+          },
+          onOpen: () => {
+            setIsBlocking(true);
+          },
+          onClose: () => {
+            setIsBlocking(false);
+          },
+        });
+      //invalid email error | api error
+      else if (err.response.status === 400 || err.response.status === 500) {
+        toast.error(err.response.data.message, {
+          style: {
+            width: "500px",
+          },
+          onOpen: () => {
+            setIsBlocking(true);
+          },
+          onClose: () => {
+            setIsBlocking(false);
+          },
+        });
+      }
     } finally {
       setIsLoading(false);
       reset();
@@ -138,79 +135,103 @@ function ForgotPassword() {
             boxShadow: 4,
           }}
         >
-          <motion.div variants={itemVariants}>
-            <CardHeader
-              title="Forgot Password?"
-              subheader="Enter your email and we will send you a reset-link to your email"
-            />
-          </motion.div>
+          {isEmailSent ? (
+            <>
+              <CardContent sx={{ py: 5, textAlign: "center" }}>
+                <Typography variant="h5" fontWeight={700} gutterBottom>
+                  Please check your email
+                </Typography>
 
-          <CardContent>
-            <Box
-              component="form"
-              noValidate
-              onSubmit={handleSubmit(makeSubmission)}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 2,
-              }}
-            >
-              {/* Email Field */}
+                <Typography color="text.secondary" sx={{ mb: 4 }}>
+                  We sent a password-reset link to your email address. The link
+                  expires in 15 minutes.
+                </Typography>
+              </CardContent>
+            </>
+          ) : (
+            <>
               <motion.div variants={itemVariants}>
-                <TextField
-                  label="Email Address"
-                  fullWidth
-                  {...register("email")}
-                  error={!!errors.email}
-                  helperText={errors.email?.message}
-                  disabled={isBlocked || isLoading}
+                <CardHeader
+                  title="Forgot Password?"
+                  subheader="Enter your email and we will send you a reset-link to your email"
                 />
               </motion.div>
 
-              {/* Button */}
-              <motion.div variants={itemVariants}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  disabled={isLoading || !isValid || isBlocked}
-                  fullWidth
-                >
-                  {isLoading ? (
-                    <CircularProgress size={20} color="inherit" />
-                  ) : (
-                    "Send Reset Link"
-                  )}
-                </Button>
-              </motion.div>
-
-              {/* Back to Login */}
-              <motion.div variants={itemVariants} style={{   textAlign: "center",alignItems: "center",justifyContent: "center",}}>
+              <CardContent>
                 <Box
-                  onClick={() => navigate("/login")}
+                  component="form"
+                  noValidate
+                  onSubmit={handleSubmit(makeSubmission)}
                   sx={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "6px",
-                    cursor: "pointer",
-                    textAlign: "center",
-                    mt: 2,
-                    color: "var(--blue)",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 2,
                   }}
-                   disabled={isLoading || isBlocked}
                 >
-                  <GoChevronLeft size={18} style={{ display: "block" }} />
-                  <Typography
-                    variant="body1"
-                    sx={{ lineHeight: 1, fontWeight: 500 }}
+                  {/* Email Field */}
+                  <motion.div variants={itemVariants}>
+                    <TextField
+                      label="Email Address"
+                      fullWidth
+                      {...register("email")}
+                      error={!!errors.email}
+                      helperText={errors.email?.message}
+                      disabled={isBlocked || isLoading}
+                    />
+                  </motion.div>
+
+                  {/* Button */}
+                  <motion.div variants={itemVariants}>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      disabled={isLoading || !isValid || isBlocked}
+                      fullWidth
+                    >
+                      {isLoading ? (
+                        <CircularProgress size={20} color="inherit" />
+                      ) : (
+                        "Send Reset Link"
+                      )}
+                    </Button>
+                  </motion.div>
+
+                  {/* Back to Login */}
+                  <motion.div
+                    variants={itemVariants}
+                    style={{
+                      textAlign: "center",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
-                    Back to login
-                  </Typography>
+                    <Box
+                      onClick={() => navigate("/login")}
+                      sx={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "6px",
+                        cursor: "pointer",
+                        textAlign: "center",
+                        mt: 2,
+                        color: "var(--blue)",
+                      }}
+                      disabled={isLoading || isBlocked}
+                    >
+                      <GoChevronLeft size={18} style={{ display: "block" }} />
+                      <Typography
+                        variant="body1"
+                        sx={{ lineHeight: 1, fontWeight: 500 }}
+                      >
+                        Back to login
+                      </Typography>
+                    </Box>
+                  </motion.div>
                 </Box>
-              </motion.div>
-            </Box>
-          </CardContent>
+              </CardContent>
+            </>
+          )}
         </Card>
       </motion.div>
     </Box>
