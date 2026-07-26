@@ -76,7 +76,7 @@ function ResetPassword() {
           },
           onClose: () => {
             setIsBlocking(false);
-          },
+           },
         });
       //token's time has been expired error 
       else if (err.response.status === 400 )  {
@@ -89,9 +89,10 @@ function ResetPassword() {
           },
           onClose: () => {
             setIsBlocking(false);
+            navigate("/forgot-password");
           },
         });
-        navigate("/forgot-password");
+        
       }
 
       // api error
@@ -105,6 +106,7 @@ function ResetPassword() {
           },
           onClose: () => {
             setIsBlocking(false);
+             
           },
         });
       }
@@ -221,9 +223,10 @@ function ResetPassword() {
                     textAlign: "center",
                     mt: 2,
                     color: "var(--blue)",
+                     pointerEvents: isLoading || isBlocked ? "none" : "auto", // ✅ disables click
                    
                   }}
-                   disabled={isLoading || isBlocked}
+                    
                 >
                   <GoChevronLeft size={18} style={{ display: "block" }} />
                   <Typography

@@ -138,6 +138,7 @@ function ForgotPassword() {
           {isEmailSent ? (
             <>
               <CardContent sx={{ py: 5, textAlign: "center" }}>
+                <motion.div variants={itemVariants}>
                 <Typography variant="h5" fontWeight={700} gutterBottom>
                   Please check your email
                 </Typography>
@@ -146,6 +147,7 @@ function ForgotPassword() {
                   We sent a password-reset link to your email address. The link
                   expires in 15 minutes.
                 </Typography>
+                </motion.div>
               </CardContent>
             </>
           ) : (
@@ -216,8 +218,9 @@ function ForgotPassword() {
                         textAlign: "center",
                         mt: 2,
                         color: "var(--blue)",
+                         pointerEvents: isLoading || isBlocked ? "none" : "auto", // ✅ disables click
                       }}
-                      disabled={isLoading || isBlocked}
+                      
                     >
                       <GoChevronLeft size={18} style={{ display: "block" }} />
                       <Typography
