@@ -193,7 +193,7 @@ function ForgotPassword() {
                       {isLoading ? (
                         <CircularProgress size={20} color="inherit" />
                       ) : (
-                        "Send Reset Link"
+                        "Send Reset Link" 
                       )}
                     </AuthButton>
                   </motion.div>
