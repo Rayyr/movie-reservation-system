@@ -24,6 +24,15 @@ api.interceptors.response.use(
     return response;
   }, //success
   function (error) {
+    //When it expires, the backend returns 401, Axios removes the saved session, and the user returns to Login.
+    //not authorized/user not found
+       if (error.response?.status === 401) {
+      localStorage.removeItem("user");
+
+      if (window.location.pathname !== "/login") {
+        window.location.href = "/login";
+      }
+    }
     //failure
     return Promise.reject(error);
   },
