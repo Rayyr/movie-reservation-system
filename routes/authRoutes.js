@@ -26,7 +26,7 @@ router.post(
   login,
 );
 
-router.post("/register", register);
+router.post("/signup", register);
 
 router.post("/logout", protect, logout);
 

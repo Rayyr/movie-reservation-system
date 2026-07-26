@@ -28,7 +28,7 @@ export const protect = async (req, res, next) => {
       return res.status(401).json({ message: "User not found" });
     }
 
-    // 5. Attach user to request
+    // 5. Attach user to request body
     req.user = user;
 
     // 6. Continue

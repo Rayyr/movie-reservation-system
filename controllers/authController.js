@@ -11,7 +11,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-//generate jwt token
+//generate jwt token using userid+hir role:(payload)
 const generateToken = (user) => {
   return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
     expiresIn: "1h",
@@ -21,17 +21,13 @@ const generateToken = (user) => {
 //register
 export const register = async (req, res) => {
   try {
-    //inputs validation
-    const errors = validationResult(req);
-    if (!errors.isEmpty())
-      return res.status(400).json({ errors: errors.array() });
-
+    
     const { username, email, password, role } = req.body;
 
     //check if user exists
     const isExist = await User.findOne({ email });
     if (isExist) {
-      return res.status(400).json({ message: "User already exist!" });
+      return res.status(400).json({ message: "User already exist with this email!" });
     }
 
     //not exist
@@ -47,17 +43,11 @@ export const register = async (req, res) => {
       role: role.toUpperCase() || "USER",
     });
 
-    // Set cookie on registration so they are automatically logged in safely
-    res.cookie("authToken", generateToken(newUser), {
-      httpOnly: true,
-      sameSite: "strict",
-      maxAge: 3600000, // 1 hour matching JWT expiration
-    });
-
     return res.status(201).json({
       _id: newUser._id,
       username: newUser.username,
       email: newUser.email,
+       
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -86,19 +76,13 @@ export const login = async (req, res) => {
     //compare now password
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
-      res.cookie("authToken", generateToken(user), {
-        httpOnly: true, // Prevents XSS attacks
-        secure: false, // Ensures cookie is sent over HTTP
-        sameSite: "strict", // Protects against CSRF attacks
-        maxAge: 3600000, // Cookie expiration (e.g., 1 hours)
-      });
-
       //success login
       return res.status(200).json({
         _id: user._id,
         username: user.username,
         email: user.email,
         role: user.role,
+        token:generateToken(newUser)
       });
     }
     //wrong password
@@ -112,17 +96,15 @@ export const login = async (req, res) => {
   }
 };
 
+
+//refactor it to use JWT
 export const logout = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     user.token = null;
     await user.save();
-
-    // Clear the cookie directly on the browser
-    res.clearCookie("authToken", {
-      httpOnly: true,
-      sameSite: "strict",
-    });
+ 
+    localStorage.setItem("user",null);
 
     res.json({ message: "Logged out successfully" });
   } catch (error) {
