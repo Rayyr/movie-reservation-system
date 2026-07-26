@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import api from "../services/api";
 import { toast } from "react-toastify";
+import AuthButton from "../components/customized/AuthButton";
 
 function ResetPassword() {
   const navigate = useNavigate();
@@ -189,18 +190,17 @@ function ResetPassword() {
 
               {/* Button */}
               <motion.div variants={itemVariants}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  disabled={isLoading || !isValid || isBlocked}
-                  fullWidth
+                <AuthButton 
+                isBlocked={isBlocked}
+                  isLoading={isLoading}
+                  isValid={isValid}
                 >
                   {isLoading ? (
                     <CircularProgress size={20} color="inherit" />
                   ) : (
                     "Confirm"
                   )}
-                </Button>
+                </AuthButton>
               </motion.div>
 
               {/* Back to Login */}

@@ -21,6 +21,7 @@ import {
 } from "@mui/material";
 import api from "../services/api";
 import { roles } from "../constants/systemRoles";
+import AuthButton from "../components/customized/AuthButton";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -232,19 +233,18 @@ export default function Login() {
 
               {/* Submit */}
               <motion.div variants={itemVariants}>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 2 }}
-                  disabled={isLoading || !isValid || isBlocked}
+                <AuthButton
+                 
+                  isBlocked={isBlocked}
+                  isLoading={isLoading}
+                  isValid={isValid}
                 >
                   {isLoading ? (
                     <CircularProgress size={20} color="inherit" />
                   ) : (
                     "Continue"
                   )}
-                </Button>
+                </AuthButton>
               </motion.div>
             </Box>
 
