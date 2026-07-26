@@ -67,9 +67,9 @@ export default function Login() {
       localStorage.setItem("user",JSON.stringify(res.data));
      
       if (res.data.role === roles.user)
-        navigate("/userDashboard", { replace: true });
+        navigate("/user-dashboard", { replace: true });
       if (res.data.role === roles.admin)
-        navigate("/adminDashboard", { replace: true });
+        navigate("/admin-dashboard", { replace: true });
     } catch (err) {
       // api network error connection 
       if (err.code === "ERR_NETWORK")

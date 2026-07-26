@@ -29,6 +29,7 @@ api.interceptors.response.use(
        if (error.response?.status === 401) {
       localStorage.removeItem("user");
 
+            // Redirect to Login only if not already there
       if (window.location.pathname !== "/login") {
         window.location.href = "/login";
       }
