@@ -14,7 +14,7 @@ dotenv.config();
 //generate jwt token using userid+hir role:(payload)
 const generateToken = (user) => {
   return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-    expiresIn: "1h",
+    expiresIn: "2m",
   });
 };
 
@@ -40,7 +40,7 @@ export const register = async (req, res) => {
       username: username,
       email: email,
       password: hashedPassword,
-      role: role.toUpperCase() || "USER",
+      role: role?.toUpperCase() || "USER",//i use optioanla chaining in case the user does not select which role he will sign up with
     });
 
     return res.status(201).json({
@@ -76,6 +76,7 @@ export const login = async (req, res) => {
     //compare now password
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
+            localStorage.setItem("user",JSON.stringify(res.data));
       //success login
       return res.status(200).json({
         _id: user._id,
@@ -97,7 +98,7 @@ export const login = async (req, res) => {
 };
 
 
-//refactor it to use JWT
+ 
 export const logout = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
@@ -106,7 +107,7 @@ export const logout = async (req, res) => {
  
     localStorage.setItem("user",null);
 
-    res.json({ message: "Logged out successfully" });
+    res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     return res.status(500).json({ message: error });
   }

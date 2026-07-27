@@ -11,7 +11,7 @@ import { body } from "express-validator";
 
 const router = express.Router();
 
-//auth routes
+//auth routes -anyone
 router.post(
   "/login",
   [
@@ -26,10 +26,12 @@ router.post(
   login,
 );
 
+//-anyone
 router.post("/signup", register);
 
 router.post("/logout", protect, logout);
 
+//-anyone
 router.post(
   "/reset-password/:token",
   [
@@ -40,6 +42,7 @@ router.post(
   resetPassword,
 );
 
+//-anyone
 router.post(
   "/forgot-password",
   [body("email").isEmail().withMessage("Valid email is required")],
