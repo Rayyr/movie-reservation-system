@@ -28,7 +28,8 @@ export const startTimer = (token, logout) => {
   timerId = setTimeout(() => {
     toast.error("Sorry , your session has been expired , log-in again", {
       style: { width: "500px" },
+      onClose:()=>{logout();}
     });
-    logout(); // 👈 delegate logout
+    
   }, timeLeft);
 };
