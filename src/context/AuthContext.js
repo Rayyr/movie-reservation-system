@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
     if (user?.token) {
       startTimer(user.token,logout);
     }
-  }, [user]);
+  }, [user]);//so in every user update this will be triggered so refresh token 
 
   // ✅ LOGIN
   const login = (data) => {
