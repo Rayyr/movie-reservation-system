@@ -11,6 +11,7 @@ import ResetPassword from './pages/ResetPassword.jsx';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
 import PublicRoute from './routes/PublicRoute.jsx';
 import { AuthProvider } from './context/AuthContext.js';
+import { roles } from './constants/systemRoles.js';
 
 function App() {
   return (
@@ -28,8 +29,8 @@ function App() {
 
 
 {/* protected routes */}
-      <Route path="/admin-dashboard" element={<ProtectedRoute><AdminDashboard></AdminDashboard></ProtectedRoute>}></Route>
-      <Route path="/user-dashboard" element={<ProtectedRoute><UserDashboard></UserDashboard></ProtectedRoute>}></Route>
+      <Route path="/admin-dashboard" element={<ProtectedRoute allowedRoles={roles.admin}><AdminDashboard></AdminDashboard></ProtectedRoute>}></Route>
+      <Route path="/user-dashboard" element={<ProtectedRoute allowedRoles={roles.user}><UserDashboard></UserDashboard></ProtectedRoute>}></Route>
 
 
      </Routes>
