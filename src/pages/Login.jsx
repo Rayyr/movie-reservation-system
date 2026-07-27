@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import ImageMasonry from "../components/built-in/ImageMasonry";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import {logoName} from '../constants/systemLogo.js';
+import { logoName } from "../constants/systemLogo.js";
 import { AuthContext } from "../context/AuthContext.js";
 
 import {
@@ -29,7 +29,6 @@ import { startTimer } from "../utils/tokenExpiry.js";
 export default function Login() {
   const navigate = useNavigate();
 
-  
   const loginFormSchema = yup.object({
     email: yup
       .string()
@@ -60,16 +59,16 @@ export default function Login() {
     mode: "onChange",
   });
 
-  const {login}=useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   const makeSubmission = async (data) => {
     setIsLoading(true);
     setIsBlocking(true);
     try {
       //success login
-      const res = await api.post("/api/auth/login", data);//data==req.body
+      const res = await api.post("/api/auth/login", data); //data==req.body
 
-      //frontend side login processing 
+      //frontend side login processing
       login(res.data);
 
       if (res.data.role === roles.user)
@@ -77,7 +76,7 @@ export default function Login() {
       if (res.data.role === roles.admin)
         navigate("/admin-dashboard", { replace: true });
     } catch (err) {
-      // api network error connection 
+      // api network error connection
       if (err.code === "ERR_NETWORK")
         toast.error("No network connection", {
           style: {
@@ -92,7 +91,6 @@ export default function Login() {
         });
       //invalid login(invalid crediantial) error | api error
       else if (err.response.status === 400 || err.response.status === 500) {
-        
         toast.error(err.response.data.message, {
           style: {
             width: "500px",
@@ -107,7 +105,7 @@ export default function Login() {
       }
     } finally {
       setIsLoading(false);
-      
+
       reset();
       clearErrors();
     }
@@ -155,11 +153,9 @@ export default function Login() {
 
             <motion.div variants={itemVariants}>
               <Typography variant="h5" fontWeight="600">
-                 Welcome back
+                Welcome back
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                 
-              </Typography>
+              <Typography variant="body2" color="text.secondary"></Typography>
             </motion.div>
 
             <Box
@@ -234,7 +230,11 @@ export default function Login() {
                     )}
                   />
 
-                  <Link  sx={{ color: "var(--blue)" }}  href="/forgot-password" underline="hover">
+                  <Link
+                    sx={{ color: "var(--blue)" }}
+                    href="/forgot-password"
+                    underline="hover"
+                  >
                     Forgot Password?
                   </Link>
                 </Box>
@@ -243,7 +243,6 @@ export default function Login() {
               {/* Submit */}
               <motion.div variants={itemVariants}>
                 <AuthButton
-                 
                   isBlocked={isBlocked}
                   isLoading={isLoading}
                   isValid={isValid}
@@ -261,11 +260,59 @@ export default function Login() {
             <motion.div variants={itemVariants}>
               <Typography variant="body2" align="center" sx={{ mt: 2 }}>
                 Don't have an account?{" "}
-                <Link sx={{ color: "var(--blue)" }}  href={"/sign-up"} underline="hover">
+                <Link
+                  sx={{ color: "var(--blue)" }}
+                  href={"/sign-up"}
+                  underline="hover"
+                >
                   Create one
                 </Link>
               </Typography>
             </motion.div>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                mt: 3,
+              }}
+            >
+              <button
+                disabled={isBlocked || isLoading}
+                onClick={() => navigate("/")}
+              >
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="48"
+                    height="48"
+                    fill="none"
+                    stroke={`var(--red)`}
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={`group cursor-pointer transition-colors duration-200 hover:fill-[var(--red)]`}
+                  >
+                    {/* Main House Outline */}
+                    <path d="M21 19v-6.733a4 4 0 0 0-1.245-2.9L13.378 3.31a2 2 0 0 0-2.755 0L4.245 9.367A4 4 0 0 0 3 12.267V19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2" />
+
+                    {/* Inner Door (flips stroke color on hover so it stays visible) */}
+                    <path
+                      className="transition-colors duration-200 group-hover:stroke-white"
+                      d="M9 15a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6H9z"
+                    />
+                  </svg>{" "}
+                </div>
+              </button>
+            </Box>
           </motion.div>
         </Box>
       </Box>
@@ -279,7 +326,6 @@ export default function Login() {
           overflow: "hidden",
           bgcolor: "white",
         }}
-        
       >
         <ImageMasonry />
         <Box
