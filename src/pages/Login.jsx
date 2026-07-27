@@ -23,6 +23,7 @@ import {
 import api from "../services/api";
 import { roles } from "../constants/systemRoles";
 import AuthButton from "../components/user-defined/AuthButton";
+import { startTimer } from "../utils/tokenExpiry.js";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -64,8 +65,9 @@ export default function Login() {
       //success login
       const res = await api.post("/api/auth/login", data);//data==req.body
 
-      localStorage.setItem("user",JSON.stringify(res.data));
-     
+     //frontend token expiry detecteion beside api requests that tthey will made later ..
+      startTimer(res.data.token);
+
       if (res.data.role === roles.user)
         navigate("/user-dashboard", { replace: true });
       if (res.data.role === roles.admin)

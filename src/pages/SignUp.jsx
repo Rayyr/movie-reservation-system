@@ -20,7 +20,7 @@ import api from "../services/api";
 import { roles } from "../constants/systemRoles";
 import { logoName } from "../constants/systemLogo";
 import AuthButton from "../components/user-defined/AuthButton";
-
+import { Controller } from "react-hook-form";
 export default function SignUp() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -76,7 +76,7 @@ export default function SignUp() {
   });
 
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors, isValid },
     reset,
@@ -92,9 +92,10 @@ export default function SignUp() {
     },
   });
 
-  const makeSubmission = async ({ confirmPassword, ...data }) => {
+  const makeSubmission = async (data) => {
     setIsLoading(true);
     setIsBlocking(true);
+    console.log(data);
     try {
       const res = await api.post("/api/auth/signup", data);
       toast.success(res.data.message, {
@@ -178,49 +179,76 @@ export default function SignUp() {
               sx={{ display: "flex", flexDirection: "column", gap: 2 }}
             >
               <motion.div variants={itemVariants}>
-                <TextField
-                  {...register("username")}
-                  label="Username"
-                  fullWidth
-                  disabled={isBlocked || isLoading}
-                  error={!!errors.username}
-                  helperText={errors.username?.message}
+                <Controller
+                  name="username"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Username"
+                      fullWidth
+                      margin="normal"
+                      error={!!errors.username}
+                      helperText={errors.username?.message}
+                      disabled={isBlocked || isLoading}
+                    />
+                  )}
                 />
               </motion.div>
 
               <motion.div variants={itemVariants}>
-                <TextField
-                  {...register("email")}
-                  label="Email address"
-                  type="email"
-                  fullWidth
-                  disabled={isBlocked || isLoading}
-                  error={!!errors.email}
-                  helperText={errors.email?.message}
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Email Address"
+                      fullWidth
+                      margin="normal"
+                      error={!!errors.email}
+                      helperText={errors.email?.message}
+                      disabled={isBlocked || isLoading}
+                    />
+                  )}
                 />
               </motion.div>
 
               <motion.div variants={itemVariants}>
-                <TextField
-                  {...register("password")}
-                  label="Password"
-                  type="password"
-                  fullWidth
-                  disabled={isBlocked || isLoading}
-                  error={!!errors.password}
-                  helperText={errors.password?.message}
+                <Controller
+                  name="password"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                       type="password"
+                      label="Password"
+                      fullWidth
+                      margin="normal"
+                      error={!!errors.password}
+                      helperText={errors.password?.message}
+                      disabled={isBlocked || isLoading}
+                    />
+                  )}
                 />
               </motion.div>
 
               <motion.div variants={itemVariants}>
-                <TextField
-                  {...register("confirmPassword")}
-                  label="Confirm password"
-                  type="password"
-                  fullWidth
-                  disabled={isBlocked || isLoading}
-                  error={!!errors.confirmPassword}
-                  helperText={errors.confirmPassword?.message}
+                <Controller
+                  name="confirmPassword"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                       type="password"
+                      label="Confirm Password"
+                      fullWidth
+                      margin="normal"
+                      error={!!errors.confirmPassword}
+                      helperText={errors.confirmPassword?.message}
+                      disabled={isBlocked || isLoading}
+                    />
+                  )}
                 />
               </motion.div>
 
