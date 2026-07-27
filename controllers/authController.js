@@ -47,7 +47,9 @@ export const register = async (req, res) => {
       _id: newUser._id,
       username: newUser.username,
       email: newUser.email,
-       
+       role:newUser.role,
+
+       message:"Registered successfully",
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -76,14 +78,13 @@ export const login = async (req, res) => {
     //compare now password
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
-            localStorage.setItem("user",JSON.stringify(res.data));
-      //success login
+       //success login
       return res.status(200).json({
         _id: user._id,
         username: user.username,
         email: user.email,
         role: user.role,
-        token:generateToken(newUser)
+        token:generateToken(user)//the token will be generated once logged in 
       });
     }
     //wrong password
@@ -98,15 +99,17 @@ export const login = async (req, res) => {
 };
 
 
- 
+
+//fix it 
 export const logout = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     user.token = null;
     await user.save();
  
-    localStorage.setItem("user",null);
 
+/*     localStorage.setItem("user",null);
+ */
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     return res.status(500).json({ message: error });

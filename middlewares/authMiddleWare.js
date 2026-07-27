@@ -18,7 +18,7 @@ export const protect = async (req, res, next) => {
       return res.status(401).json({ message: "No token, not authorized" });
     }
 
-    // 3. Verify token
+    // 3. Verify token : check for expiry time
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // 4. Get user from DB
@@ -28,13 +28,21 @@ export const protect = async (req, res, next) => {
       return res.status(401).json({ message: "User not found" });
     }
 
-    // 5. Attach user to request body
+    // 5. Attach user to request obj
     req.user = user;
 
     // 6. Continue
     next();
 
   } catch (error) {
+        if (error.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Token expired" });
+    }
+
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+    
     return res.status(500).json({ message:error.message});
   }
 };
