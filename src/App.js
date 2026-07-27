@@ -10,10 +10,12 @@ import ForgotPassword from './pages/ForgotPassword.jsx';
 import ResetPassword from './pages/ResetPassword.jsx';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
 import PuplicRoute from './routes/PuplicRoute.jsx';
+import { AuthProvider } from './context/AuthContext.js';
 
 function App() {
   return (
     <>
+   <AuthProvider>
     <BrowserRouter>
     <Routes>
 
@@ -45,6 +47,7 @@ function App() {
         theme="light"
         transition={Bounce}
       />
+      </AuthProvider>
       </>
   );
 }

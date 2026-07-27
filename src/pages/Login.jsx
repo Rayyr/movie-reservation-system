@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 
 import { useForm, Controller } from "react-hook-form";
@@ -8,7 +8,8 @@ import { motion } from "framer-motion";
 import ImageMasonry from "../components/built-in/ImageMasonry";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
- import {logoName} from '../constants/systemLogo.js';
+import {logoName} from '../constants/systemLogo.js';
+import { AuthContext } from "../context/AuthContext.js";
 
 import {
   TextField,
@@ -28,6 +29,7 @@ import { startTimer } from "../utils/tokenExpiry.js";
 export default function Login() {
   const navigate = useNavigate();
 
+  
   const loginFormSchema = yup.object({
     email: yup
       .string()
@@ -58,6 +60,8 @@ export default function Login() {
     mode: "onChange",
   });
 
+  const {login}=useContext(AuthContext);
+
   const makeSubmission = async (data) => {
     setIsLoading(true);
     setIsBlocking(true);
@@ -65,9 +69,8 @@ export default function Login() {
       //success login
       const res = await api.post("/api/auth/login", data);//data==req.body
 
-      localStorage.setItem("user", JSON.stringify(res.data));
-     //frontend token expiry detecteion beside api requests that tthey will made later ..
-      startTimer(res.data.token);
+      //frontend side login processing 
+      login(res.data);
 
       if (res.data.role === roles.user)
         navigate("/user-dashboard", { replace: true });

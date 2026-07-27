@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from "react";
-import { startTimer } from "../src/utils/tokenExpiry";
+import { startTimer } from "../utils/tokenExpiry";
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
     return stored ? JSON.parse(stored) : null;
   });
 
-  // ✅ Start timer when user logs in / refresh
+  // ✅ Start timer when user logs in / refresh === frontend token expiry detecteion beside api requests that tthey will made later ..
   useEffect(() => {
     if (user?.token) {
       startTimer(user.token,logout);
