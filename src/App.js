@@ -8,6 +8,7 @@ import Home from './pages/Home.jsx';
 import { ToastContainer ,Bounce} from 'react-toastify';
 import ForgotPassword from './pages/ForgotPassword.jsx';
 import ResetPassword from './pages/ResetPassword.jsx';
+import ProtectedRoute from './routes/ProtectedRoute.jsx';
 
 function App() {
   return (
@@ -23,8 +24,9 @@ function App() {
       <Route path="/reset-password/:token" element={<ResetPassword></ResetPassword>}></Route>
 
 
-      <Route path="/admin-dashboard" element={<AdminDashboard></AdminDashboard>}></Route>
-      <Route path="/user-dashboard" element={<UserDashboard></UserDashboard>}></Route>
+{/* protected routes */}
+      <Route path="/admin-dashboard" element={<ProtectedRoute><AdminDashboard></AdminDashboard></ProtectedRoute>}></Route>
+      <Route path="/user-dashboard" element={<ProtectedRoute><UserDashboard></UserDashboard></ProtectedRoute>}></Route>
 
 
      </Routes>
