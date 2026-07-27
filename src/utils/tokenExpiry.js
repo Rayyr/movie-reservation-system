@@ -2,71 +2,57 @@ import { jwtDecode } from "jwt-decode";
 import api from "../services/api";
 import { toast } from "react-toastify";
 
+//timerId: A unique numerical ID returned to track or cancel the timer.
+let timerId;
+
 const getTokenExpiry = (token) => {
   try {
-    const payload = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
-
-    const decoded = JSON.parse(atob(payload));
-
-    return decoded.exp * 1000; // JWT exp is in seconds
-  } catch (error) {
+    return jwtDecode(token).exp * 1000;
+  } catch {
     return 0;
   }
 };
 
-export const startTimer = (token) => {
-  let expiryTimer;
-  clearTimeout(expiryTimer);
+const expireSession = () => {
+  //i will not invoke api logout since its protected route so since the token is expired so it will not enter it so i will take logout logic and put it here
+  clearTimeout(timerId);
 
-  const expiryTime = getTokenExpiry(token);
-  const timeLeft = expiryTime - Date.now();
+  localStorage.removeItem("user");
+
+  toast.error("Sorry , your session has been expired , log-in again", {
+    style: {
+      width: "500px",
+    },
+    onClose: () => {
+      window.location.replace("/login");
+    },
+  });
+};
+
+export const startTimer = (token) => {
+  //stop the timer(manage timer)
+  clearTimeout(timerId);
+
+  const timeLeft = getTokenExpiry(token) - Date.now();
 
   if (timeLeft <= 0) {
-    handleLogout();
+    expireSession();
     return;
   }
 
-  expiryTimer = setTimeout(handleLogout, timeLeft);
+  //it will assign a timer for -timeleft- once reaches 0 -expireSession will be called
+  timerId = setTimeout(expireSession, timeLeft);
 };
 
-const handleLogout = async () => {
+/* export const handleLogout = async () => {
+  clearTimeout(expiryTimer);
+
   try {
-    const res = await api.post("api/auth/logout");
-    toast.success(res.data.message, {
-      style: {
-        width: "500px",
-      },
-      /*     onOpen: () => {
-            setIsBlocking(true);
-          },
-          onClose: () => {
-            setIsBlocking(false);
-          }, */
-    });
-  } catch (error) {
-    if (error.code === "ERR_NETWORK")
-      toast.error("No network connection", {
-        style: {
-          width: "500px",
-        },
-        /*   onOpen: () => {
-            setIsBlocking(true);
-          },
-          onClose: () => {
-            setIsBlocking(false);
-          }, */
-      });
-    else
-      toast.error(error.response.data.message, {
-        style: {
-          width: "500px",
-        },
-        /*   onOpen: () => {
-            setIsBlocking(true);
-          },
-          onClose: () => {
-            setIsBlocking(false);
-          }, */
-      });
+    await api.post("/api/auth/logout");
+  } catch {
+    // Logout locally even if the API/network fails.
+  } finally {
+    localStorage.removeItem("user");
+    window.location.replace("/login");
   }
-};
+}; */

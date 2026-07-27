@@ -95,9 +95,10 @@ export default function SignUp() {
   const makeSubmission = async (data) => {
     setIsLoading(true);
     setIsBlocking(true);
-    console.log(data);
+    
     try {
       const res = await api.post("/api/auth/signup", data);
+       
       toast.success(res.data.message, {
         style: {
           width: "500px",
@@ -107,6 +108,7 @@ export default function SignUp() {
         },
         onClose: () => {
           setIsBlocking(false);
+          navigate("/login");
         },
       });
     } catch (err) {

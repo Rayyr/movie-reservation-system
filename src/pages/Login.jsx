@@ -65,6 +65,7 @@ export default function Login() {
       //success login
       const res = await api.post("/api/auth/login", data);//data==req.body
 
+      localStorage.setItem("user", JSON.stringify(res.data));
      //frontend token expiry detecteion beside api requests that tthey will made later ..
       startTimer(res.data.token);
 

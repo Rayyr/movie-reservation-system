@@ -9,7 +9,7 @@ const api = axios.create({
 //Interceptors allow you to perform actions or modifications before a request is sent or after a response is received:
 
 //Every request through api now automatically sends the JWT.
-// attach token automatically when you make api requests : request interceptor
+// attach token automatically when you make api requests : request interceptor , since backend need the token to aunticate the user in protect middleware
 api.interceptors.request.use((req) => {
   const user = JSON.parse(localStorage.getItem("user"));
   if (user?.token) {
