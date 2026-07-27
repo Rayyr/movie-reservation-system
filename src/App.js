@@ -16,7 +16,7 @@ function App() {
     <BrowserRouter>
     <Routes>
 
-       {/* accesasable by puplic */}
+       {/* authentication routes , accesasable by puplic */}
       <Route path="/" element={<Home></Home>}></Route>
       <Route path="/sign-up" element={<SignUp></SignUp>}></Route>
       <Route path="/login" element={<Login></Login>}></Route>

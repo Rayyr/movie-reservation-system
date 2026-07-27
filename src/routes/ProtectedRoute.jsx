@@ -11,9 +11,9 @@ function ProtectedRoute({ children, allowedRoles }) {
   //authanticated but not authorized
   if (allowedRoles && !allowedRoles.includes(user.role)) {
     if (user.role === roles.user)
-      return <Navigate to="/user-dashboard" replace />;
+      return <Navigate to="/user-dashboard" replace />;//this pages acts as home page for non-authprized users
     else if (user.role === roles.admin)
-      return <Navigate to="/admin-dashboard" replace />;
+      return <Navigate to="/admin-dashboard" replace />;//this pages acts as home page for non-authprized admins
   }
 
   //authanticated and authorized
