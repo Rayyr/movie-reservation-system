@@ -9,6 +9,7 @@ import { ToastContainer ,Bounce} from 'react-toastify';
 import ForgotPassword from './pages/ForgotPassword.jsx';
 import ResetPassword from './pages/ResetPassword.jsx';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
+import PuplicRoute from './routes/PuplicRoute.jsx';
 
 function App() {
   return (
@@ -16,12 +17,12 @@ function App() {
     <BrowserRouter>
     <Routes>
 
-       {/* authentication routes , accesasable by puplic */}
-      <Route path="/" element={<Home></Home>}></Route>
-      <Route path="/sign-up" element={<SignUp></SignUp>}></Route>
-      <Route path="/login" element={<Login></Login>}></Route>
-      <Route path="/forgot-password" element={<ForgotPassword></ForgotPassword>}></Route>
-      <Route path="/reset-password/:token" element={<ResetPassword></ResetPassword>}></Route>
+       {/* authentication routes , accesasable by puplic and not loggedin users */}
+      <Route path="/" element={<PuplicRoute><Home></Home></PuplicRoute>}></Route>
+      <Route path="/sign-up" element={<PuplicRoute><SignUp></SignUp></PuplicRoute>}></Route>
+      <Route path="/login" element={<PuplicRoute><Login></Login></PuplicRoute>}></Route>
+      <Route path="/forgot-password" element={<PuplicRoute><ForgotPassword></ForgotPassword></PuplicRoute>}></Route>
+      <Route path="/reset-password/:token" element={<PuplicRoute><ResetPassword></ResetPassword></PuplicRoute>}></Route>
 
 
 {/* protected routes */}

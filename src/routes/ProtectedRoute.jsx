@@ -3,7 +3,8 @@ import { roles } from "../constants/systemRoles";
 
 function ProtectedRoute({ children, allowedRoles }) {
   //not authanticated
-  const user = localStorage.getItem("user");
+  const user = JSON.parse(localStorage.getItem("user"));
+  //console.log(user.data.username);
   if (!user?.token) {
     return <Navigate to={"/login"} replace={true} />;
   }
