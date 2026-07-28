@@ -4,4 +4,8 @@ update his info
 -Movies
 browse movies
 
+-display latest movies
+
 -logout
+
+as in figma design
