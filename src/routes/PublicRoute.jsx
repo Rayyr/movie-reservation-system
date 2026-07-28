@@ -18,7 +18,7 @@ function PublicRoute({ children }) {
 
   const navigationType = useNavigationType();
 
-  if (user && navigationType === "POP") {
+  if (user && navigationType === "POP") { 
     if (!toastShown.current) {
       toast.error("Sign out first !", {
         style: {
