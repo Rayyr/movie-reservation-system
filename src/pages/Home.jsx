@@ -11,7 +11,7 @@ function Home() {
           <Link to="/login" replace={false}>
             Login
           </Link>
-          <Link to="/signUp" replace={false}>
+          <Link to="/sign-up" replace={false}>
             Sign-up
           </Link>
         </div>

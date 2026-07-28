@@ -283,7 +283,55 @@ export default function SignUp() {
             </Box>
           </CardContent>
         </Card>
+
+          <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  variants={containerVariants}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      mt: 3,
+                    }}
+                  >
+                    <button
+                      disabled={isBlocked || isLoading}
+                      onClick={() => navigate("/")}
+                    >
+                      <div>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          width="48"
+                          height="48"
+                          fill="none"
+                          stroke={`var(--red)`}
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className={`group cursor-pointer transition-colors duration-200 hover:fill-[var(--red)]`}
+                        >
+                          {/* Main House Outline */}
+                          <path d="M21 19v-6.733a4 4 0 0 0-1.245-2.9L13.378 3.31a2 2 0 0 0-2.755 0L4.245 9.367A4 4 0 0 0 3 12.267V19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2" />
+      
+                          {/* Inner Door (flips stroke color on hover so it stays visible) */}
+                          <path
+                            className="transition-colors duration-200 group-hover:stroke-white"
+                            d="M9 15a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6H9z"
+                          />
+                        </svg>{" "}
+                      </div>
+                    </button>
+                  </Box>
+                </motion.div>
+                
       </motion.div>
+
+          
+              
     </Box>
   );
 }
