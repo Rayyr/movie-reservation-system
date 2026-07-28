@@ -1,0 +1,7 @@
+-profile 
+update his info
+
+-Movies
+browse movies
+
+-logout

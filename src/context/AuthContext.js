@@ -18,6 +18,7 @@ export const AuthProvider = ({ children }) => {
   }, [user]);//so in every user update this will be triggered so refresh token 
 
 
+  ///////////detect manual localStorage : modify them later in case the user info has been update so the storage must be synchronized
    // ✅ Detect manual localStorage changes (VERY IMPORTANT) such as deletion
   useEffect(() => {
     const handleStorageChange = () => {
@@ -38,7 +39,7 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
-  // ✅ Extra safety check (runs on every render)
+  // ✅ Extra safety check (runs on every render):meaningless 
   useEffect(() => {
     const stored = localStorage.getItem("user");
 
@@ -46,7 +47,7 @@ export const AuthProvider = ({ children }) => {
       logout();
     }
   }, [user]);
-
+///////////
 
   // ✅ LOGIN
   const login = (data) => {
@@ -59,9 +60,9 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem("user");
     setUser(null);
-    window.location.replace("/login");//replace as replace prop we passed previosully
+   // window.location.replace("/login");//replace as replace prop we passed previosully
    //navigate("/login",{replace:true});
-   return <Navigate to="/login"></Navigate>
+   return <Navigate to="/login" replace={true}></Navigate>
   };
 
   return (
