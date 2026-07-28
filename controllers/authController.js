@@ -14,7 +14,7 @@ dotenv.config();
 //generate jwt token using userid+hir role:(payload)
 const generateToken = (user) => {
   return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-    expiresIn: "2m",
+    expiresIn: "15m",
   });
 };
 
@@ -100,16 +100,14 @@ export const login = async (req, res) => {
 
 
 
-//fix it 
+ 
 export const logout = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     user.token = null;
     await user.save();
  
-
-/*     localStorage.setItem("user",null);
- */
+ 
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     return res.status(500).json({ message: error });

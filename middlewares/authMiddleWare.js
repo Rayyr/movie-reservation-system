@@ -18,7 +18,7 @@ export const protect = async (req, res, next) => {
       return res.status(401).json({ message: "No token, not authorized" });
     }
 
-    // 3. Verify token : check for expiry time
+    // 3. Verify token : check for expiry time:if expired 401 error
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // 4. Get user from DB
@@ -35,6 +35,7 @@ export const protect = async (req, res, next) => {
     next();
 
   } catch (error) {
+    //the token expiry error will be noticable in case the token is expired while an api action in processs and the api action is protected or even the timer may overwrite it
         if (error.name === "TokenExpiredError") {
       return res.status(401).json({ message: "Token expired" });
     }
@@ -42,7 +43,7 @@ export const protect = async (req, res, next) => {
     if (error.name === "JsonWebTokenError") {
       return res.status(401).json({ message: "Invalid token" });
     }
-    
+
     return res.status(500).json({ message:error.message});
   }
 };
