@@ -218,7 +218,7 @@ function ForgotPassword() {
                         textAlign: "center",
                         mt: 2,
                         color: "var(--blue)",
-                         pointerEvents: isLoading || isBlocked ? "none" : "auto", // ✅ disables click
+                        pointerEvents: isLoading || isBlocked ? "none" : "auto", // ✅ (actually as a disable prop it is not disabled but as style ) disables click
                       }}
                       
                     >

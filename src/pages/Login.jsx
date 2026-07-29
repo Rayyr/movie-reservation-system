@@ -231,7 +231,10 @@ export default function Login() {
                   />
 
                   <Link
-                    sx={{ color: "var(--blue)" }}
+                    sx={{
+                      color: "var(--blue)",
+                      pointerEvents: isLoading || isBlocked ? "none" : "auto", // ✅ disables click
+                    }}
                     href="/forgot-password"
                     underline="hover"
                   >
@@ -261,7 +264,10 @@ export default function Login() {
               <Typography variant="body2" align="center" sx={{ mt: 2 }}>
                 Don't have an account?{" "}
                 <Link
-                  sx={{ color: "var(--blue)" }}
+                  sx={{
+                    color: "var(--blue)",
+                    pointerEvents: isLoading || isBlocked ? "none" : "auto", // ✅ disables click
+                  }}
                   href={"/sign-up"}
                   underline="hover"
                 >
@@ -286,6 +292,9 @@ export default function Login() {
             >
               <button
                 disabled={isBlocked || isLoading}
+                style={{
+                  pointerEvents: isLoading || isBlocked ? "none" : "auto", // ✅ disables click
+                }}
                 onClick={() => navigate("/")}
               >
                 <div>
