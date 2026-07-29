@@ -61,7 +61,7 @@ function ResetPassword() {
         },
         onClose: () => {
           setIsBlocking(false);
-          navigate("/login",{replace:true});
+          navigate("/login",{replace:true});//important to put replace 
         },
       });
       
@@ -90,7 +90,7 @@ function ResetPassword() {
           },
           onClose: () => {
             setIsBlocking(false);
-            navigate("/forgot-password");
+            navigate("/forgot-password",{replace:true});
           },
         });
         

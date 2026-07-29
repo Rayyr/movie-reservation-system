@@ -72,7 +72,7 @@ export default function Login() {
       login(res.data);
 
       if (res.data.role === roles.user)
-        navigate("/user-dashboard", { replace: true });
+        navigate("/user-dashboard", { replace: true });//important to put replace to avoid go back 
       if (res.data.role === roles.admin)
         navigate("/admin-dashboard", { replace: true });
     } catch (err) {

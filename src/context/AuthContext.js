@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
    // window.location.replace("/login");//replace as replace prop we passed previosully
    //navigate("/login",{replace:true});
-   return <Navigate to="/login" replace={true}></Navigate>
+   return <Navigate to="/login" replace={true}></Navigate>//importnat to put replace prop 
   };
 
   return (
