@@ -2,7 +2,7 @@ import express from "express";
 import {
   register,
   login,
-  logout,
+ 
   resetPassword,
   forgotPassword,
 } from "../controllers/authController.js";
@@ -29,7 +29,10 @@ router.post(
 //-anyone
 router.post("/signup", register);
 
-router.post("/logout", protect, logout);
+//since logout at backend actually dont do anything just it returns a msg so its useless so it will be handled from frontend side
+/* router.post("/logout", protect, logout);
+ */ 
+
 
 //-anyone
 router.post(

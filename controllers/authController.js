@@ -100,19 +100,16 @@ export const login = async (req, res) => {
 
 
 
- 
+/*  
 export const logout = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
-    user.token = null;
-    await user.save();
- 
+   
  
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     return res.status(500).json({ message: error });
   }
-};
+}; */
 
 //generate reset link for forgot password + nodemail configs
 export const forgotPassword = async (req, res) => {
