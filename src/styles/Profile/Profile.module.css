@@ -1,0 +1,133 @@
+.page {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+/* CARD */
+.card {
+  width: 420px;
+  padding: 30px;
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* TITLE */
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* AVATAR */
+.avatarSection {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.avatarWrapper {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #ff2e63, #b91372);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+  transition: 0.3s;
+}
+
+.avatarWrapper:hover {
+  transform: scale(1.05);
+}
+
+.avatarWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarWrapper span {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+/* FORM */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputGroup label {
+  font-size: 12px;
+  margin-bottom: 5px;
+  color: #aaa;
+}
+
+.inputGroup input,
+.inputGroup textarea {
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+
+  transition: 0.25s;
+}
+
+.inputGroup input:focus,
+.inputGroup textarea:focus {
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 2px rgba(255, 46, 99, 0.5);
+}
+
+textarea {
+  resize: none;
+  min-height: 80px;
+}
+
+/* BUTTON */
+.saveBtn {
+  margin-top: 10px;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #ff2e63, #b91372);
+  color: white;
+  font-weight: bold;
+
+  transition: 0.3s;
+}
+
+.saveBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 46, 99, 0.4);
+}
+
+.saveBtn:active {
+  transform: scale(0.98);
+}

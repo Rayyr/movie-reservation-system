@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import styles from "../styles/userDashboard/userDashboard.module.css";
+import styles from "../styles/UserDashboard/userDashboard.module.css";
 import AuroraBG from "../components/built-in/Aurora-bg";
 import { motion } from "framer-motion";
 
@@ -14,9 +14,7 @@ import {
 
 function UserDashboard() {
   const { user, logout } = useContext(AuthContext);
- 
-const [open,setOpen]=useState(false);
-  
+
   // Animations
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -77,7 +75,6 @@ const [open,setOpen]=useState(false);
           <motion.div
             className={styles.rightSection}
             variants={containerVariants}
-            
           >
             {/* Search */}
             <motion.span
@@ -89,21 +86,20 @@ const [open,setOpen]=useState(false);
             </motion.span>
 
             {/* 🔥 RADIX DROPDOWN */}
-            <DropdownMenu  >
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <motion.div
                   className={styles.avatar}
                   variants={itemVariants}
                   whileHover={{ scale: 1.1 }}
-                  
                 >
                   {user?.username?.charAt(0).toUpperCase()}
                 </motion.div>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent className={styles.dropdown}  sideOffset={8}>
+              <DropdownMenuContent className={styles.dropdown} sideOffset={8}>
                 <DropdownMenuItem asChild>
-                  <Link to="/profile" className={styles.dropdownItem}>
+                  <Link to="/profile" className={styles.dropdownItem} replace={false}>
                     Profile
                   </Link>
                 </DropdownMenuItem>

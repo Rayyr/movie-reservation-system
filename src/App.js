@@ -13,6 +13,8 @@ import PublicRoute from "./routes/PublicRoute.jsx";
 import { AuthProvider } from "./context/AuthContext.js";
 import { roles } from "./constants/systemRoles.js";
 import { Toaster } from "react-hot-toast";
+import Profile from './pages/Profile.jsx';
+
 function App() {
   return (
     <>
@@ -78,6 +80,8 @@ function App() {
                 </ProtectedRoute>
               }
             ></Route>
+
+            <Route path="/profile" element={<ProtectedRoute allowedRoles={[roles.user,roles.admin]}><Profile></Profile></ProtectedRoute>}> </Route>
           </Routes>
         </BrowserRouter>
         <ToastContainer //for async toast msgs
