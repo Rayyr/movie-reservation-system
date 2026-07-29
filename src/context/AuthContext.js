@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import { startTimer } from "../utils/tokenExpiry";
 import { Navigate } from "react-router-dom";
+import api from "../services/api";
 
 export const AuthContext = createContext();
 
@@ -49,15 +50,17 @@ export const AuthProvider = ({ children }) => {
   }, [user]);
 ///////////
 
-  // ✅ LOGIN
+  // ✅ LOGIN -frontend side
   const login = (data) => {
     localStorage.setItem("user", JSON.stringify(data));
     setUser(data);
   };
 
    
-  // ✅ LOGOUT
+  // ✅ LOGOUT -frontend
   const logout = () => {
+
+     
     localStorage.removeItem("user");
     setUser(null);
    // window.location.replace("/login");//replace as replace prop we passed previosully

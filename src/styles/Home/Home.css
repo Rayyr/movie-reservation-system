@@ -45,10 +45,12 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  z-index: 10;
+  z-index: 10; 
+ 
   
 }
-
+ 
+ 
 .nav-links {
   display: flex;
   gap: 40px;
@@ -58,13 +60,14 @@
   backdrop-filter: blur(6px);
 }
 
+ 
 .nav-links a {
-  color: white;
-  text-decoration: none; /* optional: remove underline */
-   font-size: 30px;    
+  text-decoration: none;
+  color: #ccc;
+  font-size: 30px;
+  transition: 0.3s;
 }
 
 .nav-links a:hover {
-  opacity: .8; /* optional hover effect */
-  color: #7B1025;
+  color: white;
 }

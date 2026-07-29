@@ -65,7 +65,7 @@ export default function Login() {
     setIsLoading(true);
     setIsBlocking(true);
     try {
-      //success login
+      //success login from backend side
       const res = await api.post("/api/auth/login", data); //data==req.body
 
       //frontend side login processing

@@ -1,27 +1,23 @@
 .main {
   position: relative;
-  min-height: 100vh;
   width: 100%;
+  height: 100vh;
   overflow: hidden;
-  background-color: #000;
-  color: white;
 }
 
-.main > div:first-child {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-}
-
+/* TITLE */
 .title {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  color: white;
+  text-align: center;
+  margin-top: 120px;
+  font-size: 28px;
 }
 
-.navbar {
-  position: fixed;
+/* NAV CONTAINER */
+.navContainer {
+  position: absolute;
   top: 20px;
   width: 100%;
   display: flex;
@@ -29,22 +25,102 @@
   z-index: 10;
 }
 
+/* NAVBAR */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 750px;
+
+  padding: 10px 20px;
+  border-radius: 50px;
+
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* LINKS */
 .navLinks {
   display: flex;
-  gap: 40px;
-  padding: 12px 40px;
-  border-radius: 50px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(6px);
+  gap: 30px;
 }
 
 .navLinks a {
-  color: white;
   text-decoration: none;
-  font-size: 30px;
+  color: #ccc;
+  font-size: 20px;
+  transition: 0.3s;
 }
 
 .navLinks a:hover {
-  opacity: 0.8;
-  color: #7b1025;
+  color: white;
 }
+
+/* RIGHT SECTION */
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  position: relative;
+}
+
+/* SEARCH */
+.searchIcon {
+  font-size: 16px;
+  color: #ccc;
+  cursor: pointer;
+}
+
+/* AVATAR */
+.avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+
+  background: linear-gradient(135deg, #ff2e63, #b91372);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+ 
+/* DROPDOWN CONTAINER */
+.dropdown {
+  min-width: 150px;
+  border-radius: 12px;
+
+  background: rgba(20, 20, 20, 0.95);
+  backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px;
+
+  animation: fadeIn 0.2s ease;
+}
+
+/* ITEM */
+.dropdownItem {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 8px;
+
+  color: #ccc;
+  font-size: 14px;
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.dropdownItem:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+ 

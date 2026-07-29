@@ -1,11 +1,11 @@
--profile 
+-profile : navbar
 update his info
 
--Movies
+-Movies: navbar
 browse movies
 
--display latest movies
+-display latest movies : in main dashboard
 
--logout
+-logout : navbar
 
 as in figma design

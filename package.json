@@ -8,6 +8,7 @@
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^5.4.0",
     "@mui/material": "^9.2.0",
+    "@radix-ui/react-dropdown-menu": "^2.1.24",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
