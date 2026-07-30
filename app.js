@@ -19,10 +19,10 @@ app.use(cors());
 app.use("/api/auth",authRoutes);
 
 // admin routes
-app.use("/admin",protect,adminOnly,adminRoutes);
+app.use("/api/admin",protect,adminOnly,adminRoutes);
 
 //user routes
-app.use("/user",protect,userOnly,userRoutes);
+app.use("/api/user",userRoutes);
 
 //movie routes
 app.use("/movies",movieRoutes);//internally i specify the ACL and route protection

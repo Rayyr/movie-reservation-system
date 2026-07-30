@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 
 //role middlewares
-//role-based access
+//role-based access RBA
 export const adminOnly = (req, res, next) => {
   if (req.user && req.user.role === "ADMIN") next();
   else return res.status(403).json({ message: "Admin only" });

@@ -2,7 +2,6 @@ import express from "express";
 import {
   register,
   login,
- 
   resetPassword,
   forgotPassword,
 } from "../controllers/authController.js";
@@ -31,25 +30,16 @@ router.post("/signup", register);
 
 //since logout at backend actually dont do anything just it returns a msg so its useless so it will be handled from frontend side
 /* router.post("/logout", protect, logout);
- */ 
-
+ */
 
 //-anyone
 router.post(
   "/reset-password/:token",
-  [
-    body("password")
-      .isLength({ min: 6 })
-      .withMessage("Password must be at least 6 characters"),
-  ],
+
   resetPassword,
 );
 
 //-anyone
-router.post(
-  "/forgot-password",
-  [body("email").isEmail().withMessage("Valid email is required")],
-  forgotPassword,
-);
+router.post("/forgot-password", forgotPassword);
 
 export default router;
