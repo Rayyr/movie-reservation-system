@@ -85,6 +85,7 @@ export const login = async (req, res) => {
         username: user.username,
         email: user.email,
         role: user.role,
+        lastEdit:user.lastEdit,
         token:generateToken(user)//the token will be generated once logged in 
       });
     }

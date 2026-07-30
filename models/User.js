@@ -41,6 +41,10 @@ const userSchema = new mongoose.Schema(
     passwordResetExpires:{
       type:Date,
       default:undefined,
+    },
+    lastEdit:{//for profile edit
+      type:Date,
+      default:null
     }
   },
   { timestamps: true },

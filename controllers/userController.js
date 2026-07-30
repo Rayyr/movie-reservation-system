@@ -23,10 +23,12 @@ export const editProfile = async (req, res) => {
 
     user.username = new_username;
 
-    
+
     if(new_password)
     user.password = await bcrypt.hash(new_password, 10);
 
+    user.lastEdit= Date.now();
+    
     await user.save();
 
     return res
