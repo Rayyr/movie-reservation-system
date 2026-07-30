@@ -6,6 +6,7 @@ import api from "../services/api";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  //user:id,username,email,password,token,role,lastEdit
   const [user, setUser] = useState(() => {
     const stored = localStorage.getItem("user");
     return stored ? JSON.parse(stored) : null;
@@ -16,10 +17,14 @@ export const AuthProvider = ({ children }) => {
     if (user?.token) {
       startTimer(user.token,logout);
     }
-    if(user)
-    localStorage.setItem("user",JSON.stringify(user));
+ 
   }, [user]);//so in every user update this will be triggered so refresh token 
 
+  //in edit profile case
+  const syncLocalStorage=(newUser)=>{
+    localStorage.setItem("user",JSON.stringify(newUser));
+
+  };
 
   ///////////detect manual localStorage : modify them later in case the user info has been update so the storage must be synchronized
    // ✅ Detect manual localStorage changes (VERY IMPORTANT) such as deletion
@@ -71,7 +76,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ login, logout, user ,setUser}}>
+    <AuthContext.Provider value={{ syncLocalStorage,login, logout, user ,setUser}}>
       {children}
     </AuthContext.Provider>
   );

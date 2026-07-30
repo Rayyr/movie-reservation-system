@@ -27,7 +27,7 @@ export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false);
   const [isBlocked, setIsBlocking] = useState(false);
 
-  const { user, setUser } = useContext(AuthContext);
+  const { user, setUser,syncLocalStorage } = useContext(AuthContext);
 
   //animation
   const itemVariants = {
@@ -107,11 +107,13 @@ export default function SignUp() {
         onClose: () => {
           setIsBlocking(false);
           const newUser = {
-            ...user,
-            username: data.username,
-            ...(data.password && { password: data.password }), // ✅ only if exists
-          };
+            ...res.data.user,//new updated user
+          token:user.token,
+/*             ...(data.password && { password: data.password }), // ✅ only if exists we will not put it in localstorage
+ */          };
           setUser(newUser);
+          syncLocalStorage(newUser);
+          reset({username:data.username,password:data.password});
         },
       });
     } catch (err) {
@@ -142,9 +144,10 @@ export default function SignUp() {
           },
         });
       }
+        reset();
     } finally {
       setIsLoading(false);
-      reset();
+    
       clearErrors();
     }
   };
@@ -214,7 +217,7 @@ export default function SignUp() {
                       variant="caption"
                       sx={{ color: "text.secondary" }}
                     >
-                      Last edited: {user.lastEdit.split("T")[0]}
+                      Last edited: {user.lastEdit?.split("T")[0]}{/* optional chain in case of null */}
                     </Typography>
                   </Box>
                 }
