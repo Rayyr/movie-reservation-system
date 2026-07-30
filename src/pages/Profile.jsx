@@ -69,7 +69,7 @@ export default function SignUp() {
   const {
     control,
     handleSubmit,
-    formState: { isDirty,errors, isValid },
+    formState: { isDirty, errors, isValid },
     reset,
     clearErrors,
   } = useForm({
@@ -86,7 +86,8 @@ export default function SignUp() {
     setIsBlocking(true);
 
     try {
-      const res = await api.post("/api/auth/signup", data);
+      //data=username,password , token will be sent automatically by api interceptor
+      const res = await api.patch(`/api/user/edit-profile`, data);
 
       toast.success(res.data.message, {
         style: {
@@ -97,7 +98,6 @@ export default function SignUp() {
         },
         onClose: () => {
           setIsBlocking(false);
-          navigate("/login");
         },
       });
     } catch (err) {
@@ -146,11 +146,11 @@ export default function SignUp() {
           left: "70px",
           zIndex: 10,
         }}
-          initial="hidden"
-          animate="visible"
+        initial="hidden"
+        animate="visible"
       >
         <Box
-          onClick={() => navigate(`/${user.role.toLowerCase()}-dashboard`)}//either user/admin dashboard
+          onClick={() => navigate(`/${user.role.toLowerCase()}-dashboard`)} //either user/admin dashboard
           sx={{
             display: "inline-flex",
             alignItems: "center",
@@ -259,7 +259,7 @@ export default function SignUp() {
                         <MdOutlineEdit />
                         Save changes
                       </span>
-                    )} 
+                    )}
                   </AuthButton>
                 </motion.div>
               </Box>
