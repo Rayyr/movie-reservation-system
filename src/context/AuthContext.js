@@ -16,6 +16,8 @@ export const AuthProvider = ({ children }) => {
     if (user?.token) {
       startTimer(user.token,logout);
     }
+    if(user)
+    localStorage.setItem("user",JSON.stringify(user));
   }, [user]);//so in every user update this will be triggered so refresh token 
 
 
@@ -69,7 +71,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ login, logout, user }}>
+    <AuthContext.Provider value={{ login, logout, user ,setUser}}>
       {children}
     </AuthContext.Provider>
   );

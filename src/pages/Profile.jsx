@@ -23,12 +23,11 @@ import { MdOutlineEdit } from "react-icons/md";
 import { AuthContext } from "../context/AuthContext";
 
 export default function SignUp() {
-  
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isBlocked, setIsBlocking] = useState(false);
 
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
 
   //animation
   const itemVariants = {
@@ -56,7 +55,7 @@ export default function SignUp() {
     password: yup
       .string()
       .notRequired()
-     // .min(6, "Password must be at least 6 charcters")
+      // .min(6, "Password must be at least 6 charcters")
       .test(
         "Password validation",
         "Password nust not contain username,min len=6 chars",
@@ -64,11 +63,11 @@ export default function SignUp() {
           let x = this.parent.username;
 
           //optional key
-             if (!value) return true;
+          if (!value) return true;
 
-          if (value.includes(x)) return false;//conatins username
+          if (value.includes(x)) return false; //conatins username
 
-          if(value.length<6) return false;//min len not 6
+          if (value.length < 6) return false; //min len not 6
 
           return true;
         },
@@ -107,6 +106,12 @@ export default function SignUp() {
         },
         onClose: () => {
           setIsBlocking(false);
+          const newUser = {
+            ...user,
+            username: data.username,
+            ...(data.password && { password: data.password }), // ✅ only if exists
+          };
+          setUser(newUser);
         },
       });
     } catch (err) {
@@ -198,23 +203,23 @@ export default function SignUp() {
         >
           <Card sx={{ borderRadius: 3, boxShadow: 4, p: { xs: 1, sm: 2 } }}>
             <motion.div variants={itemVariants}>
-          <CardHeader
-  title={
-    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-      <Typography sx={{ fontWeight: 700, fontSize: "1.25rem" }}>
-        Edit profile
-      </Typography>
+              <CardHeader
+                title={
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Typography sx={{ fontWeight: 700, fontSize: "1.25rem" }}>
+                      Edit profile
+                    </Typography>
 
-      <Typography
-        variant="caption"
-        sx={{ color: "text.secondary" }}
-      >
-        Last edited: {user.lastEdit.split("T")[0]}
-      </Typography>
-    </Box>
-  }
-  subheader="Make changes to your profile here. Click save when you're done"
-/>
+                    <Typography
+                      variant="caption"
+                      sx={{ color: "text.secondary" }}
+                    >
+                      Last edited: {user.lastEdit.split("T")[0]}
+                    </Typography>
+                  </Box>
+                }
+                subheader="Make changes to your profile here. Click save when you're done"
+              />
             </motion.div>
 
             <CardContent>
