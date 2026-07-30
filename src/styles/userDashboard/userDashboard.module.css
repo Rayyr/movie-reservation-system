@@ -80,7 +80,7 @@
   height: 35px;
   border-radius: 50%;
 
-  background: linear-gradient(135deg, #ff2e63, #b91372);
+  background: linear-gradient(135deg, var(--red), #b91372);
 
   display: flex;
   align-items: center;

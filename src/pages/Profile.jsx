@@ -21,14 +21,21 @@ import AuthButton from "../components/user-defined/AuthButton";
 import { Controller } from "react-hook-form";
 import { MdOutlineEdit } from "react-icons/md";
 import { AuthContext } from "../context/AuthContext";
+import { Eye, EyeOff } from "lucide-react";
+
+import { IconButton, InputAdornment } from "@mui/material";
 
 export default function SignUp() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isBlocked, setIsBlocking] = useState(false);
 
-  const { user, setUser,syncLocalStorage } = useContext(AuthContext);
+  const { user, setUser, syncLocalStorage } = useContext(AuthContext);
+  const [showPassword, setShowPassword] = useState(false);
 
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
   //animation
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
@@ -107,13 +114,14 @@ export default function SignUp() {
         onClose: () => {
           setIsBlocking(false);
           const newUser = {
-            ...res.data.user,//new updated user
-          token:user.token,
-/*             ...(data.password && { password: data.password }), // ✅ only if exists we will not put it in localstorage
- */          };
+            ...res.data.user, //new updated user
+            token: user.token,
+            /*             ...(data.password && { password: data.password }), // ✅ only if exists we will not put it in localstorage
+             */
+          };
           setUser(newUser);
           syncLocalStorage(newUser);
-          reset({username:data.username,password:data.password});
+          reset({ username: data.username, password: data.password });
         },
       });
     } catch (err) {
@@ -144,10 +152,10 @@ export default function SignUp() {
           },
         });
       }
-        reset();
+      reset();
     } finally {
       setIsLoading(false);
-    
+
       clearErrors();
     }
   };
@@ -217,7 +225,9 @@ export default function SignUp() {
                       variant="caption"
                       sx={{ color: "text.secondary" }}
                     >
-                      Last edited: {user.lastEdit?.split("T")[0]}{/* optional chain in case of null */}
+                      {user.lastEdit &&
+                        " Last edited:" + user.lastEdit?.split("T")[0]}
+                      {/* optional chain in case of null */}
                     </Typography>
                   </Box>
                 }
@@ -255,16 +265,46 @@ export default function SignUp() {
                     name="password"
                     control={control}
                     render={({ field }) => (
-                      <TextField
-                        {...field}
-                        type="password"
-                        label="Password(optional)"
-                        fullWidth
-                        margin="normal"
-                        error={!!errors.password}
-                        helperText={errors.password?.message}
-                        disabled={isBlocked || isLoading}
-                      />
+                      <>
+                        <TextField
+                          {...field}
+                          type={showPassword ? "text" : "password"}
+                          label="Password(optional)"
+                          fullWidth
+                          margin="normal"
+                          error={!!errors.password}
+                          helperText={errors.password?.message}
+                          disabled={isBlocked || isLoading}
+                          slotProps={{
+                            input: {
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <IconButton //child prop
+                                    aria-label={
+                                      showPassword
+                                        ? "Hide password"
+                                        : "Show password"
+                                    }
+                                    aria-pressed={showPassword}
+                                    edge="end"
+                                    disabled={isBlocked || isLoading}
+                                    onClick={togglePasswordVisibility}
+                                    onMouseDown={(event) =>
+                                      event.preventDefault()
+                                    }
+                                  >
+                                    {showPassword ? (
+                                      <EyeOff size={20} />
+                                    ) : (
+                                      <Eye size={20} />
+                                    )}
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                            },
+                          }}
+                        />
+                      </>
                     )}
                   />
                 </motion.div>
