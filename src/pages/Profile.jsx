@@ -265,7 +265,7 @@ export default function SignUp() {
                     name="password"
                     control={control}
                     render={({ field }) => (
-                      <>
+                     
                         <TextField
                           {...field}
                           type={showPassword ? "text" : "password"}
@@ -304,7 +304,7 @@ export default function SignUp() {
                             },
                           }}
                         />
-                      </>
+                     
                     )}
                   />
                 </motion.div>

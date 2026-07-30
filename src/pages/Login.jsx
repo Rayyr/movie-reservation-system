@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { logoName } from "../constants/systemLogo.js";
 import { AuthContext } from "../context/AuthContext.js";
-
+import { Eye, EyeOff } from "lucide-react";
 import {
   TextField,
   Checkbox,
@@ -25,9 +25,15 @@ import api from "../services/api";
 import { roles } from "../constants/systemRoles";
 import AuthButton from "../components/user-defined/AuthButton";
 import { startTimer } from "../utils/tokenExpiry.js";
+import { IconButton, InputAdornment } from "@mui/material";
 
 export default function Login() {
   const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   const loginFormSchema = yup.object({
     email: yup
@@ -64,8 +70,7 @@ export default function Login() {
   const makeSubmission = async (data) => {
     setIsLoading(true);
     setIsBlocking(true);
-   // console.log(data.email);
-    //console.log(data.password);
+
     try {
       //success login from backend side
       const res = await api.post("/api/auth/login", data); //data==req.body
@@ -74,7 +79,7 @@ export default function Login() {
       login(res.data);
 
       if (res.data.role === roles.user)
-        navigate("/user-dashboard", { replace: true });//important to put replace to avoid go back 
+        navigate("/user-dashboard", { replace: true }); //important to put replace to avoid go back
       if (res.data.role === roles.admin)
         navigate("/admin-dashboard", { replace: true });
     } catch (err) {
@@ -193,13 +198,39 @@ export default function Login() {
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       label="Password"
                       fullWidth
                       margin="normal"
                       error={!!errors.password}
                       helperText={errors.password?.message}
                       disabled={isBlocked || isLoading}
+                      slotProps={{
+                        input: {
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton //child prop
+                                aria-label={
+                                  showPassword
+                                    ? "Hide password"
+                                    : "Show password"
+                                }
+                                aria-pressed={showPassword}
+                                edge="end"
+                                disabled={isBlocked || isLoading}
+                                onClick={togglePasswordVisibility}
+                                onMouseDown={(event) => event.preventDefault()}
+                              >
+                                {showPassword ? (
+                                  <EyeOff size={20} />
+                                ) : (
+                                  <Eye size={20} />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        },
+                      }}
                     />
                   )}
                 />
