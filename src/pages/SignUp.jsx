@@ -21,10 +21,23 @@ import { roles } from "../constants/systemRoles";
 import { logoName } from "../constants/systemLogo";
 import AuthButton from "../components/user-defined/AuthButton";
 import { Controller } from "react-hook-form";
+import { Eye, EyeOff } from "lucide-react";
+import { IconButton, InputAdornment } from "@mui/material";
+
 export default function SignUp() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isBlocked, setIsBlocking] = useState(false);
+
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword((prev) => !prev);
+  };
 
   //animation
   const itemVariants = {
@@ -223,13 +236,39 @@ export default function SignUp() {
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       label="Password"
                       fullWidth
                       margin="normal"
                       error={!!errors.password}
                       helperText={errors.password?.message}
                       disabled={isBlocked || isLoading}
+                      slotProps={{
+                        input: {
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton //child prop
+                                aria-label={
+                                  showPassword
+                                    ? "Hide password"
+                                    : "Show password"
+                                }
+                                aria-pressed={showPassword}
+                                edge="end"
+                                disabled={isBlocked || isLoading}
+                                onClick={togglePasswordVisibility}
+                                onMouseDown={(event) => event.preventDefault()}
+                              >
+                                {showPassword ? (
+                                  <EyeOff size={20} />
+                                ) : (
+                                  <Eye size={20} />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        },
+                      }}
                     />
                   )}
                 />
@@ -242,13 +281,39 @@ export default function SignUp() {
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      type="password"
+                      type={showConfirmPassword ? "text" : "password"}
                       label="Confirm Password"
                       fullWidth
                       margin="normal"
                       error={!!errors.confirmPassword}
                       helperText={errors.confirmPassword?.message}
                       disabled={isBlocked || isLoading}
+                      slotProps={{
+                        input: {
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton //child prop
+                                aria-label={
+                                  showConfirmPassword
+                                    ? "Hide password"
+                                    : "Show password"
+                                }
+                                aria-pressed={showConfirmPassword}
+                                edge="end"
+                                disabled={isBlocked || isLoading}
+                                onClick={toggleConfirmPasswordVisibility}
+                                onMouseDown={(event) => event.preventDefault()}
+                              >
+                                {showConfirmPassword ? (
+                                  <EyeOff size={20} />
+                                ) : (
+                                  <Eye size={20} />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        },
+                      }}
                     />
                   )}
                 />
