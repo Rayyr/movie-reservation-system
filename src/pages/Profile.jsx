@@ -69,7 +69,7 @@ export default function SignUp() {
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { isDirty,errors, isValid },
     reset,
     clearErrors,
   } = useForm({
@@ -139,16 +139,18 @@ export default function SignUp() {
     <>
       {/* Back to Dashboard */}
       <motion.div
-        variants={itemVariants}
+        variants={containerVariants}
         style={{
           position: "absolute",
           top: "30px",
           left: "70px",
           zIndex: 10,
         }}
+          initial="hidden"
+          animate="visible"
       >
         <Box
-          onClick={() => navigate("/login")}
+          onClick={() => navigate(`/${user.role.toLowerCase()}-dashboard`)}//either user/admin dashboard
           sx={{
             display: "inline-flex",
             alignItems: "center",
@@ -242,7 +244,7 @@ export default function SignUp() {
                   <AuthButton
                     isBlocked={isBlocked}
                     isLoading={isLoading}
-                    isValid={isValid}
+                    isValid={isValid && isDirty}
                   >
                     {isLoading ? (
                       <CircularProgress size={20} color="inherit" />
@@ -257,7 +259,7 @@ export default function SignUp() {
                         <MdOutlineEdit />
                         Save changes
                       </span>
-                    )}
+                    )} 
                   </AuthButton>
                 </motion.div>
               </Box>
