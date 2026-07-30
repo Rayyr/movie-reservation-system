@@ -198,11 +198,23 @@ export default function SignUp() {
         >
           <Card sx={{ borderRadius: 3, boxShadow: 4, p: { xs: 1, sm: 2 } }}>
             <motion.div variants={itemVariants}>
-              <CardHeader
-                title={`Edit profile`}
-                subheader="Make changes to your profile here. Click save when you're done"
-                titleTypographyProps={{ fontWeight: 700 }}
-              />
+          <CardHeader
+  title={
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+      <Typography sx={{ fontWeight: 700, fontSize: "1.25rem" }}>
+        Edit profile
+      </Typography>
+
+      <Typography
+        variant="caption"
+        sx={{ color: "text.secondary" }}
+      >
+        Last edited: {user.lastEdit.split("T")[0]}
+      </Typography>
+    </Box>
+  }
+  subheader="Make changes to your profile here. Click save when you're done"
+/>
             </motion.div>
 
             <CardContent>
