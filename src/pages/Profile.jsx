@@ -55,13 +55,21 @@ export default function SignUp() {
 
     password: yup
       .string()
-      .min(6, "Password must be at least 6 charcters")
+      .notRequired()
+     // .min(6, "Password must be at least 6 charcters")
       .test(
-        "Is have username",
-        "Password nust not contain username",
+        "Password validation",
+        "Password nust not contain username,min len=6 chars",
         function (value) {
           let x = this.parent.username;
-          if (value.includes(x)) return false;
+
+          //optional key
+             if (!value) return true;
+
+          if (value.includes(x)) return false;//conatins username
+
+          if(value.length<6) return false;//min len not 6
+
           return true;
         },
       ),
@@ -78,7 +86,7 @@ export default function SignUp() {
     mode: "onChange",
     defaultValues: {
       username: `${user.username}`,
-      password: `${user.password}`,
+      password: "",
     },
   });
 
@@ -230,7 +238,7 @@ export default function SignUp() {
                       <TextField
                         {...field}
                         type="password"
-                        label="Password"
+                        label="Password(optional)"
                         fullWidth
                         margin="normal"
                         error={!!errors.password}

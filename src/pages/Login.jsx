@@ -64,6 +64,8 @@ export default function Login() {
   const makeSubmission = async (data) => {
     setIsLoading(true);
     setIsBlocking(true);
+   // console.log(data.email);
+    //console.log(data.password);
     try {
       //success login from backend side
       const res = await api.post("/api/auth/login", data); //data==req.body
