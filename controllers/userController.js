@@ -8,6 +8,7 @@ export const editProfile = async (req, res) => {
     const new_username = req.body.username;
     const new_password = req.body.password;
 
+
     const user = await User.findById(user_id);
 
     if (!user) {
@@ -21,12 +22,21 @@ export const editProfile = async (req, res) => {
     }
 
     user.username = new_username;
+
+    
+    if(new_password)
     user.password = await bcrypt.hash(new_password, 10);
+
     await user.save();
 
     return res
       .status(200)
-      .json({ message: "User information has been updated succefully" });
+      .json({ message: "User information has been updated succefully" ,   user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },});
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

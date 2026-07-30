@@ -80,6 +80,7 @@ export const login = async (req, res) => {
     if (isMatch) {
        //success login
       return res.status(200).json({
+        //for security reasons i dont return password
         _id: user._id,
         username: user.username,
         email: user.email,
