@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 
 export const editProfile = async (req, res) => {
   try {
-    const user_id = req.user_id; //comes from protect middleware
+    const user_id = req.user._id; //comes from protect middleware
 
     const new_username = req.body.username;
     const new_password = req.body.password;

@@ -32,10 +32,9 @@ router.post("/signup", register);
 /* router.post("/logout", protect, logout);
  */
 
-//-anyone
+//-anyone , here the token is acts as user_id not actually for protecttion since this route is accesable for anyone so we can replace it bu id actually
 router.post(
   "/reset-password/:token",
-
   resetPassword,
 );
 
