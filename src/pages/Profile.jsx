@@ -323,7 +323,7 @@ export default function SignUp() {
                           display: "flex",
                           alignItems: "center",
                           gap: "6px",
-                        }}
+                        }} 
                       >
                         <MdOutlineEdit />
                         Save changes
