@@ -23,6 +23,7 @@ import { MdOutlineEdit } from "react-icons/md";
 import { AuthContext } from "../context/AuthContext";
 
 export default function SignUp() {
+  
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isBlocked, setIsBlocking] = useState(false);
