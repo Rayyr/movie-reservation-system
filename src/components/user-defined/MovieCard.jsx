@@ -11,22 +11,38 @@ import StarIcon from "@mui/icons-material/Star";
 export default function MovieCard({ movie }) {
   return (
     <Card
-      sx={{
-        maxWidth: 280,
-        borderRadius: 4,
-        overflow: "hidden",
-        background: "linear-gradient(180deg, #0f172a, #020617)",
-        color: "#fff",
-        boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
-      }}
+     sx={{
+    width: 320,
+    maxWidth: "100%",
+    height: 300,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    borderRadius: 4,
+    overflow: "hidden",
+    background: "linear-gradient(180deg, #0f172a, #020617)",
+    color: "#fff",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+  }}
     >
       {/* Poster */}
-      <Box sx={{ position: "relative" }}>
+      <Box
+        sx={{
+          position: "relative",
+          flex: "0 0 135px",
+          overflow: "hidden",
+        }}
+      >
         <CardMedia
           component="img"
-          height="320"
           image={movie.poster_path}
           alt={movie.title}
+          sx={{
+            display: "block",
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
         />
 
         {/* Gradient overlay */}
@@ -41,13 +57,43 @@ export default function MovieCard({ movie }) {
       </Box>
 
       {/* Content */}
-      <CardContent sx={{ mt: -4 }}>
-        <Typography variant="h6" fontWeight="bold">
+      <CardContent
+        sx={{
+          flex: 1,
+          minHeight: 0,
+          p: "12px 16px",
+          "&:last-child": { pb: "12px" },
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          gap: 0.75,
+        }}
+      >
+        <Typography
+          variant="h6"
+          fontWeight="bold"
+          sx={{
+            display: "-webkit-box",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: 2,
+            overflow: "hidden",
+            fontSize: "1.05rem",
+            lineHeight: 1.25,
+          }}
+        >
           {movie.title}
         </Typography>
 
-        <Typography variant="body2" sx={{ color: "#94a3b8", mb: 2 }}>
-          {movie.releaseDate} • {movie.genre} • {movie.duration}
+        <Typography
+          variant="body2"
+          sx={{
+            color: "#94a3b8",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {new Date(movie.releaseDate).getFullYear()} • {movie.genre} • {movie.duration_min}m
         </Typography>
 
         {/* Bottom Row */}
@@ -66,6 +112,9 @@ export default function MovieCard({ movie }) {
               borderRadius: "999px",
               textTransform: "none",
               px: 2,
+              py: 0.25,
+              minHeight: 32,
+              fontSize: "0.8rem",
               "&:hover": { background: "#e11d48" },
             }}
           >
