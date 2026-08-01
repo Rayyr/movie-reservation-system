@@ -1,26 +1,41 @@
-import {
-  
-  Container,
-  Box,
-} from "@mui/material";
-import { useState, useEffect,useContext } from "react";
+import { Container, Box } from "@mui/material";
+import { useState, useEffect, useContext, useMemo } from "react";
 import api from "../services/api";
 import { toast } from "react-toastify";
 import Grid from "@mui/material/Grid";
 import MovieCard from "../components/user-defined/MovieCard";
 import { CircularProgress } from "@mui/material";
 import { AuthContext } from "../context/AuthContext";
+import { Pagination } from "@mui/material";
 
 export default function MovieList() {
- 
-    const {logout}=useContext(AuthContext);
+  const { logout } = useContext(AuthContext);
 
-    const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState([]);
+
+  const moviesPerPage = 8;
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(movies.length / moviesPerPage);
+
+  const displayedMovies = useMemo(() => {
+    const start = (currentPage - 1) * moviesPerPage;
+    return movies.slice(start, start + moviesPerPage);
+  }, [movies, currentPage]);
+
+  /*       useEffect(() => {
+    setCurrentPage(1); // go back to page 1 when filters change
+  }, [filters]); */
+
+  //reset to last page
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isBlocked, setIsBlocking] = useState(false);
 
-   
   useEffect(() => {
     const fetchMovies = async () => {
       setIsLoading(true);
@@ -61,7 +76,7 @@ export default function MovieList() {
         }
       } finally {
         setIsLoading(false);
-         setIsBlocking(false);
+        setIsBlocking(false);
       }
     };
     fetchMovies();
@@ -81,7 +96,7 @@ export default function MovieList() {
   ) : (
     <Container maxWidth="m" sx={{ mt: 4 }}>
       <Grid container spacing={5} justifyContent="center">
-        {movies.map((movie) => (
+        {displayedMovies.map((movie) => (
           <Grid
             item
             xs={12}
@@ -95,6 +110,25 @@ export default function MovieList() {
           </Grid>
         ))}
       </Grid>
+      {/* //center it and make it split from contaner */}
+      {totalPages > 1 && (
+        <Box sx={{ display: "flex", justifyContent: "center", my: 3 }}>
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={(_, newPage) => setCurrentPage(newPage)}
+            sx={{
+              "& .MuiPaginationItem-root.Mui-selected": {
+                backgroundColor: "var(--blue)",
+                color: "white",
+              },
+              "& .MuiPaginationItem-root.Mui-selected:hover": {
+                backgroundColor: "var(--blue)",
+              },
+            }}
+          />
+        </Box>
+      )}
     </Container>
   );
 }
