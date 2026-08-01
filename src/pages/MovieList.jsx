@@ -1,8 +1,5 @@
 import {
-  Card,
-  CardMedia,
-  CardContent,
-  Typography,
+  
   Container,
   Box,
 } from "@mui/material";
@@ -23,6 +20,7 @@ export default function MovieList() {
   const [isLoading, setIsLoading] = useState(false);
   const [isBlocked, setIsBlocking] = useState(false);
 
+   
   useEffect(() => {
     const fetchMovies = async () => {
       setIsLoading(true);
@@ -63,6 +61,7 @@ export default function MovieList() {
         }
       } finally {
         setIsLoading(false);
+         setIsBlocking(false);
       }
     };
     fetchMovies();
