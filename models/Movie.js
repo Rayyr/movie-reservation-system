@@ -12,7 +12,7 @@ const movieSchema = new mongoose.Schema(
       type:String,
       default:null,
     },
-     vote_avg:{
+    rating:{
       type:Number,
       default:0
      },
@@ -44,7 +44,7 @@ const movieSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    description: {
+    overview: {
       type: String,
       required: true,
     },
