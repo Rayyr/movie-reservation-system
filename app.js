@@ -25,6 +25,6 @@ app.use("/api/admin",protect,adminOnly,adminRoutes);
 app.use("/api/user",userRoutes);
 
 //movie routes
-app.use("/movies",movieRoutes);//internally i specify the ACL and route protection
+app.use("/api/movies",movieRoutes);//internally i specify the ACL and route protection
 
 export default app;

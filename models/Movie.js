@@ -5,10 +5,24 @@ const movieSchema = new mongoose.Schema(
     title: {
       type: String,
       required: true,
+      unique:true,
     },
+   
+     vote_avg:{
+      type:Number,
+      default:0
+     },
+      vote_count:{
+      type:Number,
+      default:0
+     },
+     language:{
+      type:String,
+      default:"english"
+     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "User",//admin(author)role 
       required: true,
     },
     duration_min: {

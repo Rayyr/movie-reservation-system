@@ -15,6 +15,8 @@ const router=express.Router();
 
 //by authnaticated admins only
 router.post("/create",protect,adminOnly,createMovie);
+/* router.post("/create", createMovie);
+ */
 
 //by puplic
 router.get("/getAll",getMovies);

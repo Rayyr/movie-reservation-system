@@ -28,7 +28,7 @@ export const editProfile = async (req, res) => {
     user.password = await bcrypt.hash(new_password, 10);
 
     user.lastEdit= Date.now();
-    
+
     await user.save();
 
     return res
@@ -38,6 +38,8 @@ export const editProfile = async (req, res) => {
         username: user.username,
         email: user.email,
         role: user.role,
+        lastEdit:user.lastEdit,
+        
       },});
   } catch (error) {
     return res.status(500).json({ message: error.message });
