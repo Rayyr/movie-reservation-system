@@ -8,6 +8,10 @@ const movieSchema = new mongoose.Schema(
       unique:true,
     },
    
+    poster_path:{
+      type:String,
+      default:null,
+    },
      vote_avg:{
       type:Number,
       default:0
