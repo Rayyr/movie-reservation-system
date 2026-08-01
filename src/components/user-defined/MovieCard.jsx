@@ -108,7 +108,7 @@ export default function MovieCard({ movie }) {
           <Button
             variant="contained"
             sx={{
-              background: "#f43f5e",
+              background: "var(--red)",
               borderRadius: "999px",
               textTransform: "none",
               px: 2,
@@ -123,7 +123,7 @@ export default function MovieCard({ movie }) {
 
           {/* Rating */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-            <StarIcon sx={{ color: "#f43f5e", fontSize: 18 }} />
+            <StarIcon sx={{ color: "var(--red)", fontSize: 18 }} />
             <Typography variant="body2">{movie.rating}</Typography>
           </Box>
         </Box>
