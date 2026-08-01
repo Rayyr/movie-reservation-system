@@ -77,6 +77,7 @@ function ResetPassword() {
           },
           onClose: () => {
             setIsBlocking(false);
+            navigate("/login",{ replace: true });
            },
         });
       //token's time has been expired error 

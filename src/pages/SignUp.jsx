@@ -72,7 +72,7 @@ export default function SignUp() {
       .string().transform((value) => value ? value.toUpperCase() : value)
       .notRequired()
       .oneOf([roles.admin, roles.user], "Invalid role"),
-      
+
     password: yup
       .string()
       .required("Password is required")
@@ -142,6 +142,7 @@ export default function SignUp() {
           },
           onClose: () => {
             setIsBlocking(false);
+            navigate("/login",{ replace: true });
           },
         });
       //user exists error | api error
@@ -155,6 +156,7 @@ export default function SignUp() {
           },
           onClose: () => {
             setIsBlocking(false);
+  navigate("/login",{ replace: true });
           },
         });
       }

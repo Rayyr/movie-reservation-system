@@ -30,7 +30,7 @@ export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false);
   const [isBlocked, setIsBlocking] = useState(false);
 
-  const { user, setUser, syncLocalStorage } = useContext(AuthContext);
+  const { user, setUser, syncLocalStorage ,logout} = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -136,6 +136,7 @@ export default function SignUp() {
           },
           onClose: () => {
             setIsBlocking(false);
+            logout();
           },
         });
       //user exists error | api error
@@ -149,6 +150,7 @@ export default function SignUp() {
           },
           onClose: () => {
             setIsBlocking(false);
+            logout();
           },
         });
       }

@@ -74,6 +74,7 @@ function ForgotPassword() {
           },
           onClose: () => {
             setIsBlocking(false);
+            //navigate("/login");
           },
         });
       //invalid email error | api error
@@ -87,6 +88,7 @@ function ForgotPassword() {
           },
           onClose: () => {
             setIsBlocking(false);
+            navigate("/login",{ replace: true });
           },
         });
       }

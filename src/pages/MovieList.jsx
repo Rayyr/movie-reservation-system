@@ -6,15 +6,19 @@ import {
   Container,
   Box,
 } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState, useEffect,useContext } from "react";
 import api from "../services/api";
 import { toast } from "react-toastify";
 import Grid from "@mui/material/Grid";
 import MovieCard from "../components/user-defined/MovieCard";
 import { CircularProgress } from "@mui/material";
+import { AuthContext } from "../context/AuthContext";
 
 export default function MovieList() {
-  const [movies, setMovies] = useState([]);
+ 
+    const {logout}=useContext(AuthContext);
+
+    const [movies, setMovies] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isBlocked, setIsBlocking] = useState(false);
@@ -39,9 +43,10 @@ export default function MovieList() {
             },
             onClose: () => {
               setIsBlocking(false);
+              logout();
             },
           });
-        // api error
+        // api error so sth not from user
         else if (error.response.status === 500) {
           toast.error(error.response.data.message, {
             style: {
@@ -52,6 +57,7 @@ export default function MovieList() {
             },
             onClose: () => {
               setIsBlocking(false);
+              logout();
             },
           });
         }

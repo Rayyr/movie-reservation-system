@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { motion } from "framer-motion";
 import ImageMasonry from "../components/built-in/ImageMasonry";
-import { useNavigate } from "react-router-dom";
+import { replace, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { logoName } from "../constants/systemLogo.js";
 import { AuthContext } from "../context/AuthContext.js";
@@ -94,6 +94,7 @@ export default function Login() {
           },
           onClose: () => {
             setIsBlocking(false);
+           
           },
         });
       //invalid login(invalid crediantial) error | api error
