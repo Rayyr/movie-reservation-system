@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState,useEffect } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import styles from "../styles/UserDashboard/userDashboard.module.css";
@@ -15,6 +15,9 @@ import {
 function UserDashboard() {
   const { user, logout } = useContext(AuthContext);
 
+  ////////////
+
+  //////////
   // Animations
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -59,7 +62,7 @@ function UserDashboard() {
             </motion.div>
 
             <motion.div variants={itemVariants}>
-              <Link to="/movies">Movies</Link>
+              <Link to="/movie-list">Movies</Link>
             </motion.div>
 
             <motion.div variants={itemVariants}>

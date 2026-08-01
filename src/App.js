@@ -14,6 +14,7 @@ import { AuthProvider } from "./context/AuthContext.js";
 import { roles } from "./constants/systemRoles.js";
 import { Toaster } from "react-hot-toast";
 import Profile from './pages/Profile.jsx';
+import MovieList from "./pages/MovieList.jsx";
 
 function App() {
   return (
@@ -80,6 +81,8 @@ function App() {
                 </ProtectedRoute>
               }
             ></Route>
+
+            <Route path="/movie-list" element={<ProtectedRoute allowedRoles={[roles.user,roles.admin]}><MovieList ></MovieList ></ProtectedRoute>}> </Route>
 
             <Route path="/profile" element={<ProtectedRoute allowedRoles={[roles.user,roles.admin]}><Profile></Profile></ProtectedRoute>}> </Route>
           </Routes>

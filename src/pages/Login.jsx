@@ -222,9 +222,9 @@ export default function Login() {
                                 onMouseDown={(event) => event.preventDefault()}
                               >
                                 {showPassword ? (
-                                  <EyeOff size={20} />
-                                ) : (
                                   <Eye size={20} />
+                                ) : (
+                                  <EyeOff size={20} />
                                 )}
                               </IconButton>
                             </InputAdornment>

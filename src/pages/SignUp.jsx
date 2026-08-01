@@ -68,6 +68,11 @@ export default function SignUp() {
       .required("Email is required")
       .matches(/@gmail\.com$/, "Please enter valid email : example@gmail.com"),
 
+    role: yup
+      .string().transform((value) => value ? value.toUpperCase() : value)
+      .notRequired()
+      .oneOf([roles.admin, roles.user], "Invalid role"),
+      
     password: yup
       .string()
       .required("Password is required")
@@ -102,6 +107,7 @@ export default function SignUp() {
       email: "",
       password: "",
       confirmPassword: "",
+      role:"USER",
     },
   });
 
@@ -260,9 +266,9 @@ export default function SignUp() {
                                 onMouseDown={(event) => event.preventDefault()}
                               >
                                 {showPassword ? (
-                                  <EyeOff size={20} />
-                                ) : (
                                   <Eye size={20} />
+                                ) : (
+                                  <EyeOff size={20} />
                                 )}
                               </IconButton>
                             </InputAdornment>
@@ -305,15 +311,34 @@ export default function SignUp() {
                                 onMouseDown={(event) => event.preventDefault()}
                               >
                                 {showConfirmPassword ? (
-                                  <EyeOff size={20} />
-                                ) : (
                                   <Eye size={20} />
+                                ) : (
+                                  <EyeOff size={20} />
                                 )}
                               </IconButton>
                             </InputAdornment>
                           ),
                         },
                       }}
+                    />
+                  )}
+                />
+              </motion.div>
+
+              <motion.div variants={itemVariants}>
+                <Controller
+                  name="role"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Role"
+                      fullWidth
+                      margin="normal"
+                      error={!!errors.role}
+                      helperText={errors.role?.message}
+                      disabled={isBlocked || isLoading}
+                       
                     />
                   )}
                 />
