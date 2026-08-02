@@ -61,7 +61,7 @@ export const createBooking = async (req, res) => {
       showTime: showTimeId,
       seats: seatsIds,
       totalPrice: totalPrice,
-      user: req.params.userId,
+      user: req.user._id,
     });
 
     return res.status(201).json(newBooking);

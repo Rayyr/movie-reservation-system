@@ -19,15 +19,17 @@ const showTimeSchema = new mongoose.Schema(
       required: true,
     },
 
-    endTime: {
+    endTime: {//calculated from move duration
       type: Date,
       required: true,
     },
     price: {/* (per seat) */
       type: Number,
       required: true,
-      min: [, "Price must be positive"],
+      min: [0, "Price must be positive"],
     },
+
+    index: { screen: 1, startTime: 1 } // منع تكرار نفس العرض
   },
   { timestamps: true },
 );

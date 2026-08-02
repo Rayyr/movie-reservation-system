@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose  from "mongoose";
 
 const bookingSchema = new mongoose.Schema(
   {
@@ -12,11 +12,11 @@ const bookingSchema = new mongoose.Schema(
       ref: "ShowTime",
       required: true,
     },
-    seats: {
+    seats:[ {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Seat",
       required: true,
-    },
+    }],
     totalPrice: {
       type: Number,
       required: true,
@@ -30,5 +30,5 @@ const bookingSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-const Booking = new mongoose.model("Booking", bookingSchema);
+const Booking =  mongoose.model("Booking", bookingSchema);
 export default Booking;

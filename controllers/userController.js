@@ -11,6 +11,7 @@ export const editProfile = async (req, res) => {
 
     const user = await User.findById(user_id);
 
+    //redundant actually since it is logged in 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }

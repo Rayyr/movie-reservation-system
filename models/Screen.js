@@ -6,8 +6,9 @@ const screenSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      unique:true,
     },
-    theater: {//store a reference(Id)
+    theater: {//store a reference(Id) FK
       type: mongoose.Schema.Types.ObjectId,
       ref: "Theater",
       required: true,

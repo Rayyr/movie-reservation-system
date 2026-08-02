@@ -8,7 +8,7 @@ const seatSchema = new mongoose.Schema(
       required: true,
     },
     row: {
-      row: String, //A,B
+      type: String, //A,B
       required: true,
       uppercase:true,
       match:[/^[A-Z]$/,"Row must be 1 letter"]
@@ -17,10 +17,7 @@ const seatSchema = new mongoose.Schema(
       type: Number, // 1,2,3...
       required: true,
     },
-    isBooked: {
-      type: Boolean,
-      default: false,
-    },
+   
   },
   { timestamps: true },
 );

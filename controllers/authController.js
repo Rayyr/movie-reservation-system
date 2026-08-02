@@ -134,7 +134,7 @@ export const forgotPassword = async (req, res) => {
       .update(token)
       .digest("hex");
 
-    //token expiration period
+    //token expiration period(link)
     user.passwordResetExpires = Date.now() + 15 * 60 * 1000; //valid for 15-mins
     await user.save();
 

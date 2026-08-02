@@ -7,6 +7,7 @@ const router=express.Router();
 
 
 //by only admin
-router.post("/create/:userId",protect,adminOnly,createBooking);
+router.post("/",protect,userOnly,createBooking);
 
 router.getAvailableSeats("/get/:showTimeId/seats",getAvailableSeats);
+ 
