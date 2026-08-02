@@ -29,7 +29,7 @@ const showTimeSchema = new mongoose.Schema(
       min: [0, "Price must be positive"],
     },
 
-    index: { screen: 1, startTime: 1 } // منع تكرار نفس العرض
+   // index: { screen: 1, startTime: 1 } // منع تكرار نفس العرض
   },
   { timestamps: true },
 );

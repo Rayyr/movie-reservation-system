@@ -6,8 +6,8 @@ import userRoutes from "./routes/userRoutes.js";
 import movieRoutes from "./routes/movieRoutes.js";
 import { protect } from "./middlewares/authMiddleWare.js";
 import { adminOnly, userOnly } from "./middlewares/roleMiddleWare.js";
-/* import bookingRoutes from "./routes/bookingRoutes.js";
- */
+ import bookingRoutes from "./routes/bookingRoutes.js";
+import showTimesRoutes from './routes/showTimesRoutes.js';
 
 const app=express();
 
@@ -29,7 +29,9 @@ app.use("/api/user",userRoutes);
 app.use("/api/movies",movieRoutes);//internally i specify the ACL and route protection
 
 
-/* app.use("/api/bookings", bookingRoutes);
- */export default app;
+app.use("/api/bookings", bookingRoutes);
+
+app.use("/api/showTimes",showTimesRoutes);
+ export default app;
 
  

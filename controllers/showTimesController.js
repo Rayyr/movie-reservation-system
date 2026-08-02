@@ -1,6 +1,6 @@
-import ShowTime from "../models/ShowTime";
-import Movie from "../models/Movie";
-
+import ShowTime from "../models/ShowTime.js";
+import Movie from "../models/Movie.js";
+/* 
 export const createShowTime = async (req, res) => {
   try {
     const { movie, screen, startTime, endTime, price } = req.body;
@@ -41,22 +41,36 @@ export const createShowTime = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
-};
+}; */
 
-//get all showtimes
-export const getAllShowTimes = async (req, res) => {
+//get all showtimes of movie
+export const getMovieShowTimes = async (req, res) => {
   try {
-    const showTimes = await ShowTime.find()
-      .populate("movie")
+
+    const movie_id=req.params.movieID;
+ 
+    console.log(movie_id);
+    const showtimes = await ShowTime.find({ movie: movie_id })
       .populate({
         path: "screen",
-        populate: { path: "theater" },
-      });
+        select: "name",
+        populate: {
+          path: "theater",
+          select: "name location",
+        },
+      })
+      .sort({ startTime: 1 });
+
+    res.status(200).json({
+      data: showtimes,
+    });
+
+
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
-
+/* 
 //get showtimes by movie name
 export const getShowTimesByMovieTilte = async (req, res) => {
   try {
@@ -86,3 +100,4 @@ export const getShowTimesByMovieTilte = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+ */

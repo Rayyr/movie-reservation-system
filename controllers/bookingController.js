@@ -1,10 +1,11 @@
-import Booking from "../models/Booking";
-import Seat from "../models/Seat";
-import ShowTime from "../models/ShowTime";
+import Booking from "../models/Booking.js";
+import Seat from "../models/Seat.js";
+import ShowTime from "../models/ShowTime.js";
+ 
 
 //Get Available Seats for a Showtime
 export const getAvailableSeats = async (req, res) => {
-  try {
+  /* try {
     const showTimdId = req.params.showTimeId;
 
     // 🎬 Get showtime → screen
@@ -15,12 +16,12 @@ export const getAvailableSeats = async (req, res) => {
     }
 
     //  💺 All seats of this screen
-    const seats = await Seat.find({ screen: showtime.screen });
+    const seats = await Seat.find({ screen: showTime.screen });
 
     // ❌ Already booked seats
 
     const bookings = await Booking.find({
-      showtime: showtimeId,
+      showtime: showTimeId,
       status: "BOOKED",
     });
 
@@ -34,11 +35,11 @@ export const getAvailableSeats = async (req, res) => {
     res.json(availableSeats);
   } catch (error) {
     return res.status(500).json({ message: error.message });
-  }
+  } */
 };
 
 export const createBooking = async (req, res) => {
-  try {
+ /*  try {
     const { showTimeId, seatIds } = req.body;
 
     // 🔍 Check if seats already booked
@@ -53,13 +54,13 @@ export const createBooking = async (req, res) => {
     }
 
     //get showtime price (per seat)
-    const showTimePrice = await ShowTime.findById(showTimeId).price;
-
+    const showTime  = await ShowTime.findById(showTimeId);
+const showTimePrice = showTime.price;
     const totalPrice = showTimePrice * seatIds.length;
 
     const newBooking = await Booking.create({
       showTime: showTimeId,
-      seats: seatsIds,
+      seats: seatIds,
       totalPrice: totalPrice,
       user: req.user._id,
     });
@@ -67,5 +68,5 @@ export const createBooking = async (req, res) => {
     return res.status(201).json(newBooking);
   } catch (error) {
     return res.status(500).json({ message: error.message });
-  }
+  } */
 };
