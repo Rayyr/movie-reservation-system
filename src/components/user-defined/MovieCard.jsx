@@ -158,7 +158,7 @@ export default function MovieCard({ movie, handleOpen }) {
           transform: "translateY(8px)",
           transition: "opacity 180ms ease, transform 180ms ease",
         pointerEvents: "auto",
-cursor: "pointer",
+cursor: "pointer", 
         }}
       >
         <Typography
