@@ -8,22 +8,28 @@ import {
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 
-export default function MovieCard({ movie }) {
+export default function MovieCard({ movie, handleOpen }) {
   return (
     <Card
-     sx={{
-    width: 320,
-    maxWidth: "100%",
-    height: 300,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    borderRadius: 4,
-    overflow: "hidden",
-    background: "linear-gradient(180deg, #0f172a, #020617)",
-    color: "#fff",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
-  }}
+      sx={{
+        width: 320,
+        maxWidth: "100%",
+        height: 300,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        position: "relative",
+        borderRadius: 4,
+        overflow: "hidden",
+        background: "linear-gradient(180deg, #0f172a, #020617)",
+        color: "#fff",
+        boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+        "&:hover .movie-overview": {
+          opacity: 1,
+          transform: "translateY(0)",
+        },
+      }}
+      onClick={handleOpen}
     >
       {/* Poster */}
       <Box
@@ -53,7 +59,7 @@ export default function MovieCard({ movie }) {
             background:
               "linear-gradient(to top, rgba(2,6,23,1), rgba(2,6,23,0))",
           }}
-        />
+        ></Box>
       </Box>
 
       {/* Content */}
@@ -93,7 +99,8 @@ export default function MovieCard({ movie }) {
             textOverflow: "ellipsis",
           }}
         >
-          {new Date(movie.releaseDate).getFullYear()} • {movie.genre} • {movie.duration_min}m
+          {new Date(movie.releaseDate).getFullYear()} • {movie.genre} •{" "}
+          {movie.duration_min}m
         </Typography>
 
         {/* Bottom Row */}
@@ -128,6 +135,46 @@ export default function MovieCard({ movie }) {
           </Box>
         </Box>
       </CardContent>
+
+      <Box
+        className="movie-overview"
+        sx={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 2,
+          p: 2.5,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+
+          // 🌟 GLASS EFFECT
+          background: "rgba(255, 255, 255, 0.08)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+ 
+          opacity: 0,
+          transform: "translateY(8px)",
+          transition: "opacity 180ms ease, transform 180ms ease",
+        pointerEvents: "auto",
+cursor: "pointer",
+        }}
+      >
+        <Typography
+          variant="subtitle1"
+          sx={{
+            color: "white",
+            display: "-webkit-box",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: 8,
+            overflow: "hidden",
+             fontWeight: 600,
+          }}
+        >
+          Overview
+        </Typography>
+      </Box>
     </Card>
   );
 }

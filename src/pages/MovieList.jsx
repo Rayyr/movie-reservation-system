@@ -1,4 +1,11 @@
-import { Container, Box } from "@mui/material";
+import {
+  Container,
+  Box,
+  Typography,
+  Modal,
+  Backdrop,
+  Fade,
+} from "@mui/material";
 import { useState, useEffect, useContext, useMemo } from "react";
 import api from "../services/api";
 import { toast } from "react-toastify";
@@ -7,6 +14,8 @@ import MovieCard from "../components/user-defined/MovieCard";
 import { CircularProgress } from "@mui/material";
 import { AuthContext } from "../context/AuthContext";
 import { Pagination } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import IconButton from "@mui/material/IconButton";
 
 export default function MovieList() {
   const { logout } = useContext(AuthContext);
@@ -21,6 +30,19 @@ export default function MovieList() {
     const start = (currentPage - 1) * moviesPerPage;
     return movies.slice(start, start + moviesPerPage);
   }, [movies, currentPage]);
+
+  //for overview state
+  const [open, setOpen] = useState(false);
+  const handleOpen = (movie) => {
+    setSelectedMovie(movie);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedMovie(null);
+  };
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   /*       useEffect(() => {
     setCurrentPage(1); // go back to page 1 when filters change
@@ -113,12 +135,15 @@ export default function MovieList() {
               sx={{ display: "flex", justifyContent: "center" }}
             >
               {/* //movie card */}
-              <MovieCard movie={movie}></MovieCard>
+              <MovieCard
+                movie={movie}
+                handleOpen={() => handleOpen(movie)}
+              ></MovieCard>
             </Grid>
           ))}
         </Grid>
       </Container>
-      {/* //center it and make it split from contaner */}
+
       {totalPages > 1 && (
         <Box sx={{ display: "flex", justifyContent: "center", my: 3, py: 2 }}>
           <Pagination
@@ -137,6 +162,69 @@ export default function MovieList() {
           />
         </Box>
       )}
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{ backdrop: { timeout: 300 } }}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: { xs: "90%", sm: 500 },
+            bgcolor: "#020617",
+            color: "#fff",
+
+            borderRadius: 3,
+            boxShadow: 24,
+            p: 3,
+          }}
+        >
+          <IconButton
+            aria-label="Close movie overview"
+            onClick={handleClose}
+            sx={{
+              position: "absolute",
+              top: 10,
+              right: 10,
+              zIndex: 1,
+              color: "#fff",
+              backgroundColor: "rgba(2, 6, 23, 0.55)",
+              "&:hover": { backgroundColor: "rgba(2, 6, 23, 0.8)" },
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+
+          {selectedMovie && (
+            <>
+              {/* Poster */}
+              <Box
+                component="img"
+                src={selectedMovie.poster_path}
+                alt={selectedMovie.title}
+                sx={{
+                  width: "100%",
+                  height: 250,
+                  objectFit: "cover",
+                  borderRadius: 2,
+                  mb: 2,
+                }}
+              />
+
+              {/* Overview */}
+              <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
+                {selectedMovie.overview}
+              </Typography>
+            </>
+          )}
+        </Box>
+      </Modal>
     </Box>
   );
 }
