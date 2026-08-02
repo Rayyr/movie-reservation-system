@@ -94,25 +94,33 @@ export default function MovieList() {
       <CircularProgress sx={{ color: "var(--blue)" }} size={40} />
     </Box>
   ) : (
-    <Container maxWidth="m" sx={{ mt: 4 }}>
-      <Grid container spacing={5} justifyContent="center">
-        {displayedMovies.map((movie) => (
-          <Grid
-            item
-            xs={12}
-            sm={6}
-            md={4}
-            key={movie._id}
-            sx={{ display: "flex", justifyContent: "center" }}
-          >
-            {/* //movie card */}
-            <MovieCard movie={movie}></MovieCard>
-          </Grid>
-        ))}
-      </Grid>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <Container maxWidth="m" sx={{ mt: 4, flexGrow: 1 }}>
+        <Grid container spacing={5} justifyContent="center">
+          {displayedMovies.map((movie) => (
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={4}
+              key={movie._id}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              {/* //movie card */}
+              <MovieCard movie={movie}></MovieCard>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
       {/* //center it and make it split from contaner */}
       {totalPages > 1 && (
-        <Box sx={{ display: "flex", justifyContent: "center", my: 3 }}>
+        <Box sx={{ display: "flex", justifyContent: "center", my: 3, py: 2 }}>
           <Pagination
             count={totalPages}
             page={currentPage}
@@ -129,6 +137,6 @@ export default function MovieList() {
           />
         </Box>
       )}
-    </Container>
+    </Box>
   );
 }
