@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 
-export default function MovieCard({ movie, handleOpen }) {
+export default function MovieCard({ movie, handleOpen ,handleBuyTicket}) {
   return (
     <Card
       sx={{
@@ -124,6 +124,8 @@ export default function MovieCard({ movie, handleOpen }) {
               fontSize: "0.8rem",
               "&:hover": { background: "#e11d48" },
             }}
+
+            onClick={(e)=>{e.stopPropagation(); handleBuyTicket(movie);}}
           >
             Buy Ticket
           </Button>
@@ -140,7 +142,11 @@ export default function MovieCard({ movie, handleOpen }) {
         className="movie-overview"
         sx={{
           position: "absolute",
-          inset: 0,
+          top: 0,
+          right: 0,
+          bottom: "auto",
+          left: 0,
+          height: 135,
           zIndex: 2,
           p: 2.5,
           display: "flex",
@@ -157,22 +163,22 @@ export default function MovieCard({ movie, handleOpen }) {
           opacity: 0,
           transform: "translateY(8px)",
           transition: "opacity 180ms ease, transform 180ms ease",
-        pointerEvents: "auto",
+        pointerEvents: "none",
 cursor: "pointer", 
         }}
       >
         <Typography
-          variant="subtitle1"
+          variant="body2"
           sx={{
             color: "white",
             display: "-webkit-box",
             WebkitBoxOrient: "vertical",
-            WebkitLineClamp: 8,
+            WebkitLineClamp: 5,
             overflow: "hidden",
-             fontWeight: 600,
+            fontWeight: 500,
           }}
         >
-          Overview
+        Overview
         </Typography>
       </Box>
     </Card>

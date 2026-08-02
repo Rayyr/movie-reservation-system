@@ -104,6 +104,10 @@ export default function MovieList() {
     fetchMovies();
   }, []);
 
+  const handleBuyTicket=()=>{
+
+  };
+
   return isLoading || isBlocked ? (
     <Box
       sx={{
@@ -138,6 +142,7 @@ export default function MovieList() {
               <MovieCard
                 movie={movie}
                 handleOpen={() => handleOpen(movie)}
+                handleBuyTicket={handleBuyTicket}
               ></MovieCard>
             </Grid>
           ))}
@@ -219,7 +224,7 @@ export default function MovieList() {
 
               {/* Overview */}
               <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
-                {selectedMovie.overview}
+                {selectedMovie.overview?selectedMovie.overview:"Currentlly there is no overview for this movie"}
               </Typography>
             </>
           )}
