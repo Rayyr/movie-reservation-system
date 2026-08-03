@@ -8,7 +8,6 @@ import ShowTimeCard from "../components/user-defined/ShowTimeCard";
 import notFoundMovieBg from "../assests/Movie/notFoundMovieBg.avif";
 import { motion } from "framer-motion";
 
-
 function ShowTimes() {
   //exatrct movie from url path
   const { movieID } = useParams();
@@ -27,7 +26,6 @@ function ShowTimes() {
       try {
         const res = await api.get(`/api/movies/getOne/${movieID}`);
 
-        
         setMovie(res.data);
       } catch (err) {
         // api network error connection
@@ -114,8 +112,7 @@ function ShowTimes() {
     fetchShowTimes();
   }, [movieID]);
 
-
-   // Animations
+  // Animations
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -124,32 +121,31 @@ function ShowTimes() {
     },
   };
 
-const MotionBox = motion(Box);
+  const MotionBox = motion(Box);
 
- 
   return (
-<MotionBox
-  variants={containerVariants}
-  initial="hidden"
-  animate="visible"
-  sx={{
-    minHeight: "100vh",
-    backgroundImage: movie?.backdrop_path
-      ? `url(${movie.backdrop_path})`
-      : `url(${notFoundMovieBg})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    position: "relative",
-    p: 3,
-  }}
->
-     <h1>{movie?.title} showtimes</h1>
+    <MotionBox
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      sx={{
+        minHeight: "100vh",
+        backgroundImage: movie?.backdrop_path
+          ? `url(${process.env.REACT_APP_BASE_MOVIES_IMGS_URL}${movie.backdrop_path})`
+          : `url(${notFoundMovieBg})`,
+
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        position: "relative",
+        p: 3,
+      }}
+    >
+      <h1>{movie?.title} showtimes</h1>
       {showTimes.map((st) => (
-    <ShowTimeCard key={st._id} st={st} movie={movie} />
+        <ShowTimeCard key={st._id} st={st} movie={movie} />
       ))}
-   </MotionBox>
-    
+    </MotionBox>
   );
 }
 

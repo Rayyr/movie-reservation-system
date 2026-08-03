@@ -242,11 +242,8 @@ export default function MovieList() {
               {/* Poster */}
               <Box
                 component="img"
-                src={
-                  selectedMovie.poster_path
-                    ? selectedMovie.poster_path
-                    : movieAlt
-                }
+                src={selectedMovie.poster_path ? `${process.env.REACT_APP_BASE_MOVIES_IMGS_URL}${selectedMovie.poster_path}` : movieAlt}
+                
                 alt={selectedMovie.title}
                 sx={{
                   width: "100%",

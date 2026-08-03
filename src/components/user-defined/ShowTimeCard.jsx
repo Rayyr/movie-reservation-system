@@ -29,12 +29,14 @@ const ShowTimeCard = ({ st, movie }) => {
         {/* 🎬 Poster */}
         <Box
           component="img"
-          src={movie.poster_path ? movie.poster_path : movieAlt}
+         src={movie.poster_path ? `${process.env.REACT_APP_BASE_MOVIES_IMGS_URL}${movie.poster_path}` : movieAlt}
+          
           alt="poster"
           sx={{
-            width: 120,
-            height: 160,
+           width: "100%",      // Spans full container width
+            maxWidth: 300,
             objectFit: "cover",
+            
           }}
         />
 
@@ -70,8 +72,9 @@ const ShowTimeCard = ({ st, movie }) => {
               mt: 2,
               background: "var(--red)",
               "&:hover": {
-                background: "#ff4444",
+                background: "#e11d48",
               },
+              textTransform: "none",
             }}
             onClick={() => console.log("Selected:", st)}
           >

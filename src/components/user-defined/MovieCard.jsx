@@ -10,7 +10,8 @@ import StarIcon from "@mui/icons-material/Star";
 import movieAlt from "../../assests/Movie/movieAlt.png";
 
 export default function MovieCard({ movie, handleOpen, handleBuyTicket }) {
-  return (
+ 
+    return (
     <Card
       sx={{
         width: 320,
@@ -40,7 +41,7 @@ export default function MovieCard({ movie, handleOpen, handleBuyTicket }) {
       >
         <CardMedia
           component="img"
-          src={movie.poster_path ? movie.poster_path : movieAlt}
+          src={movie.poster_path ? `${process.env.REACT_APP_BASE_MOVIES_IMGS_URL}${movie.poster_path}` : movieAlt}
           alt={movie.title}
           sx={{
             display: "block",
