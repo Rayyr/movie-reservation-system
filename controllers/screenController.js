@@ -1,13 +1,14 @@
 import Screen from "../models/Screen.js";
-import Seat from "../models/Seat";
+import Seat from "../models/Seat.js";
 
+//make it atomic 
 export const createScreen = async (req, res) => {
   try {
     const { name, theater, rows, seatsPerRow } = req.body;
 
     let totalSeats = Number(rows) * Number(seatsPerRow);
 
-    const screen = await Screen.create({
+    const newScreen = await Screen.create({
       name,
       theater,
       totalSeats,
@@ -15,20 +16,21 @@ export const createScreen = async (req, res) => {
 
     //Create seats automatically
     const seats = [];
-    rows.forEach((row) => {
-      for (let i = 1; i <= seatsPerRow; i++) {
-        seats.push({
-          screen: screen._id,
-          row,
-          number: i,
+    for (let row = 1; row <= Number(rows); row++) {
+      for (let number = 1; number <= Number(seatsPerRow); number++) {
+        Seat.create({
+          screen: newScreen._id,
+          row:String.fromCodePoint(65+(row-1)) ,
+          number
         });
       }
-    });
+    }
 
-    await Seat.insertMany(seats);
+
+    
 
     res.status(201).json({
-      screen,
+      newScreen,
       message: "Screen and seats created",
     });
   } catch (error) {

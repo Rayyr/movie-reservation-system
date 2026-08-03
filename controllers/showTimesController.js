@@ -62,7 +62,7 @@ export const getMovieShowTimes = async (req, res) => {
       .sort({ startTime: 1 });
 
     res.status(200).json({
-      data: showtimes,
+       showtimes,
     });
 
 

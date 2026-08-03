@@ -9,6 +9,7 @@ import { adminOnly, userOnly } from "./middlewares/roleMiddleWare.js";
  import bookingRoutes from "./routes/bookingRoutes.js";
 import showTimesRoutes from './routes/showTimesRoutes.js';
 import theaterRoutes from './routes/theaterRoutes.js';
+import screenRoutes from './routes/screenRoutes.js';
 
 const app=express();
 
@@ -32,9 +33,13 @@ app.use("/api/movies",movieRoutes);//internally i specify the ACL and route prot
 
 app.use("/api/bookings", bookingRoutes);
 
+
+//dummmy jsut to insert data
 app.use("/api/showTimes",showTimesRoutes);
 
 app.use("/api/theaters",theaterRoutes);
+
+app.use("/api/screens",screenRoutes);
  export default app;
 
  

@@ -11,7 +11,10 @@ import express from 'express';
 const router=express.Router();
 
 //create screen by admin only
-router.post('/create',protect,adminOnly,createScreen);
+//router.post('/create',protect,adminOnly,createScreen);
+
+//just to add dummy data
+router.post('/create',createScreen);
 
 //get screen' seats  
 router.get("/:screenId/seats/getSeats",protect,getScreenSeats);
