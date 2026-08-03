@@ -16,6 +16,9 @@ import { AuthContext } from "../context/AuthContext";
 import { Pagination } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
+import { Navigate, useNavigate } from "react-router-dom";
+import movieAlt from "../assests/Movie/movieAlt.png";
+
 
 export default function MovieList() {
   const { logout } = useContext(AuthContext);
@@ -104,8 +107,14 @@ export default function MovieList() {
     fetchMovies();
   }, []);
 
-  const handleBuyTicket=()=>{
+ const navigate=useNavigate();
 
+  const handleBuyTicket=(movie)=>{
+
+    
+  //console.log(movie._id);
+   //disaply showTimes for this movie
+    navigate(`/show-times/${movie._id}`);
   };
 
   return isLoading || isBlocked ? (
@@ -211,7 +220,8 @@ export default function MovieList() {
               {/* Poster */}
               <Box
                 component="img"
-                src={selectedMovie.poster_path}
+                         src={selectedMovie.poster_path ? selectedMovie.poster_path : movieAlt}
+               
                 alt={selectedMovie.title}
                 sx={{
                   width: "100%",

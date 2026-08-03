@@ -7,9 +7,12 @@ import {
   Button,
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
+import movieAlt from "../../assests/Movie/movieAlt.png";
+ 
 
 export default function MovieCard({ movie, handleOpen ,handleBuyTicket}) {
-  return (
+  
+    return (
     <Card
       sx={{
         width: 320,
@@ -29,7 +32,7 @@ export default function MovieCard({ movie, handleOpen ,handleBuyTicket}) {
           transform: "translateY(0)",
         },
       }}
-      onClick={handleOpen}
+     
     >
       {/* Poster */}
       <Box
@@ -41,14 +44,17 @@ export default function MovieCard({ movie, handleOpen ,handleBuyTicket}) {
       >
         <CardMedia
           component="img"
-          image={movie.poster_path}
+          src={movie.poster_path ? movie.poster_path : movieAlt}
           alt={movie.title}
           sx={{
             display: "block",
             width: "100%",
             height: "100%",
-            objectFit: "cover",
+            objectFit: "contain",
+            objectPosition: "top",
+            backgroundColor: "#000",
           }}
+          
         />
 
         {/* Gradient overlay */}
@@ -163,9 +169,10 @@ export default function MovieCard({ movie, handleOpen ,handleBuyTicket}) {
           opacity: 0,
           transform: "translateY(8px)",
           transition: "opacity 180ms ease, transform 180ms ease",
-        pointerEvents: "none",
+         
 cursor: "pointer", 
         }}
+         onClick={handleOpen}
       >
         <Typography
           variant="body2"
@@ -181,6 +188,9 @@ cursor: "pointer",
         Overview
         </Typography>
       </Box>
+
+      
+
     </Card>
   );
 }
