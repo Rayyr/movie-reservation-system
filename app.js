@@ -10,6 +10,8 @@ import { adminOnly, userOnly } from "./middlewares/roleMiddleWare.js";
 import showTimesRoutes from './routes/showTimesRoutes.js';
 import theaterRoutes from './routes/theaterRoutes.js';
 import screenRoutes from './routes/screenRoutes.js';
+import seatRoutes from './routes/seatRoutes.js';
+
 
 const app=express();
 
@@ -40,6 +42,8 @@ app.use("/api/showTimes",showTimesRoutes);
 app.use("/api/theaters",theaterRoutes);
 
 app.use("/api/screens",screenRoutes);
+
+app.use("/api/seats",seatRoutes);
  export default app;
 
  
