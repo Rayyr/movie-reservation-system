@@ -8,11 +8,9 @@ import {
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import movieAlt from "../../assests/Movie/movieAlt.png";
- 
 
-export default function MovieCard({ movie, handleOpen ,handleBuyTicket}) {
-  
-    return (
+export default function MovieCard({ movie, handleOpen, handleBuyTicket }) {
+  return (
     <Card
       sx={{
         width: 320,
@@ -28,23 +26,18 @@ export default function MovieCard({ movie, handleOpen ,handleBuyTicket}) {
         color: "#fff",
         boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
         "&:hover .movie-overview": { opacity: 1, transform: "translateY(0)" },
- 
       }}
-     
     >
-  
-       
       {/* Poster */}
       <Box
         sx={{
           position: "relative",
           flex: "0 0 135px",
           overflow: "hidden",
-     
-      
+          width: "100%",
+          height: "100%",
         }}
       >
-    
         <CardMedia
           component="img"
           src={movie.poster_path ? movie.poster_path : movieAlt}
@@ -53,12 +46,11 @@ export default function MovieCard({ movie, handleOpen ,handleBuyTicket}) {
             display: "block",
             width: "100%",
             height: "100%",
-            objectFit: "contain",
+
             objectPosition: "top",
-            backgroundColor: "#000",
-            
+
+            objectFit: "cover",
           }}
-          
         />
 
         {/* Gradient overlay */}
@@ -134,8 +126,10 @@ export default function MovieCard({ movie, handleOpen ,handleBuyTicket}) {
               fontSize: "0.8rem",
               "&:hover": { background: "#e11d48" },
             }}
-
-            onClick={(e)=>{e.stopPropagation(); handleBuyTicket(movie);}}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleBuyTicket(movie);
+            }}
           >
             Buy Ticket
           </Button>
@@ -157,7 +151,7 @@ export default function MovieCard({ movie, handleOpen ,handleBuyTicket}) {
           bottom: "auto",
           left: 0,
           height: 135,
-          inset:0,
+          inset: 0,
           zIndex: 2,
           p: 2.5,
           display: "flex",
@@ -170,14 +164,14 @@ export default function MovieCard({ movie, handleOpen ,handleBuyTicket}) {
           background: "rgba(255, 255, 255, 0.08)",
           backdropFilter: "blur(12px)",
           WebkitBackdropFilter: "blur(12px)",
- 
+
           opacity: 0,
           transform: "translateY(8px)",
           transition: "opacity 180ms ease, transform 180ms ease",
-         
-cursor: "pointer", 
+
+          cursor: "pointer",
         }}
-         onClick={handleOpen}
+        onClick={handleOpen}
       >
         <Typography
           variant="body2"
@@ -190,12 +184,9 @@ cursor: "pointer",
             fontWeight: 500,
           }}
         >
-        Overview
+          Overview
         </Typography>
       </Box>
-
-      
-
     </Card>
   );
 }
