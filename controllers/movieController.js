@@ -27,6 +27,8 @@ export const getMovies = async (req, res) => {
   }
 };
 
+
+
 //get singke movie by id
 export const getMovieById = async (req, res) => {
   try {
@@ -35,11 +37,14 @@ export const getMovieById = async (req, res) => {
 
     if (!movie) {
       return res.status(404).json({ message: "Movie not found" });
-    } else return res.json(movie);
+    } else return res.status(200).json(movie);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
+
+
+
 
 //update movie by id
 export const updateMovieById = async (req, res) => {

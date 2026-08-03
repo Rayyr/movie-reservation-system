@@ -8,7 +8,11 @@ const movieSchema = new mongoose.Schema(
       unique:true,
     },
    
-    poster_path:{
+    poster_path:{//for movie cards
+      type:String,
+      default:null,
+    },
+    backdrop_path:{//for bg 
       type:String,
       default:null,
     },
