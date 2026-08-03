@@ -1,16 +1,23 @@
 import ShowTime from "../models/ShowTime.js";
 import Movie from "../models/Movie.js";
-/* 
+
 export const createShowTime = async (req, res) => {
   try {
-    const { movie, screen, startTime, endTime, price } = req.body;
+    //movie,scree, : IDs (FKs)
+    const { movie, screen, startTime, price } = req.body;
 
-    //validate time
+    /*    //validate time
     if (new Date(startTime) >= new Date(endTime)) {
       return res
         .status(400)
         .json({ message: "End time must be after start time" });
-    }
+    } */
+
+    const movieX = await Movie.findById(movie);
+
+    const start = new Date(startTime);
+
+    const endTime = new Date(start.getTime() + movieX.duration_min * 60000);
 
     //check if there is other movie at same screen or at same time
     const existing = await ShowTime.findOne({
@@ -41,14 +48,13 @@ export const createShowTime = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
-}; */
+};
 
 //get all showtimes of movie
 export const getMovieShowTimes = async (req, res) => {
   try {
+    const movie_id = req.params.movieID;
 
-    const movie_id=req.params.movieID;
- 
     console.log(movie_id);
     const showtimes = await ShowTime.find({ movie: movie_id })
       .populate({
@@ -62,10 +68,8 @@ export const getMovieShowTimes = async (req, res) => {
       .sort({ startTime: 1 });
 
     res.status(200).json({
-       showtimes,
+      showtimes,
     });
-
-
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
