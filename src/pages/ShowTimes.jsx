@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 import { useParams } from "react-router-dom";
 import ShowTimeCard from "../components/user-defined/ShowTimeCard";
 import notFoundMovieBg from "../assests/Movie/notFoundMovieBg.avif";
+import { motion } from "framer-motion";
 
 
 function ShowTimes() {
@@ -114,29 +115,41 @@ function ShowTimes() {
   }, [movieID]);
 
 
+   // Animations
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 },
+    },
+  };
 
+const MotionBox = motion(Box);
+
+ 
   return (
-    <Box   sx={{
+<MotionBox
+  variants={containerVariants}
+  initial="hidden"
+  animate="visible"
+  sx={{
     minHeight: "100vh",
-
-    // 🎬 dynamic background
     backgroundImage: movie?.backdrop_path
       ? `url(${movie.backdrop_path})`
-      :  `url(${notFoundMovieBg})`,
- 
-    backgroundSize:"cover",
+      : `url(${notFoundMovieBg})`,
+    backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-
-    // ✨ overlay عشان القراءة
     position: "relative",
- 
-  }}>
-    
+    p: 3,
+  }}
+>
+     <h1>{movie?.title} showtimes</h1>
       {showTimes.map((st) => (
     <ShowTimeCard key={st._id} st={st} movie={movie} />
       ))}
-    </Box>
+   </MotionBox>
+    
   );
 }
 

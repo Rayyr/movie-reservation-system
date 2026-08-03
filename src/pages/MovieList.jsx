@@ -18,7 +18,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import { Navigate, useNavigate } from "react-router-dom";
 import movieAlt from "../assests/Movie/movieAlt.png";
-
+import { motion } from "framer-motion";
 
 export default function MovieList() {
   const { logout } = useContext(AuthContext);
@@ -46,6 +46,20 @@ export default function MovieList() {
     setSelectedMovie(null);
   };
   const [selectedMovie, setSelectedMovie] = useState(null);
+
+  // Animations
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 },
+  };
 
   /*       useEffect(() => {
     setCurrentPage(1); // go back to page 1 when filters change
@@ -107,13 +121,11 @@ export default function MovieList() {
     fetchMovies();
   }, []);
 
- const navigate=useNavigate();
+  const navigate = useNavigate();
 
-  const handleBuyTicket=(movie)=>{
-
-    
-  //console.log(movie._id);
-   //disaply showTimes for this movie
+  const handleBuyTicket = (movie) => {
+    //console.log(movie._id);
+    //disaply showTimes for this movie
     navigate(`/show-times/${movie._id}`);
   };
 
@@ -137,7 +149,15 @@ export default function MovieList() {
       }}
     >
       <Container maxWidth="m" sx={{ mt: 4, flexGrow: 1 }}>
-        <Grid container spacing={5} justifyContent="center">
+        <Grid
+          container
+          spacing={5}
+          justifyContent="center"
+          component={motion.div}
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           {displayedMovies.map((movie) => (
             <Grid
               item
@@ -146,6 +166,8 @@ export default function MovieList() {
               md={4}
               key={movie._id}
               sx={{ display: "flex", justifyContent: "center" }}
+              component={motion.div}
+              variants={itemVariants}
             >
               {/* //movie card */}
               <MovieCard
@@ -220,8 +242,11 @@ export default function MovieList() {
               {/* Poster */}
               <Box
                 component="img"
-                         src={selectedMovie.poster_path ? selectedMovie.poster_path : movieAlt}
-               
+                src={
+                  selectedMovie.poster_path
+                    ? selectedMovie.poster_path
+                    : movieAlt
+                }
                 alt={selectedMovie.title}
                 sx={{
                   width: "100%",
@@ -234,7 +259,9 @@ export default function MovieList() {
 
               {/* Overview */}
               <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
-                {selectedMovie.overview?selectedMovie.overview:"Currentlly there is no overview for this movie"}
+                {selectedMovie.overview
+                  ? selectedMovie.overview
+                  : "Currentlly there is no overview for this movie"}
               </Typography>
             </>
           )}
