@@ -27,21 +27,24 @@ export default function MovieCard({ movie, handleOpen ,handleBuyTicket}) {
         background: "linear-gradient(180deg, #0f172a, #020617)",
         color: "#fff",
         boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
-        "&:hover .movie-overview": {
-          opacity: 1,
-          transform: "translateY(0)",
-        },
+        "&:hover .movie-overview": { opacity: 1, transform: "translateY(0)" },
+ 
       }}
      
     >
+  
+       
       {/* Poster */}
       <Box
         sx={{
           position: "relative",
           flex: "0 0 135px",
           overflow: "hidden",
+     
+      
         }}
       >
+    
         <CardMedia
           component="img"
           src={movie.poster_path ? movie.poster_path : movieAlt}
@@ -53,6 +56,7 @@ export default function MovieCard({ movie, handleOpen ,handleBuyTicket}) {
             objectFit: "contain",
             objectPosition: "top",
             backgroundColor: "#000",
+            
           }}
           
         />
@@ -153,6 +157,7 @@ export default function MovieCard({ movie, handleOpen ,handleBuyTicket}) {
           bottom: "auto",
           left: 0,
           height: 135,
+          inset:0,
           zIndex: 2,
           p: 2.5,
           display: "flex",

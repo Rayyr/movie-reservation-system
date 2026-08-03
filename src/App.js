@@ -15,6 +15,7 @@ import { roles } from "./constants/systemRoles.js";
 import { Toaster } from "react-hot-toast";
 import Profile from './pages/Profile.jsx';
 import MovieList from "./pages/MovieList.jsx";
+import ShowTimes from "./pages/ShowTimes.jsx";
 
 function App() {
   return (
@@ -86,6 +87,9 @@ function App() {
 {/*             <Route path="/movie-list" element={<ProtectedRoute allowedRoles={[roles.user,roles.admin]}><MovieList ></MovieList ></ProtectedRoute>}> </Route>
  */}
             <Route path="/profile" element={<ProtectedRoute allowedRoles={[roles.user,roles.admin]}><Profile></Profile></ProtectedRoute>}> </Route>
+         
+            <Route path="/show-times/:movieID" element={ <ShowTimes></ShowTimes> }> </Route>
+
           </Routes>
         </BrowserRouter>
         <ToastContainer //for async toast msgs
