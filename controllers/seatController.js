@@ -26,9 +26,15 @@ export const getSeatsForScreen = async (req, res) => {
       if (!rows[seat.row]) rows[seat.row] = [];
        rows[seat.row].push(seat);
     });
-    console.log(rows);
+   
+    
+    const rowsArray = Object.keys(rows).map((rowKey) => ({
+  row: rowKey,
+  seats: rows[rowKey],
+}));
+
     return res.status(200).json({
-      rows
+      rowsArray
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });

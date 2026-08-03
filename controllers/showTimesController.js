@@ -59,7 +59,7 @@ export const getMovieShowTimes = async (req, res) => {
     const showtimes = await ShowTime.find({ movie: movie_id })
       .populate({
         path: "screen",
-        select: "name",
+        select: "name",//by default screen_id will be returned 
         populate: {
           path: "theater",
           select: "name location",
