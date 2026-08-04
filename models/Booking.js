@@ -17,7 +17,7 @@ const bookingSchema = new mongoose.Schema(
       ref: "Seat",
       required: true,
     }],
-    totalPrice: {
+    totalPrice: {//derived prop , so we will calculate it manuallt so it will not be entered or passed as param
       type: Number,
       required: true,
     },
