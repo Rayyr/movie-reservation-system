@@ -144,7 +144,7 @@ const SelectSeat = ({setRemountKey,remountKey}) => {
                    setIsPressed(true);
                  },
                  onClose: () => {
-                   setIsPressed(false);
+                   setIsPressed(false); 
                   
                  },
                });
