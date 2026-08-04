@@ -23,7 +23,7 @@ function ProtectedRoute({ children, allowedRoles }) {
 
     setTimeout(() => {
       navigate("/login", { replace: true });
-    }, 3000); //3 secs
+    }, 4000); //3 secs as same as toast contaner time
   }
 
   if (user) {

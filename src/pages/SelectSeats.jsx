@@ -73,12 +73,9 @@ const SelectSeats = ({setRemountKey,remountKey}) => {
             onOpen: () => {
               setIsBlocking(true);
               setIsLoading(true);
-            },
-            onClose: () => {
-            setIsBlocking(false); //keep him at this page untill network is restored ! so i will not make setIsloading(false)
-            },
+            } 
           });
-        //invalid showtimeID error | api error
+        //invalid showtimeID error (impossiple since there is a previous chain of api calls with this id )| api error
         else if (err.response.status === 404 || err.response.status === 500) {
           toast.error(err.response.data.message, {
             style: {
@@ -183,7 +180,7 @@ const SelectSeats = ({setRemountKey,remountKey}) => {
     } 
   });
 
-  return isLoading || isBlocked ? (
+  return (isLoading || isBlocked) ? (
     <Box
       sx={{
         display: "flex",

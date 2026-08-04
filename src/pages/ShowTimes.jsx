@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import ShowTimeCard from "../components/user-defined/ShowTimeCard";
 import notFoundMovieBg from "../assests/Movie/notFoundMovieBg.avif";
 import { motion } from "framer-motion";
+import {CircularProgress} from '@mui/material';
 
 function ShowTimes() {
   //exatrct movie from url path
@@ -27,6 +28,9 @@ function ShowTimes() {
         const res = await api.get(`/api/movies/getOne/${movieID}`);
 
         setMovie(res.data);
+
+          setIsLoading(false);
+      setIsBlocking(false);
       } catch (err) {
         // api network error connection
         if (err.code === "ERR_NETWORK")
@@ -36,13 +40,10 @@ function ShowTimes() {
             },
             onOpen: () => {
               setIsBlocking(true);
-            },
-            onClose: () => {
-              setIsBlocking(false);
-            },
+            } 
           });
-        //api error
-        else if (err.response.status === 500) {
+        //api error || invalid movie id error
+        else if (err.response.status===400 || err.response.status === 500) {
           toast.error(err.response.data.message, {
             style: {
               width: "500px",
@@ -55,10 +56,7 @@ function ShowTimes() {
             },
           });
         }
-      } finally {
-        setIsBlocking(false);
-        setIsLoading(false);
-      }
+      }  
     };
     fetchMovie();
   }, [movieID]);
@@ -75,6 +73,8 @@ function ShowTimes() {
           `/api/showTimes/getMovieShowTimes/${movieID}`,
         );
         setShowTimes(res.data.showtimes);
+          setIsBlocking(false);
+        setIsLoading(false);
       } catch (err) {
         // api network error connection
         if (err.code === "ERR_NETWORK")
@@ -84,10 +84,7 @@ function ShowTimes() {
             },
             onOpen: () => {
               setIsBlocking(true);
-            },
-            onClose: () => {
-              setIsBlocking(false);
-            },
+            } 
           });
         //api error
         else if (err.response.status === 500) {
@@ -103,10 +100,7 @@ function ShowTimes() {
             },
           });
         }
-      } finally {
-        setIsBlocking(false);
-        setIsLoading(false);
-      }
+      }  
     };
 
     fetchShowTimes();
@@ -124,6 +118,18 @@ function ShowTimes() {
   const MotionBox = motion(Box);
 
   return (
+    isLoading || isBlocked) ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh", // or "100vh" for full screen
+          }}
+        >
+          <CircularProgress sx={{ color: "var(--blue)" }} size={40} />
+        </Box>
+      ) : (
     <MotionBox
       variants={containerVariants}
       initial="hidden"
@@ -142,10 +148,11 @@ function ShowTimes() {
       }}
     >
       <h1>{movie?.title} showtimes</h1>
-      {showTimes.map((st) => (
+      {showTimes.length!==0? ( showTimes.map((st) => (
         <ShowTimeCard key={st._id} st={st} movie={movie} />
-      ))}
+      ))): <h1>Sorry , currentlly there is no showtimes for this movie</h1>}
     </MotionBox>
+      
   );
 }
 
