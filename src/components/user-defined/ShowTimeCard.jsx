@@ -1,8 +1,16 @@
 import { Card, CardContent, Typography, Button, Box } from "@mui/material";
 import { motion } from "framer-motion";
 import movieAlt from "../../assests/Movie/movieAlt.png";
+import { useNavigate } from "react-router-dom";
 
 const ShowTimeCard = ({ st, movie }) => {
+
+    const navigate=useNavigate();
+    const handleBooking=()=>{
+
+        navigate("/select-seat",{state:{movie:movie,    showtime: st}});
+        //select seat
+    };
 
   // Animations
   const itemVariants = {
@@ -27,7 +35,7 @@ const ShowTimeCard = ({ st, movie }) => {
         }}
       >
         {/* 🎬 Poster */}
-        <Box
+     {/*    <Box
           component="img"
          src={movie.poster_path ? `${process.env.REACT_APP_BASE_MOVIES_IMGS_URL}${movie.poster_path}` : movieAlt}
           
@@ -38,13 +46,11 @@ const ShowTimeCard = ({ st, movie }) => {
             objectFit: "cover",
             
           }}
-        />
+        /> */}
 
         {/* 📄 Content */}
         <CardContent sx={{ flex: 1 }}>
-          <Typography variant="h6">
-            {movie?.title || "Movie"}
-          </Typography>
+          
 
           <Typography variant="body2" sx={{ opacity: 0.7 }}>
             {st.screen?.theater?.name}
@@ -76,7 +82,7 @@ const ShowTimeCard = ({ st, movie }) => {
               },
               textTransform: "none",
             }}
-            onClick={() => console.log("Selected:", st)}
+            onClick={() => handleBooking()}
           >
             Book Now
           </Button>

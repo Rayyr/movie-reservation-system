@@ -16,6 +16,7 @@ import { Toaster } from "react-hot-toast";
 import Profile from './pages/Profile.jsx';
 import MovieList from "./pages/MovieList.jsx";
 import ShowTimes from "./pages/ShowTimes.jsx";
+import SelectSeat from './pages/SelectSeat.jsx';
 
 function App() {
   return (
@@ -89,6 +90,8 @@ function App() {
             <Route path="/profile" element={<ProtectedRoute allowedRoles={[roles.user,roles.admin]}><Profile></Profile></ProtectedRoute>}> </Route>
          
             <Route path="/show-times/:movieID" element={ <ShowTimes></ShowTimes> }> </Route>
+
+            <Route path="/select-seat" element={ <SelectSeat></SelectSeat> }> </Route>
 
           </Routes>
         </BrowserRouter>
