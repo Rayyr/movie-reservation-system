@@ -17,8 +17,14 @@ import Profile from './pages/Profile.jsx';
 import MovieList from "./pages/MovieList.jsx";
 import ShowTimes from "./pages/ShowTimes.jsx";
 import SelectSeat from './pages/SelectSeat.jsx';
+import { dummyRemountVar } from "./constants/systemVars.js";
+import { useState } from "react";
 
 function App() {
+ 
+  //to force component remounting
+  const [remountKey,setRemountKey]=useState(1);
+ 
   return (
     <>
       <AuthProvider>
@@ -92,7 +98,7 @@ function App() {
             <Route path="/show-times/:movieID" element={ <ShowTimes></ShowTimes> }> </Route>
 
 {/* since this page will contain booking confirmation so it must be protected
- */}            <Route path="/select-seat" element={<ProtectedRoute allowedRoles={[roles.user,roles.admin]}> <SelectSeat></SelectSeat> </ProtectedRoute>}> </Route>
+ */}            <Route path="/select-seat" element={<ProtectedRoute allowedRoles={[roles.user,roles.admin]}> <SelectSeat remountKey={remountKey} setRemountKey={setRemountKey} key={remountKey}></SelectSeat> </ProtectedRoute>}> </Route>
 
           </Routes>
         </BrowserRouter>

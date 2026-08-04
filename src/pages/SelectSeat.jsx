@@ -7,10 +7,11 @@ import notFoundMovieBg from "../assests/Movie/notFoundMovieBg.avif";
 import { CircularProgress } from "@mui/material";
 import { AuthContext } from "../context/AuthContext";
 
-const SelectSeat = () => {
+const SelectSeat = ({setRemountKey,remountKey}) => {
 
   const {user}=useContext(AuthContext);
 
+  
   const [isLoading, setIsLoading] = useState(true);
   const [isBlocked, setIsBlocking] = useState(true);
 
@@ -118,25 +119,37 @@ const SelectSeat = () => {
   };
 
   const flattenSeatsIds=(seats)=>{
-
     //return only seat ids
     const flatten=seats.flatMap((s)=>{return s._id;});//[seat1Id,seat2Id...]
     return flatten;
   };
 
+  //for confirm booking btn
   const [isPressed,setIsPressed]=useState(false);
 
   const confirmBooking = async() => {
     setIsPressed(true);
     try {
-        
-
         const seats=flattenSeatsIds(selectedSeats);
         const data={user:user._id,showTime:showtime._id,seats:seats};
    
        const res=await api.post("/api/bookings/create",data);
 
-       
+        setRemountKey(remountKey+1);//or we can directlly call again fetchSeats api 
+         toast.success(res.data.message, {
+                 style: {
+                   width: "500px",
+                 },
+                 onOpen: () => {
+                   setIsPressed(true);
+                 },
+                 onClose: () => {
+                   setIsPressed(false);
+                  
+                 },
+               });
+             
+      
     } catch (err) {
       // api network error connection
       if (err.code === "ERR_NETWORK")
@@ -152,14 +165,15 @@ const SelectSeat = () => {
             setIsBlocking(false); //keep him at this page untill network is restored ! so i will not make setIsloading(false)
           },
         });
-      //invalid showtimeID error | api error
-      else if (err.response.status === 404 || err.response.status === 500) {
+      //api error
+      else if (  err.response.status === 500) {
         toast.error(err.response.data.message, {
           style: {
             width: "500px",
           },
           onOpen: () => {
             setIsBlocking(true);
+            
           },
           onClose: () => {
             setIsBlocking(false);
@@ -167,9 +181,7 @@ const SelectSeat = () => {
           },
         });
       }
-    }finally{
-        setIsPressed(false);
-    }
+    } 
   };
 
   return isLoading || isBlocked ? (
@@ -196,6 +208,7 @@ const SelectSeat = () => {
         p: 4,
         color: "#fff",
       }}
+      
     >
       {/* Overlay */}
       <Box
