@@ -1,12 +1,16 @@
 import { useLocation } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
 import api from "../services/api";
 import notFoundMovieBg from "../assests/Movie/notFoundMovieBg.avif";
-import {CircularProgress} from "@mui/material";
+import { CircularProgress } from "@mui/material";
+import { AuthContext } from "../context/AuthContext";
 
 const SelectSeat = () => {
+
+  const {user}=useContext(AuthContext);
+
   const [isLoading, setIsLoading] = useState(true);
   const [isBlocked, setIsBlocking] = useState(true);
 
@@ -15,10 +19,10 @@ const SelectSeat = () => {
   const { showtime, movie } = state || {};
 
   //const [seats, setSeats] = useState([]);
-  const [groupedSeats, setGroupedSeats] = useState({});
+  const [groupedSeats, setGroupedSeats] = useState({});//key:row,value:seatsObjs in that row
   const [seatsExist, setSeatsExist] = useState(true);
 
-  //group seats by rows : [{A:[]},{B:[]}...]
+  //group seats by rows : {{A:[]},{B:[]}...}
   const groupSeats = (seatsArr) => {
     const grouped = {};
     seatsArr.forEach((seat) => {
@@ -27,8 +31,6 @@ const SelectSeat = () => {
     });
     setGroupedSeats(grouped);
   };
-
-   
 
   //check if there is available seats IOW not all are RESERVED status
   const checkSeats = (seats) => {
@@ -50,8 +52,8 @@ const SelectSeat = () => {
         const res = await api.get(
           `/api/bookings/getSeatsStatus/${showtime._id}/seats`,
         );
-      //  console.log(res.data);
-       // setSeats(res.data);
+        //  console.log(res.data);
+        // setSeats(res.data);
 
         groupSeats(res.data);
 
@@ -59,8 +61,8 @@ const SelectSeat = () => {
         if (checkSeats(res.data) === true) setSeatsExist(true);
         else setSeatsExist(false);
 
-         setIsLoading(false);
-         setIsBlocking(false);
+        setIsLoading(false);
+        setIsBlocking(false);
       } catch (err) {
         // api network error connection
         if (err.code === "ERR_NETWORK")
@@ -73,7 +75,7 @@ const SelectSeat = () => {
               setIsLoading(true);
             },
             onClose: () => {
-              setIsBlocking(false); //keep him at this page untill network is restored !
+            setIsBlocking(false); //keep him at this page untill network is restored ! so i will not make setIsloading(false)
             },
           });
         //invalid showtimeID error | api error
@@ -91,13 +93,13 @@ const SelectSeat = () => {
             },
           });
         }
-      }  
+      }
     };
 
     fetchSeats();
-  }, []);//on each refresh it will be triggered since the component will be remounted and this is the mean of [] dependency array
+  }, []); //on each refresh it will be triggered since the component will be remounted and this is the mean of [] dependency array
 
-  const [selectedSeats, setSelectedSeats] = useState([]);
+  const [selectedSeats, setSelectedSeats] = useState([]);//[seat1Obj,seat2Obj...]
 
   const toggleSeat = (seat) => {
     if (seat.status === "RESERVED") return;
@@ -115,9 +117,62 @@ const SelectSeat = () => {
     }
   };
 
-  const makeBooking = () => {};
+  const flattenSeatsIds=(seats)=>{
 
-  return (isLoading || isBlocked ) ? (
+    //return only seat ids
+    const flatten=seats.flatMap((s)=>{return s._id;});//[seat1Id,seat2Id...]
+    return flatten;
+  };
+
+  const [isPressed,setIsPressed]=useState(false);
+
+  const confirmBooking = async() => {
+    setIsPressed(true);
+    try {
+        
+
+        const seats=flattenSeatsIds(selectedSeats);
+        const data={user:user._id,showTime:showtime._id,seats:seats};
+   
+       const res=await api.post("/api/bookings/create",data);
+
+       
+    } catch (err) {
+      // api network error connection
+      if (err.code === "ERR_NETWORK")
+        toast.error("No network connection", {
+          style: {
+            width: "500px",
+          },
+          onOpen: () => {
+            setIsBlocking(true);
+            setIsLoading(true);
+          },
+          onClose: () => {
+            setIsBlocking(false); //keep him at this page untill network is restored ! so i will not make setIsloading(false)
+          },
+        });
+      //invalid showtimeID error | api error
+      else if (err.response.status === 404 || err.response.status === 500) {
+        toast.error(err.response.data.message, {
+          style: {
+            width: "500px",
+          },
+          onOpen: () => {
+            setIsBlocking(true);
+          },
+          onClose: () => {
+            setIsBlocking(false);
+            setIsLoading(false);
+          },
+        });
+      }
+    }finally{
+        setIsPressed(false);
+    }
+  };
+
+  return isLoading || isBlocked ? (
     <Box
       sx={{
         display: "flex",
@@ -194,7 +249,7 @@ const SelectSeat = () => {
 
         {/* 🪑 SEATS BY ROW */}
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          {Object.keys(groupedSeats).map((rowKey) => (
+          {Object.keys(groupedSeats).map((rowKey) => (//go among them by row
             <Box
               key={rowKey}
               sx={{ display: "flex", gap: 1, alignItems: "center" }}
@@ -203,7 +258,7 @@ const SelectSeat = () => {
               <Box sx={{ width: 20, color: "white" }}>{rowKey}</Box>
 
               {/* Seats in this row */}
-              {groupedSeats[rowKey].map((seat) => {
+              {groupedSeats[rowKey].map((seat) => {//go among each seat in that row
                 const isSelected = selectedSeats.some(
                   (selected) => selected._id === seat._id,
                 );
@@ -256,9 +311,13 @@ const SelectSeat = () => {
             paddingY: 1.5,
           }}
           disabled={selectedSeats.length === 0 || isBlocked || isLoading}
-          onClick={() => makeBooking()}
+          onClick={() => confirmBooking()}
         >
-          Confirm Booking
+          {isPressed ? (
+            <CircularProgress size={20} color="inherit" />
+          ) : (
+            "Confirm Booking"
+          )}
         </Button>
       </Box>
     </Box>
