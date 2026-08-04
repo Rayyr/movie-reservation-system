@@ -7,8 +7,8 @@ import notFoundMovieBg from "../assests/Movie/notFoundMovieBg.avif";
 import {CircularProgress} from "@mui/material";
 
 const SelectSeat = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isBlocked, setIsBlocking] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isBlocked, setIsBlocking] = useState(true);
 
   //contains selected movie + showtime
   const { state } = useLocation();
@@ -58,6 +58,9 @@ const SelectSeat = () => {
         //if there is no exist seats handle it
         if (checkSeats(res.data) === true) setSeatsExist(true);
         else setSeatsExist(false);
+
+         setIsLoading(false);
+         setIsBlocking(false);
       } catch (err) {
         // api network error connection
         if (err.code === "ERR_NETWORK")
@@ -67,6 +70,7 @@ const SelectSeat = () => {
             },
             onOpen: () => {
               setIsBlocking(true);
+              setIsLoading(true);
             },
             onClose: () => {
               setIsBlocking(false); //keep him at this page untill network is restored !
@@ -83,17 +87,15 @@ const SelectSeat = () => {
             },
             onClose: () => {
               setIsBlocking(false);
+              setIsLoading(false);
             },
           });
         }
-      } finally {
-        setIsBlocking(false);
-        setIsLoading(false);
-      }
+      }  
     };
 
     fetchSeats();
-  }, []);
+  }, []);//on each refresh it will be triggered 
 
   const [selectedSeats, setSelectedSeats] = useState([]);
 
@@ -115,7 +117,7 @@ const SelectSeat = () => {
 
   const makeBooking = () => {};
 
-  return isLoading ? (
+  return (isLoading || isBlocked ) ? (
     <CircularProgress size={20} color="inherit" />
   ) : (
     <Box
@@ -244,7 +246,7 @@ const SelectSeat = () => {
             paddingX: 3,
             paddingY: 1.5,
           }}
-          disabled={selectedSeats.length === 0}
+          disabled={selectedSeats.length === 0 || isBlocked || isLoading}
           onClick={() => makeBooking()}
         >
           Confirm Booking
