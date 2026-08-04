@@ -9,6 +9,6 @@ const router=express.Router();
 //by only admin
 router.post("/",protect,userOnly,createBooking);
 
-/* router.getAvailableSeats("/get/:showTimeId/seats",getAvailableSeats);
- */
+ router.get("/getAvailableSeats/:showTimeId/seats",getAvailableSeats);
+ 
 export default router;

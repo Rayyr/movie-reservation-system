@@ -33,8 +33,9 @@ export const getSeatsForScreen = async (req, res) => {
   seats: rows[rowKey],
 }));
 
+ //array of objs : [{},{},..]
     return res.status(200).json({
-      rowsArray
+     rows: rowsArray
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
