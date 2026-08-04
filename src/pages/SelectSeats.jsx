@@ -7,7 +7,7 @@ import notFoundMovieBg from "../assests/Movie/notFoundMovieBg.avif";
 import { CircularProgress } from "@mui/material";
 import { AuthContext } from "../context/AuthContext";
 
-const SelectSeat = ({setRemountKey,remountKey}) => {
+const SelectSeats = ({setRemountKey,remountKey}) => {
 
   const {user}=useContext(AuthContext);
 
@@ -337,4 +337,4 @@ const SelectSeat = ({setRemountKey,remountKey}) => {
   );
 };
 
-export default SelectSeat;
+export default SelectSeats;

@@ -16,7 +16,7 @@ import { Toaster } from "react-hot-toast";
 import Profile from './pages/Profile.jsx';
 import MovieList from "./pages/MovieList.jsx";
 import ShowTimes from "./pages/ShowTimes.jsx";
-import SelectSeat from './pages/SelectSeat.jsx';
+import SelectSeats from './pages/SelectSeats.jsx';
 import { dummyRemountVar } from "./constants/systemVars.js";
 import { useState } from "react";
 
@@ -98,7 +98,7 @@ function App() {
             <Route path="/show-times/:movieID" element={ <ShowTimes></ShowTimes> }> </Route>
 
 {/* since this page will contain booking confirmation so it must be protected
- */}            <Route path="/select-seat" element={<ProtectedRoute allowedRoles={[roles.user,roles.admin]}> <SelectSeat remountKey={remountKey} setRemountKey={setRemountKey} key={remountKey}></SelectSeat> </ProtectedRoute>}> </Route>
+ */}            <Route path="/select-seats" element={<ProtectedRoute allowedRoles={[roles.user,roles.admin]}> <SelectSeats remountKey={remountKey} setRemountKey={setRemountKey} key={remountKey}></SelectSeats> </ProtectedRoute>}> </Route>
 
           </Routes>
         </BrowserRouter>

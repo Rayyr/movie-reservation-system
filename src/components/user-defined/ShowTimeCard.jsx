@@ -8,7 +8,7 @@ const ShowTimeCard = ({ st, movie }) => {
     const navigate=useNavigate();
     const handleBooking=()=>{
 
-        navigate("/select-seat",{state:{movie:movie,    showtime: st}});
+        navigate("/select-seats",{state:{movie:movie,    showtime: st}});
         //select seat
     };
 
