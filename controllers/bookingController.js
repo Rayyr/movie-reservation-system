@@ -3,7 +3,7 @@ import Seat from "../models/Seat.js";
 import ShowTime from "../models/ShowTime.js";
 
 //Get Available Seats for a Showtime
-export const getAvailableSeats = async (req, res) => {
+export const getSeatsStatus = async (req, res) => {
   try {
     const showTimeId = req.params.showTimeId;
 
