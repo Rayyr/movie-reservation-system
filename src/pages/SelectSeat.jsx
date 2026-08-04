@@ -14,7 +14,7 @@ const SelectSeat = () => {
   const { state } = useLocation();
   const { showtime, movie } = state || {};
 
-  const [seats, setSeats] = useState([]);
+  //const [seats, setSeats] = useState([]);
   const [groupedSeats, setGroupedSeats] = useState({});
   const [seatsExist, setSeatsExist] = useState(true);
 
@@ -28,7 +28,7 @@ const SelectSeat = () => {
     setGroupedSeats(grouped);
   };
 
-  //add loading state
+   
 
   //check if there is available seats IOW not all are RESERVED status
   const checkSeats = (seats) => {
@@ -50,8 +50,8 @@ const SelectSeat = () => {
         const res = await api.get(
           `/api/bookings/getSeatsStatus/${showtime._id}/seats`,
         );
-        console.log(res.data);
-        setSeats(res.data);
+      //  console.log(res.data);
+       // setSeats(res.data);
 
         groupSeats(res.data);
 
@@ -95,7 +95,7 @@ const SelectSeat = () => {
     };
 
     fetchSeats();
-  }, []);//on each refresh it will be triggered 
+  }, []);//on each refresh it will be triggered since the component will be remounted and this is the mean of [] dependency array
 
   const [selectedSeats, setSelectedSeats] = useState([]);
 
@@ -118,7 +118,16 @@ const SelectSeat = () => {
   const makeBooking = () => {};
 
   return (isLoading || isBlocked ) ? (
-    <CircularProgress size={20} color="inherit" />
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh", // or "100vh" for full screen
+      }}
+    >
+      <CircularProgress sx={{ color: "var(--blue)" }} size={40} />
+    </Box>
   ) : (
     <Box
       sx={{
