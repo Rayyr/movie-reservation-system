@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import api from "../services/api";
 import notFoundMovieBg from "../assests/Movie/notFoundMovieBg.avif";
+import {CircularProgress} from "@mui/material";
 
 const SelectSeat = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -112,7 +113,11 @@ const SelectSeat = () => {
     }
   };
 
-  return (
+  const makeBooking = () => {};
+
+  return isLoading ? (
+    <CircularProgress size={20} color="inherit" />
+  ) : (
     <Box
       sx={{
         minHeight: "100vh",
@@ -240,6 +245,7 @@ const SelectSeat = () => {
             paddingY: 1.5,
           }}
           disabled={selectedSeats.length === 0}
+          onClick={() => makeBooking()}
         >
           Confirm Booking
         </Button>
