@@ -91,7 +91,8 @@ function App() {
          
             <Route path="/show-times/:movieID" element={ <ShowTimes></ShowTimes> }> </Route>
 
-            <Route path="/select-seat" element={ <SelectSeat></SelectSeat> }> </Route>
+{/* since this page will contain booking confirmation so it must be protected
+ */}            <Route path="/select-seat" element={<ProtectedRoute allowedRoles={[roles.user,roles.admin]}> <SelectSeat></SelectSeat> </ProtectedRoute>}> </Route>
 
           </Routes>
         </BrowserRouter>
