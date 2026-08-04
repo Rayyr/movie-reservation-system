@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useMemo, useCallback } from "react";
 import { toast } from "react-toastify";
 import api from "../services/api";
 import notFoundMovieBg from "../assests/Movie/notFoundMovieBg.avif";
@@ -10,7 +10,6 @@ import { AuthContext } from "../context/AuthContext";
 const SelectSeats = ({setRemountKey,remountKey}) => {
 
   const {user}=useContext(AuthContext);
-
   
   const [isLoading, setIsLoading] = useState(true);
   const [isBlocked, setIsBlocking] = useState(true);
@@ -24,24 +23,24 @@ const SelectSeats = ({setRemountKey,remountKey}) => {
   const [seatsExist, setSeatsExist] = useState(true);
 
   //group seats by rows : {{A:[]},{B:[]}...}
-  const groupSeats = (seatsArr) => {
+  const groupSeats = useCallback((seatsArr) => {
     const grouped = {};
     seatsArr.forEach((seat) => {
       if (!grouped[seat.row]) grouped[seat.row] = [];
       grouped[seat.row].push(seat);
     });
     setGroupedSeats(grouped);
-  };
+  });
 
   //check if there is available seats IOW not all are RESERVED status
-  const checkSeats = (seats) => {
+  const checkSeats = useCallback((seats) => {
     const atLeastOne = seats.some((seat) => {
       return seat.status === "AVAILABLE";
     });
 
     if (atLeastOne) return true;
     return false;
-  };
+  });
 
   //fetch seats related to this screen of this showtime  and their status
   useEffect(() => {
@@ -102,7 +101,7 @@ const SelectSeats = ({setRemountKey,remountKey}) => {
 
   const [selectedSeats, setSelectedSeats] = useState([]);//[seat1Obj,seat2Obj...]
 
-  const toggleSeat = (seat) => {
+  const toggleSeat = useCallback((seat) => {
     if (seat.status === "RESERVED") return;
 
     const alreadySelected = selectedSeats.some(
@@ -116,18 +115,18 @@ const SelectSeats = ({setRemountKey,remountKey}) => {
     } else {
       setSelectedSeats((prev) => [...prev, seat]);
     }
-  };
+  });
 
-  const flattenSeatsIds=(seats)=>{
+  const flattenSeatsIds=useCallback((seats)=>{
     //return only seat ids
     const flatten=seats.flatMap((s)=>{return s._id;});//[seat1Id,seat2Id...]
     return flatten;
-  };
+  });
 
   //for confirm booking btn
   const [isPressed,setIsPressed]=useState(false);
 
-  const confirmBooking = async() => {
+  const confirmBooking = useCallback(async() => {
     setIsPressed(true);
     try {
         const seats=flattenSeatsIds(selectedSeats);
@@ -182,7 +181,7 @@ const SelectSeats = ({setRemountKey,remountKey}) => {
         });
       }
     } 
-  };
+  });
 
   return isLoading || isBlocked ? (
     <Box
