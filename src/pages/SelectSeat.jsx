@@ -1,22 +1,23 @@
 import { useLocation } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import api from "../services/api";
-import notFoundMovieBg from '../assests/Movie/notFoundMovieBg.avif';
- 
-const SelectSeat = () => {
+import notFoundMovieBg from "../assests/Movie/notFoundMovieBg.avif";
 
-    
-    //contains selected movie + showtime
+const SelectSeat = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isBlocked, setIsBlocking] = useState(false);
+
+  //contains selected movie + showtime
   const { state } = useLocation();
   const { showtime, movie } = state || {};
 
-  const [seats,setSeats]=useState([]);
-  const [groupedSeats,setGroupedSeats]=useState({});
+  const [seats, setSeats] = useState([]);
+  const [groupedSeats, setGroupedSeats] = useState({});
+  const [seatsExist, setSeatsExist] = useState(true);
 
-   //group seats by rows : [{A:[]},{B:[]}...]
-
+  //group seats by rows : [{A:[]},{B:[]}...]
   const groupSeats = (seatsArr) => {
     const grouped = {};
     seatsArr.forEach((seat) => {
@@ -26,74 +27,89 @@ const SelectSeat = () => {
     setGroupedSeats(grouped);
   };
 
+  //add loading state
+
+  //check if there is available seats IOW not all are RESERVED status
+  const checkSeats = (seats) => {
+    const atLeastOne = seats.some((seat) => {
+      return seat.status === "AVAILABLE";
+    });
+
+    if (atLeastOne) return true;
+    return false;
+  };
 
   //fetch seats related to this screen of this showtime  and their status
-  useEffect(()=>{
+  useEffect(() => {
+    const fetchSeats = async () => {
+      setIsBlocking(true);
+      setIsLoading(true);
 
-    const fetchSeats=async()=>{
+      try {
+        const res = await api.get(
+          `/api/bookings/getSeatsStatus/${showtime._id}/seats`,
+        );
+        console.log(res.data);
+        setSeats(res.data);
 
-        try{
+        groupSeats(res.data);
 
-            const res=await api.get(`/api/bookings/getSeatsStatus/${showtime._id}/seats`);
-            console.log(res.data);
-            setSeats(res.data);
-         
- groupSeats(res.data);
-            //if there is no exist seats handle it
-           
-        }catch(err){
-                // api network error connection
-                  if (err.code === "ERR_NETWORK")
-                    toast.error("No network connection", {
-                      style: {
-                        width: "500px",
-                      },
-                      onOpen: () => {
-                     //   setIsBlocking(true);
-                      },
-                      onClose: () => {
-                      //  setIsBlocking(false);
-                       
-                      },
-                    });
-                  //invalid login(invalid crediantial) error | api error
-                  else if (err.response.status === 400 || err.response.status === 500) {
-                    toast.error(err.response.data.message, {
-                      style: {
-                        width: "500px",
-                      },
-                      onOpen: () => {
-                      //  setIsBlocking(true);
-                      },
-                      onClose: () => {
-                      //  setIsBlocking(false);
-                      },
-                    });
-                  }
+        //if there is no exist seats handle it
+        if (checkSeats(res.data) === true) setSeatsExist(true);
+        else setSeatsExist(false);
+      } catch (err) {
+        // api network error connection
+        if (err.code === "ERR_NETWORK")
+          toast.error("No network connection", {
+            style: {
+              width: "500px",
+            },
+            onOpen: () => {
+              setIsBlocking(true);
+            },
+            onClose: () => {
+              setIsBlocking(false); //keep him at this page untill network is restored !
+            },
+          });
+        //invalid showtimeID error | api error
+        else if (err.response.status === 404 || err.response.status === 500) {
+          toast.error(err.response.data.message, {
+            style: {
+              width: "500px",
+            },
+            onOpen: () => {
+              setIsBlocking(true);
+            },
+            onClose: () => {
+              setIsBlocking(false);
+            },
+          });
         }
+      } finally {
+        setIsBlocking(false);
+        setIsLoading(false);
+      }
     };
 
     fetchSeats();
-  },[]);
-
+  }, []);
 
   const [selectedSeats, setSelectedSeats] = useState([]);
 
   const toggleSeat = (seat) => {
     if (seat.status === "RESERVED") return;
 
-     const alreadySelected = selectedSeats.some(
-      (selected) => selected._id === seat._id
+    const alreadySelected = selectedSeats.some(
+      (selected) => selected._id === seat._id,
     );
 
     if (alreadySelected) {
       setSelectedSeats((prev) =>
-        prev.filter((selected) => selected._id !== seat._id)
+        prev.filter((selected) => selected._id !== seat._id),
       );
     } else {
       setSelectedSeats((prev) => [...prev, seat]);
-    } 
- 
+    }
   };
 
   return (
@@ -130,8 +146,9 @@ const SelectSeat = () => {
           {new Date(showtime?.startTime).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
-          })} {" - "}
-                    {new Date(showtime?.endTime).toLocaleTimeString([], {
+          })}{" "}
+          {" - "}
+          {new Date(showtime?.endTime).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
           })}
@@ -153,60 +170,74 @@ const SelectSeat = () => {
           SCREEN
         </Box>
 
-      {/* 🪑 SEATS BY ROW */}
-<Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-  {Object.keys(groupedSeats).map((rowKey) => (
-    <Box key={rowKey} sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-      
-      {/* Row Label */}
-      <Box sx={{ width: 20, color: "white" }}>{rowKey}</Box>
+        {!seatsExist && (
+          <Typography sx={{ mb: 3 }}>
+            Sorry there is no available seats currentlly !
+          </Typography>
+        )}
 
-      {/* Seats in this row */}
-      {groupedSeats[rowKey].map((seat) => {
-        const isSelected = selectedSeats.some(
-          (selected) => selected._id === seat._id
-        );
+        {/* 🪑 SEATS BY ROW */}
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          {Object.keys(groupedSeats).map((rowKey) => (
+            <Box
+              key={rowKey}
+              sx={{ display: "flex", gap: 1, alignItems: "center" }}
+            >
+              {/* Row Label */}
+              <Box sx={{ width: 20, color: "white" }}>{rowKey}</Box>
 
-        return (
-          <Box
-            key={seat._id}
-            onClick={() => toggleSeat(seat)}
-            sx={{
-              width: 35,
-              height: 35,
-              borderRadius: "6px",
-              cursor: seat.status === "RESERVED" ? "not-allowed" : "pointer",
-              backgroundColor: seat.status === "RESERVED"
-                ? "#e50914"
-                : isSelected
-                ? "#ffdd57"
-                : "#2ecc71",
-              border: isSelected ? "2px solid #fff" : "2px solid transparent",
-              transition: "0.2s",
-            }}
-          />
-        );
-      })}
-    </Box>
-  ))}
-</Box>
+              {/* Seats in this row */}
+              {groupedSeats[rowKey].map((seat) => {
+                const isSelected = selectedSeats.some(
+                  (selected) => selected._id === seat._id,
+                );
+
+                return (
+                  <Box
+                    key={seat._id}
+                    onClick={() => toggleSeat(seat)}
+                    sx={{
+                      width: 35,
+                      height: 35,
+                      borderRadius: "6px",
+                      cursor:
+                        seat.status === "RESERVED" ? "not-allowed" : "pointer",
+                      backgroundColor:
+                        seat.status === "RESERVED"
+                          ? "#e50914"
+                          : isSelected
+                            ? "#ffdd57"
+                            : "#2ecc71",
+                      border: isSelected
+                        ? "2px solid #fff"
+                        : "2px solid transparent",
+                      transition: "0.2s",
+                    }}
+                  />
+                );
+              })}
+            </Box>
+          ))}
+        </Box>
 
         {/* 🎟️ Selected Info */}
         <Typography sx={{ mt: 3 }}>
-          Selected Seats: {selectedSeats.length > 0
-            ? selectedSeats.map((seat) => `${seat.row}${seat.number}`).join(", ")
+          Selected Seats:{" "}
+          {selectedSeats.length > 0
+            ? selectedSeats
+                .map((seat) => `${seat.row}${seat.number}`)
+                .join(", ")
             : "None"}
         </Typography>
 
         <Button
-           
           sx={{
             mt: 3,
             background: "var(--red)",
             textTransform: "none",
-            color:"#fff",
-            paddingX:3,
-            paddingY:1.5
+            color: "#fff",
+            paddingX: 3,
+            paddingY: 1.5,
           }}
           disabled={selectedSeats.length === 0}
         >
