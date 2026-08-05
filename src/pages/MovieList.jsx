@@ -148,57 +148,75 @@ export default function MovieList() {
         flexDirection: "column",
       }}
     >
-      <Container maxWidth="m" sx={{ mt: 4, flexGrow: 1 }}>
-        <Grid
-          container
-          spacing={5}
-          justifyContent="center"
-          component={motion.div}
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {displayedMovies.map((movie) => (
+      {displayedMovies.length !== 0 ? (
+        <>
+          <Container maxWidth="m" sx={{ mt: 4, flexGrow: 1 }}>
             <Grid
-              item
-              xs={12}
-              sm={6}
-              md={4}
-              key={movie._id}
-              sx={{ display: "flex", justifyContent: "center" }}
+              container
+              spacing={5}
+              justifyContent="center"
               component={motion.div}
-              variants={itemVariants}
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
             >
-              {/* //movie card */}
-              <MovieCard
-                movie={movie}
-                handleOpen={() => handleOpen(movie)}
-                handleBuyTicket={handleBuyTicket}
-              ></MovieCard>
+              {displayedMovies.map((movie) => (
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  key={movie._id}
+                  sx={{ display: "flex", justifyContent: "center" }}
+                  component={motion.div}
+                  variants={itemVariants}
+                >
+                  {/* //movie card */}
+                  <MovieCard
+                    movie={movie}
+                    handleOpen={() => handleOpen(movie)}
+                    handleBuyTicket={handleBuyTicket}
+                  ></MovieCard>
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
-      </Container>
+          </Container>
 
-      {totalPages > 1 && (
-        <Box sx={{ display: "flex", justifyContent: "center", my: 3, py: 2 }}>
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={(_, newPage) => setCurrentPage(newPage)}
-            sx={{
-              "& .MuiPaginationItem-root.Mui-selected": {
-                backgroundColor: "var(--blue)",
-                color: "white",
-              },
-              "& .MuiPaginationItem-root.Mui-selected:hover": {
-                backgroundColor: "var(--blue)",
-              },
-            }}
-          />
+          {totalPages > 1 && (
+            <Box
+              sx={{ display: "flex", justifyContent: "center", my: 3, py: 2 }}
+            >
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={(_, newPage) => setCurrentPage(newPage)}
+                sx={{
+                  "& .MuiPaginationItem-root.Mui-selected": {
+                    backgroundColor: "var(--blue)",
+                    color: "white",
+                  },
+                  "& .MuiPaginationItem-root.Mui-selected:hover": {
+                    backgroundColor: "var(--blue)",
+                  },
+                }}
+              />
+            </Box>
+          )}
+        </>
+      ) : (
+        <Box
+          sx={{
+            mt: 5,
+            textAlign: "center",
+            color: "white",
+            opacity: 0.8,
+          }}
+        >
+          <motion.div variants={itemVariants}>
+            <Typography variant="h5">🎬 No movies available</Typography>
+          </motion.div>
         </Box>
       )}
-
       <Modal
         open={open}
         onClose={handleClose}
@@ -242,8 +260,11 @@ export default function MovieList() {
               {/* Poster */}
               <Box
                 component="img"
-                src={selectedMovie.poster_path ? `${process.env.REACT_APP_BASE_MOVIES_IMGS_URL}${selectedMovie.poster_path}` : movieAlt}
-                
+                src={
+                  selectedMovie.poster_path
+                    ? `${process.env.REACT_APP_BASE_MOVIES_IMGS_URL}${selectedMovie.poster_path}`
+                    : movieAlt
+                }
                 alt={selectedMovie.title}
                 sx={{
                   width: "100%",

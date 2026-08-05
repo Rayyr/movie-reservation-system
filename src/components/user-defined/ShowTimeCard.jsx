@@ -1,16 +1,13 @@
 import { Card, CardContent, Typography, Button, Box } from "@mui/material";
 import { motion } from "framer-motion";
-import movieAlt from "../../assests/Movie/movieAlt.png";
 import { useNavigate } from "react-router-dom";
 
 const ShowTimeCard = ({ st, movie }) => {
-
-    const navigate=useNavigate();
-    const handleBooking=()=>{
-//select seat
-        navigate("/select-seats",{state:{movie:movie,    showtime: st}});
-        
-    };
+  const navigate = useNavigate();
+  const handleBooking = () => {
+    //select seat
+    navigate("/select-seats", { state: { movie: movie, showtime: st } });
+  };
 
   // Animations
   const itemVariants = {
@@ -19,11 +16,7 @@ const ShowTimeCard = ({ st, movie }) => {
   };
 
   return (
-    <motion.div
-      variants={itemVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <motion.div variants={itemVariants} initial="hidden" animate="visible">
       <Card
         sx={{
           display: "flex",
@@ -34,26 +27,10 @@ const ShowTimeCard = ({ st, movie }) => {
           overflow: "hidden",
         }}
       >
-        {/* 🎬 Poster */}
-     {/*    <Box
-          component="img"
-         src={movie.poster_path ? `${process.env.REACT_APP_BASE_MOVIES_IMGS_URL}${movie.poster_path}` : movieAlt}
-          
-          alt="poster"
-          sx={{
-           width: "100%",      // Spans full container width
-            maxWidth: 300,
-            objectFit: "cover",
-            
-          }}
-        /> */}
-
         {/* 📄 Content */}
         <CardContent sx={{ flex: 1 }}>
-          
-
           <Typography variant="body2" sx={{ opacity: 0.7 }}>
-            {st.screen?.theater?.name}
+            {st.screen.theater.name}
           </Typography>
 
           <Typography sx={{ mt: 1 }}>
@@ -69,20 +46,33 @@ const ShowTimeCard = ({ st, movie }) => {
           </Typography>
 
           <Typography sx={{ mt: 1 }}>
-            💰 {st.price} EGP
+            💰 {st.price}
+            <Typography
+              component="span"
+              sx={{ fontSize: ".85rem", opacity: 0.9 }}
+            >
+              {" "}
+              $/seat
+            </Typography>
           </Typography>
 
           <Button
             variant="contained"
             sx={{
-              mt: 2,
               background: "var(--red)",
-              "&:hover": {
-                background: "#e11d48",
-              },
+              borderRadius: "999px",
               textTransform: "none",
+              px: 2.5,
+              py: 0.4,
+              minHeight: 32,
+              fontSize: ".95rem",
+              "&:hover": { background: "#e11d48" },
+              mt: 2.5,
             }}
-            onClick={() => handleBooking()}
+            onClick={(e) => {
+              e.preventDefault();
+              handleBooking();
+            }}
           >
             Book Now
           </Button>
