@@ -12,8 +12,8 @@ export const getIfUserRate = async (req, res) => {
     });
 
     if (!result) {
-      return res.status(200).json(true); //true=res.data
-    } else return res.status(200).json(false);
+      return res.status(200).json(false); //true=res.data
+    } else return res.status(200).json(true);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
