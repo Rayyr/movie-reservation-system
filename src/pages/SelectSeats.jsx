@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
-import { useState, useEffect, useContext, useMemo, useCallback } from "react";
+import { useState, useEffect, useContext, memo, useCallback } from "react";
 import { toast } from "react-toastify";
 import api from "../services/api";
 import notFoundMovieBg from "../assests/Movie/notFoundMovieBg.avif";
@@ -187,15 +187,7 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
     },
   };
 
-  const rowVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.3 },
-    },
-  };
-
+  
   const seatVariants = {
     hidden: { scale: 0.8, opacity: 0 },
     visible: {
@@ -210,7 +202,7 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
     visible: { opacity: 1, y: 0 },
   };
 
-  const itemVariants = {
+  const itemVariants ={
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1 },
   };

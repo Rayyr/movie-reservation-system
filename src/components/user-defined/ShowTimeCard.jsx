@@ -1,13 +1,15 @@
 import { Card, CardContent, Typography, Button, Box } from "@mui/material";
 import { motion } from "framer-motion";
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 const ShowTimeCard = ({ st, movie }) => {
   const navigate = useNavigate();
-  const handleBooking = () => {
+ 
+  const handleBooking = useCallback(() => {
     //select seat
     navigate("/select-seats", { state: { movie: movie, showtime: st } });
-  };
+  });
 
   // Animations
   const itemVariants = {
