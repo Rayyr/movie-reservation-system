@@ -30,8 +30,7 @@ function ShowTimes() {
   
   const [open, setOpen] = useState(false);
   
-    const handleOpen = (movie) => {
-     
+const handleOpen = (movie) => {
     setOpen(true);
     setIsPressed(true);
   };
@@ -278,7 +277,7 @@ function ShowTimes() {
         )}
       </Box>
 
-      <RateModal open={open}   handleClose={handleClose}  />
+      <RateModal movieID={movieID} open={open}   handleClose={handleClose}  />
      
     </MotionBox>
   );

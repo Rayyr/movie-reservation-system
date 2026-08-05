@@ -1,71 +1,157 @@
- 
+'use client';
 
-import { useState } from 'react';
-import { Star } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Star } from "lucide-react";
+import React, { useState, useCallback, memo } from "react";
 
-export function StarRating({ 
-  totalStars = 5, 
-  defaultValue = 0,
-  onRate,
-  size = 'md',
-  className = '',
-  disabled = false,
-}) {
-  const [rating, setRating] = useState(defaultValue);
-  const [hover, setHover] = useState(0);
+// ID generator
+let nextId = 0;
+const generateStarIds = (count) =>
+  Array.from({ length: count }, () => `star-${nextId++}`);
 
-  const handleRating = (star) => {
-    if (disabled) return;
-    setRating(star);
-    if (onRate) onRate(star);
+// ⭐ Star Icon Component
+const StarIcon = memo(
+  ({ index, style, iconSize, onClick, onMouseMove, isInteractive }) => (
+    <Star
+      key={index}
+      size={iconSize}
+      fill={style.fill}
+      color={style.color}
+      onClick={onClick}
+      onMouseMove={onMouseMove}
+      className={`transition-colors duration-200 ${
+        isInteractive ? "cursor-pointer" : ""
+      }`}
+      style={style}
+    />
+  )
+);
+
+StarIcon.displayName = "StarIcon";
+
+// ⭐ Main Component
+const StarRating = ({
+  value,
+  onChange,
+  className = "",
+  iconSize = 24,
+  maxStars = 5,
+  readOnly = false,
+  color = "#e4c616",
+}) => {
+  const [hoverRating, setHoverRating] = useState(null);
+  const [starIds] = useState(() => generateStarIds(maxStars));
+
+  const calculateRating = useCallback((index, event) => {
+    const star = event.currentTarget;
+    const rect = star.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const width = rect.width;
+    const clickPosition = x / width;
+
+    let fraction = 1;
+    if (clickPosition <= 0.25) fraction = 0.25;
+    else if (clickPosition <= 0.5) fraction = 0.5;
+    else if (clickPosition <= 0.75) fraction = 0.75;
+
+    return index + fraction;
+  }, []);
+
+  const handleStarClick = useCallback(
+    (index, event) => {
+      if (readOnly || !onChange) return;
+      const newRating = calculateRating(index, event);
+      onChange(newRating);
+    },
+    [readOnly, onChange, calculateRating]
+  );
+
+  const handleStarHover = useCallback(
+    (index, event) => {
+      if (!readOnly) {
+        const previewRating = calculateRating(index, event);
+        setHoverRating(previewRating);
+      }
+    },
+    [readOnly, calculateRating]
+  );
+
+  const handleMouseLeave = useCallback(() => {
+    if (!readOnly) {
+      setHoverRating(null);
+    }
+  }, [readOnly]);
+
+  const getStarStyle = useCallback(
+    (index) => {
+      const ratingToUse =
+        !readOnly && hoverRating !== null ? hoverRating : value;
+
+      const difference = ratingToUse - index;
+
+      if (difference <= 0) return { color: "gray", fill: "transparent" };
+      if (difference >= 1) return { color: color, fill: color };
+
+      return {
+        color: color,
+        fill: `url(#${starIds[index]})`,
+      };
+    },
+    [readOnly, hoverRating, value, color, starIds]
+  );
+
+  const renderGradientDefs = () => {
+    const ratingToUse =
+      !readOnly && hoverRating !== null ? hoverRating : value;
+
+    const partialStarIndex = Math.floor(ratingToUse);
+    const partialFill = (ratingToUse % 1) * 100;
+
+    if (partialFill > 0) {
+      return (
+        <linearGradient
+          id={starIds[partialStarIndex]}
+          x1="0%"
+          y1="0%"
+          x2="100%"
+          y2="0%"
+        >
+          <stop offset={`${partialFill}%`} stopColor={color} />
+          <stop offset={`${partialFill}%`} stopColor="transparent" />
+        </linearGradient>
+      );
+    }
+    return null;
   };
 
-  const starSizes = {
-    sm: 'h-4 w-4',
-    md: 'h-6 w-6',
-    lg: 'h-8 w-8'
+  const renderStars = () => {
+    return Array.from({ length: maxStars }).map((_, index) => {
+      const style = getStarStyle(index);
+      return (
+        <StarIcon
+          key={starIds[index]}
+          index={index}
+          style={style}
+          iconSize={iconSize}
+          onClick={(e) => handleStarClick(index, e)}
+          onMouseMove={(e) => handleStarHover(index, e)}
+          isInteractive={!readOnly}
+        />
+      );
+    });
   };
 
   return (
     <div
-      className={`flex items-center gap-2 ${disabled ? 'opacity-50' : ''} ${className}`}
+      className={`relative flex items-center gap-x-0.5 ${className}`}
+      onMouseLeave={handleMouseLeave}
     >
-      {Array.from({ length: totalStars }, (_, index) => index + 1).map((star) => (
-        <motion.button
-          key={star}
-          type="button"
-          className={`relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
-            disabled ? 'cursor-not-allowed' : ''
-          }`}
-          onClick={() => handleRating(star)}
-          onMouseEnter={() => !disabled && setHover(star)}
-          onMouseLeave={() => !disabled && setHover(0)}
-          whileHover={!disabled ? { scale: 1.3, rotate: -10 } : undefined}
-          whileTap={!disabled ? { scale: 0.9, rotate: 15 } : undefined}
-          disabled={disabled}
-        >
-          <motion.div
-            className={`transition-colors duration-300 ${
-              (hover || rating) >= star
-                ? 'text-yellow-400 dark:text-yellow-300'
-                : 'text-muted'
-            }`}
-            initial={{ scale: 1 }}
-            animate={{
-              scale: (hover || rating) >= star ? 1.2 : 1,
-            }}
-            transition={{ 
-              duration: 0.3,
-              ease: "easeOut"
-            }}
-          >
-            <Star
-              className={`${starSizes[size]} fill-current stroke-[1.5px]`}
-            />
-          </motion.div>
-        </motion.button>
-      ))}
+      <svg width="0" height="0" style={{ position: "absolute" }}>
+        <defs>{renderGradientDefs()}</defs>
+      </svg>
+
+      {renderStars()}
     </div>
   );
-}
+};
+
+export default StarRating;
