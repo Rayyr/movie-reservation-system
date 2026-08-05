@@ -4,6 +4,7 @@ import {
   getMovieById,
   updateMovieById,
   deleteMovieById,
+  getMovieRate
 } from "../controllers/movieController.js";
 
 import { protect } from "../middlewares/authMiddleWare.js";
@@ -16,11 +17,15 @@ const router=express.Router();
 //by authnaticated admins only
 router.post("/create",protect,adminOnly,createMovie);
  
+/////////
 //by puplic
 router.get("/getAll",getMovies);
 
 //by puplic
 router.get("/getOne/:id",getMovieById);
+
+router.get("/getMovieRate/:movieID",getMovieRate);
+//////////////
 
 //by authnaticated admins only
 router.put("/updateOne/:id",protect,adminOnly,updateMovieById);

@@ -11,7 +11,7 @@ import showTimesRoutes from './routes/showTimesRoutes.js';
 import theaterRoutes from './routes/theaterRoutes.js';
 import screenRoutes from './routes/screenRoutes.js';
 import seatRoutes from './routes/seatRoutes.js';
- 
+import ratingsRoutes from './routes/ratingsRoutes.js';
 
 const app=express();
 
@@ -44,6 +44,8 @@ app.use("/api/theaters",theaterRoutes);
 app.use("/api/screens",screenRoutes);
 
 app.use("/api/seats",seatRoutes);
+
+app.use("/api/ratings",ratingsRoutes);
  
  export default app;
 

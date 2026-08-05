@@ -55,7 +55,7 @@ export const getMovieShowTimes = async (req, res) => {
   try {
     const movie_id = req.params.movieID;
 
-    console.log(movie_id);
+    //console.log(movie_id);
     const showtimes = await ShowTime.find({ movie: movie_id })
       .populate({
         path: "screen",
@@ -65,7 +65,7 @@ export const getMovieShowTimes = async (req, res) => {
           select: "name location",
         },
       })
-      .sort({ startTime: 1 });
+      .sort({ startTime: 1 });//ascending order A-Z by startTime prop
 
     res.status(200).json({
       showtimes,

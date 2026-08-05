@@ -36,7 +36,7 @@ export const getMovieById = async (req, res) => {
     const movie = await Movie.findById(id);
 
     if (!movie) {
-      return res.status(404).json({ message: "Movie not found" });
+      return res.status(400).json({ message: "Movie not found" });
     } else return res.status(200).json(movie);
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -44,7 +44,22 @@ export const getMovieById = async (req, res) => {
 };
 
 
+//get movie rate by id
+export const getMovieRate=async(req,res)=>{
 
+  try{
+
+    const movieID=req.params.movieID;
+    const movie=await Movie.findById(movieID);
+    if(!movie){
+      return res.status(400).json({message:"Movie not found"});
+    }
+    
+  }catch(error){
+        return res.status(500).json({ message: error.message });
+
+  }
+};
 
 //update movie by id
 export const updateMovieById = async (req, res) => {
