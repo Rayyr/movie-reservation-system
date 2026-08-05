@@ -26,18 +26,17 @@ function ShowTimes() {
   const [isLoading, setIsLoading] = useState(false);
   const [isBlocked, setIsBlocking] = useState(false);
 
-  const [isPressed, setIsPressed] = useState(false);
-  
+   
   const [open, setOpen] = useState(false);
   
 const handleOpen = (movie) => {
     setOpen(true);
-    setIsPressed(true);
+    
   };
 
   const handleClose = () => {
     setOpen(false);
-      setIsPressed(false);
+      
   };
  
   //fetch movie obj
@@ -216,11 +215,9 @@ const handleOpen = (movie) => {
                
             }}
           >
-            {isPressed ? (
-              <CircularProgress size={20} color="inherit" />
-            ) : (
-              "Rate now"
-            )}
+            
+              Rate now
+           
           </Button>
         </motion.div>
 
