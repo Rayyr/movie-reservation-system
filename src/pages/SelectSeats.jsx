@@ -6,11 +6,11 @@ import api from "../services/api";
 import notFoundMovieBg from "../assests/Movie/notFoundMovieBg.avif";
 import { CircularProgress } from "@mui/material";
 import { AuthContext } from "../context/AuthContext";
+import { motion } from "framer-motion";
 
-const SelectSeats = ({setRemountKey,remountKey}) => {
+const SelectSeats = ({ setRemountKey, remountKey }) => {
+  const { user } = useContext(AuthContext);
 
-  const {user}=useContext(AuthContext);
-  
   const [isLoading, setIsLoading] = useState(true);
   const [isBlocked, setIsBlocking] = useState(true);
 
@@ -19,7 +19,7 @@ const SelectSeats = ({setRemountKey,remountKey}) => {
   const { showtime, movie } = state || {};
 
   //const [seats, setSeats] = useState([]);
-  const [groupedSeats, setGroupedSeats] = useState({});//key:row,value:seatsObjs in that row
+  const [groupedSeats, setGroupedSeats] = useState({}); //key:row,value:seatsObjs in that row
   const [seatsExist, setSeatsExist] = useState(true);
 
   //group seats by rows : {{A:[]},{B:[]}...}
@@ -73,7 +73,7 @@ const SelectSeats = ({setRemountKey,remountKey}) => {
             onOpen: () => {
               setIsBlocking(true);
               setIsLoading(true);
-            } 
+            },
           });
         //invalid showtimeID error (impossiple since there is a previous chain of api calls with this id )| api error
         else if (err.response.status === 404 || err.response.status === 500) {
@@ -96,7 +96,7 @@ const SelectSeats = ({setRemountKey,remountKey}) => {
     fetchSeats();
   }, []); //on each refresh it will be triggered since the component will be remounted and this is the mean of [] dependency array
 
-  const [selectedSeats, setSelectedSeats] = useState([]);//[seat1Obj,seat2Obj...]
+  const [selectedSeats, setSelectedSeats] = useState([]); //[seat1Obj,seat2Obj...]
 
   const toggleSeat = useCallback((seat) => {
     if (seat.status === "RESERVED") return;
@@ -114,38 +114,37 @@ const SelectSeats = ({setRemountKey,remountKey}) => {
     }
   });
 
-  const flattenSeatsIds=useCallback((seats)=>{
+  const flattenSeatsIds = useCallback((seats) => {
     //return only seat ids
-    const flatten=seats.flatMap((s)=>{return s._id;});//[seat1Id,seat2Id...]
+    const flatten = seats.flatMap((s) => {
+      return s._id;
+    }); //[seat1Id,seat2Id...]
     return flatten;
   });
 
   //for confirm booking btn
-  const [isPressed,setIsPressed]=useState(false);
+  const [isPressed, setIsPressed] = useState(false);
 
-  const confirmBooking = useCallback(async() => {
+  const confirmBooking = useCallback(async () => {
     setIsPressed(true);
     try {
-        const seats=flattenSeatsIds(selectedSeats);
-        const data={user:user._id,showTime:showtime._id,seats:seats};
-   
-       const res=await api.post("/api/bookings/create",data);
+      const seats = flattenSeatsIds(selectedSeats);
+      const data = { user: user._id, showTime: showtime._id, seats: seats };
 
-        setRemountKey(remountKey+1);//or we can directlly call again fetchSeats api 
-         toast.success(res.data.message, {
-                 style: {
-                   width: "500px",
-                 },
-                 onOpen: () => {
-                   setIsPressed(true);
-                 },
-                 onClose: () => {
-                   setIsPressed(false); 
-                  
-                 },
-               });
-             
-      
+      const res = await api.post("/api/bookings/create", data);
+
+      setRemountKey(remountKey + 1); //or we can directlly call again fetchSeats api
+      toast.success(res.data.message, {
+        style: {
+          width: "500px",
+        },
+        onOpen: () => {
+          setIsPressed(true);
+        },
+        onClose: () => {
+          setIsPressed(false);
+        },
+      });
     } catch (err) {
       // api network error connection
       if (err.code === "ERR_NETWORK")
@@ -162,14 +161,13 @@ const SelectSeats = ({setRemountKey,remountKey}) => {
           },
         });
       //api error
-      else if (  err.response.status === 500) {
+      else if (err.response.status === 500) {
         toast.error(err.response.data.message, {
           style: {
             width: "500px",
           },
           onOpen: () => {
             setIsBlocking(true);
-            
           },
           onClose: () => {
             setIsBlocking(false);
@@ -177,10 +175,49 @@ const SelectSeats = ({setRemountKey,remountKey}) => {
           },
         });
       }
-    } 
+    }
   });
 
-  return (isLoading || isBlocked) ? (
+  // Animations
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 },
+    },
+  };
+
+  const rowVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.3 },
+    },
+  };
+
+  const seatVariants = {
+    hidden: { scale: 0.8, opacity: 0 },
+    visible: {
+      scale: 1,
+      opacity: 1,
+      transition: { duration: 0.2 },
+    },
+  };
+
+  const buttonVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 },
+  };
+
+  const MotionBox = motion(Box);
+
+  return isLoading || isBlocked ? (
     <Box
       sx={{
         display: "flex",
@@ -192,7 +229,10 @@ const SelectSeats = ({setRemountKey,remountKey}) => {
       <CircularProgress sx={{ color: "var(--blue)" }} size={40} />
     </Box>
   ) : (
-    <Box
+    <MotionBox
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
       sx={{
         minHeight: "100vh",
         backgroundImage: movie?.backdrop_path
@@ -204,132 +244,157 @@ const SelectSeats = ({setRemountKey,remountKey}) => {
         p: 4,
         color: "#fff",
       }}
-      
     >
       {/* Overlay */}
       <Box
         sx={{
           position: "absolute",
           inset: 0,
-          background: "rgba(0,0,0,0.5)",
+          backdropFilter: "blur(3px)",
           zIndex: 0,
         }}
       />
 
       {/* Content */}
-      <Box sx={{ position: "relative", zIndex: 1 }}>
-        <Typography variant="h4" gutterBottom>
-          {movie?.title}
-        </Typography>
 
-        <Typography sx={{ mb: 3 }}>
-          {new Date(showtime?.startTime).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}{" "}
-          {" - "}
-          {new Date(showtime?.endTime).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </Typography>
+      <Box sx={{ position: "relative", zIndex: 1 }}>
+        <motion.div variants={itemVariants}>
+          <Typography variant="h4" gutterBottom>
+            {movie?.title}
+          </Typography>
+        </motion.div>
+
+        <motion.div variants={itemVariants}>
+          <Typography sx={{ mb: 3 }}>
+            {new Date(showtime?.startTime).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}{" "}
+            {" - "}
+            {new Date(showtime?.endTime).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </Typography>
+        </motion.div>
 
         {/* 🎬 SCREEN */}
-        <Box
-          sx={{
-            width: "100%",
-            height: 40,
-            background: "#ddd",
-            borderRadius: "50%",
-            textAlign: "center",
-            lineHeight: "40px",
-            color: "#000",
-            mb: 4,
-          }}
-        >
-          SCREEN
-        </Box>
-
-        {!seatsExist && (
-          <Typography sx={{ mb: 3 }}>
-            Sorry there is no available seats currentlly !
-          </Typography>
-        )}
-
+        <motion.div variants={itemVariants}>
+          <Box
+            sx={{
+              width: "100%",
+              height: 40,
+              background: "#ddd",
+              borderRadius: "50%",
+              textAlign: "center",
+              lineHeight: "40px",
+              color: "#000",
+              mb: 4,
+            }}
+          >
+            SCREEN
+          </Box>
+        </motion.div>
+        <motion.div variants={itemVariants}>
+          {!seatsExist && (
+            <Typography sx={{ mb: 3 }}>
+              Sorry there is no available seats currentlly !
+            </Typography>
+          )}
+        </motion.div>
         {/* 🪑 SEATS BY ROW */}
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          {Object.keys(groupedSeats).map((rowKey) => (//go among them by row
-            <Box
-              key={rowKey}
-              sx={{ display: "flex", gap: 1, alignItems: "center" }}
-            >
-              {/* Row Label */}
-              <Box sx={{ width: 20, color: "white" }}>{rowKey}</Box>
+          {Object.keys(groupedSeats).map(
+            (
+              rowKey, //go among them by row
+            ) => (
+              <Box
+                key={rowKey}
+                sx={{ display: "flex", gap: 1, alignItems: "center" }}
+              >
+                {/* Row Label */}
+                <Box sx={{ width: 20, color: "white" }}>{rowKey}</Box>
 
-              {/* Seats in this row */}
-              {groupedSeats[rowKey].map((seat) => {//go among each seat in that row
-                const isSelected = selectedSeats.some(
-                  (selected) => selected._id === seat._id,
-                );
+                {/* Seats in this row */}
+                {groupedSeats[rowKey].map((seat) => {
+                  //go among each seat in that row
+                  const isSelected = selectedSeats.some(
+                    (selected) => selected._id === seat._id,
+                  );
 
-                return (
-                  <Box
-                    key={seat._id}
-                    onClick={() => toggleSeat(seat)}
-                    sx={{
-                      width: 35,
-                      height: 35,
-                      borderRadius: "6px",
-                      cursor:
-                        seat.status === "RESERVED" ? "not-allowed" : "pointer",
-                      backgroundColor:
-                        seat.status === "RESERVED"
-                          ? "#e50914"
-                          : isSelected
-                            ? "#ffdd57"
-                            : "#2ecc71",
-                      border: isSelected
-                        ? "2px solid #fff"
-                        : "2px solid transparent",
-                      transition: "0.2s",
-                    }}
-                  />
-                );
-              })}
-            </Box>
-          ))}
+                  return (
+                    <MotionBox
+                      variants={seatVariants}
+                      key={seat._id}
+                      onClick={() => toggleSeat(seat)}
+                      sx={{
+                        width: 35,
+                        height: 35,
+                        borderRadius: "6px",
+                        cursor:
+                          seat.status === "RESERVED"
+                            ? "not-allowed"
+                            : "pointer",
+                        backgroundColor:
+                          seat.status === "RESERVED"
+                            ? "#e50914"
+                            : isSelected
+                              ? "#ffdd57"
+                              : "#2ecc71",
+                        border: isSelected
+                          ? "2px solid #fff"
+                          : "2px solid transparent",
+                        transition: "0.2s",
+                      }}
+                    />
+                  );
+                })}
+              </Box>
+            ),
+          )}
         </Box>
 
         {/* 🎟️ Selected Info */}
-        <Typography sx={{ mt: 3 }}>
-          Selected Seats:{" "}
-          {selectedSeats.length > 0
-            ? selectedSeats
-                .map((seat) => `${seat.row}${seat.number}`)
-                .join(", ")
-            : "None"}
-        </Typography>
+        <motion.div variants={itemVariants}>
+          <Typography sx={{ mt: 3 }}>
+            Selected Seats:{" "}
+            {selectedSeats.length > 0
+              ? selectedSeats
+                  .map((seat) => `${seat.row}${seat.number}`)
+                  .join(", ")
+              : "None"}
+          </Typography>
+        </motion.div>
 
-        <Button
-          sx={{
-            mt: 3,
-            background: "var(--red)",
-            textTransform: "none",
-            color: "#fff",
-            paddingX: 3,
-            paddingY: 1.5,
-          }}
-          disabled={selectedSeats.length === 0 || isBlocked || isLoading}
-          onClick={() => confirmBooking()}
-        >
-          {isPressed ? (
-            <CircularProgress size={20} color="inherit" />
-          ) : (
-            "Confirm Booking"
-          )}
-        </Button>
+        {/* 🎟️ Button */}
+        <MotionBox variants={buttonVariants}>
+          <Button
+            sx={{
+              background: "var(--red)",
+              borderRadius: "999px",
+              textTransform: "none",
+              px: 2,
+              py: 0.25,
+              minHeight: 32,
+              fontSize: "0.8rem",
+              "&:hover": { background: "#e11d48" },
+              mt: 3.5,
+            }}
+            disabled={selectedSeats.length === 0 || isBlocked || isLoading}
+            onClick={(e) => {
+              e.preventDefault();
+              confirmBooking();
+            }}
+          >
+            {isPressed ? (
+              <CircularProgress size={20} color="inherit" />
+            ) : (
+              "Confirm Booking"
+            )}
+          </Button>
+        </MotionBox>
       </Box>
-    </Box>
+    </MotionBox>
   );
 };
 
