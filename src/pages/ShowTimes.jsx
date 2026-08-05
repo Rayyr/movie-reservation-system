@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import api from "../services/api";
 import { toast } from "react-toastify";
-import { Box } from "@mui/material";
-import { Button } from "@mui/material";
+import { Box, Typography, Grid, Paper } from "@mui/material";
 import { useParams } from "react-router-dom";
 import ShowTimeCard from "../components/user-defined/ShowTimeCard";
 import notFoundMovieBg from "../assests/Movie/notFoundMovieBg.avif";
 import { motion } from "framer-motion";
-import {CircularProgress} from '@mui/material';
+import { CircularProgress } from "@mui/material";
 
 function ShowTimes() {
   //exatrct movie from url path
@@ -29,8 +28,8 @@ function ShowTimes() {
 
         setMovie(res.data);
 
-          setIsLoading(false);
-      setIsBlocking(false);
+        setIsLoading(false);
+        setIsBlocking(false);
       } catch (err) {
         // api network error connection
         if (err.code === "ERR_NETWORK")
@@ -40,10 +39,10 @@ function ShowTimes() {
             },
             onOpen: () => {
               setIsBlocking(true);
-            } 
+            },
           });
         //api error || invalid movie id error
-        else if (err.response.status===400 || err.response.status === 500) {
+        else if (err.response.status === 400 || err.response.status === 500) {
           toast.error(err.response.data.message, {
             style: {
               width: "500px",
@@ -56,7 +55,7 @@ function ShowTimes() {
             },
           });
         }
-      }  
+      }
     };
     fetchMovie();
   }, [movieID]);
@@ -73,7 +72,7 @@ function ShowTimes() {
           `/api/showTimes/getMovieShowTimes/${movieID}`,
         );
         setShowTimes(res.data.showtimes);
-          setIsBlocking(false);
+        setIsBlocking(false);
         setIsLoading(false);
       } catch (err) {
         // api network error connection
@@ -84,7 +83,7 @@ function ShowTimes() {
             },
             onOpen: () => {
               setIsBlocking(true);
-            } 
+            },
           });
         //api error
         else if (err.response.status === 500) {
@@ -100,7 +99,7 @@ function ShowTimes() {
             },
           });
         }
-      }  
+      }
     };
 
     fetchShowTimes();
@@ -115,21 +114,25 @@ function ShowTimes() {
     },
   };
 
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 },
+  };
+
   const MotionBox = motion(Box);
 
-  return (
-    isLoading || isBlocked) ? (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh", // or "100vh" for full screen
-          }}
-        >
-          <CircularProgress sx={{ color: "var(--blue)" }} size={40} />
-        </Box>
-      ) : (
+  return isLoading || isBlocked ? (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh", // or "100vh" for full screen
+      }}
+    >
+      <CircularProgress sx={{ color: "var(--blue)" }} size={40} />
+    </Box>
+  ) : (
     <MotionBox
       variants={containerVariants}
       initial="hidden"
@@ -139,20 +142,92 @@ function ShowTimes() {
         backgroundImage: movie?.backdrop_path
           ? `url(${process.env.REACT_APP_BASE_MOVIES_IMGS_URL}${movie.backdrop_path})`
           : `url(${notFoundMovieBg})`,
-
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
         position: "relative",
-        p: 3,
+        p: { xs: 2, md: 4 },
       }}
     >
-      <h1>{movie?.title} showtimes</h1>
-      {showTimes.length!==0? ( showTimes.map((st) => (
-        <ShowTimeCard key={st._id} st={st} movie={movie} />
-      ))): <h1>Sorry , currentlly there is no showtimes for this movie</h1>}
+      {/* 🔥 Overlay */}
+      <Box
+        sx={{
+          position: "absolute",
+          inset: 0,
+
+          backdropFilter: "blur(2px)",
+          zIndex: 0,
+        }}
+      />
+
+      {/* 🎯 Content */}
+      <Box sx={{ position: "relative", zIndex: 1 }}>
+        {/* 🎬 Title */}
+        <motion.div variants={itemVariants}>
+          <Typography
+            variant="h3"
+            sx={{
+              fontWeight: "bold",
+              mb: 1,
+              color: "white",
+            }}
+          >
+            {movie?.title}
+          </Typography>
+        </motion.div>
+
+        <motion.div variants={itemVariants}>
+          <Typography
+            variant="subtitle1"
+            sx={{ color: "rgba(255,255,255,0.7)", mb: 4 }}
+          >
+            Available Showtimes
+          </Typography>
+        </motion.div>
+
+        {/* 🎟️ Showtimes */}
+        {showTimes.length !== 0 ? (
+          <Grid container spacing={3}>
+            {showTimes.map((st) => (
+              <Grid item xs={12} sm={6} md={4} key={st._id}>
+                <motion.div variants={itemVariants}>
+                  <Paper
+                    elevation={6}
+                    sx={{
+                      p: 3,
+                      borderRadius: "16px",
+                      background: "rgba(255,255,255,0.08)",
+                      backdropFilter: "blur(10px)",
+                      color: "#fff",
+                      transition: "0.3s",
+                      cursor: "pointer",
+                      "&:hover": {
+                        transform: "translateY(-5px) scale(1.02)",
+                        background: "rgba(255,255,255,0.15)",
+                      },
+                    }}
+                  >
+                    <ShowTimeCard st={st} movie={movie} />
+                  </Paper>
+                </motion.div>
+              </Grid>
+            ))}
+          </Grid>
+        ) : (
+          <Box
+            sx={{
+              mt: 5,
+              textAlign: "center",
+              color: "white",
+              opacity: 0.8,
+            }}
+          >
+            <motion.div variants={itemVariants}>
+              <Typography variant="h5">🎬 No showtimes available</Typography>
+            </motion.div>
+          </Box>
+        )}
+      </Box>
     </MotionBox>
-      
   );
 }
 
