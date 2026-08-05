@@ -74,7 +74,7 @@ function ForgotPassword() {
           },
           onClose: () => {
             setIsBlocking(false);
-            //navigate("/login");
+            navigate("/login",{ replace: true });
           },
         });
       //invalid email error | api error

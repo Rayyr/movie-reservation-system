@@ -6,13 +6,22 @@ import StarRating from "../built-in/StarRating";
 import { toast } from "react-toastify";
 import api from "../../services/api";
 import { useState } from "react";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 function RateModal({ open, handleClose, movieID }) {
+
+    const {logout}=useContext(AuthContext);
+
   const [isLoading, setIsLoading] = useState(false);
   const [isBlocked, setIsBlocking] = useState(false);
 
   const handleRating = async () => {
+   setIsBlocking(true);
+   setIsLoading(true);
+
     try {
+        
     } catch (err) {
       // api network error connection
       if (err.code === "ERR_NETWORK")
@@ -21,10 +30,11 @@ function RateModal({ open, handleClose, movieID }) {
             width: "500px",
           },
           onOpen: () => {
-            /* setIsBlocking(true); */
+            setIsBlocking(true);
           },
           onClose: () => {
-            /* setIsBlocking(false); */
+            setIsBlocking(false);
+           logout();
             // navigate("/login",{ replace: true });
           },
         });

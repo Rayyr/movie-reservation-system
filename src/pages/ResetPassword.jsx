@@ -80,7 +80,7 @@ function ResetPassword() {
             navigate("/login",{ replace: true });
            },
         });
-      //token's time has been expired error 
+      //token's time has been expired error for the reset URL
       else if (err.response.status === 400 )  {
         toast.error(err.response.data.message, {
           style: {

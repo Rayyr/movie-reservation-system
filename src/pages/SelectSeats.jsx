@@ -9,7 +9,7 @@ import { AuthContext } from "../context/AuthContext";
 import { motion } from "framer-motion";
 
 const SelectSeats = ({ setRemountKey, remountKey }) => {
-  const { user } = useContext(AuthContext);
+  const { user,logout } = useContext(AuthContext);
 
   const [isLoading, setIsLoading] = useState(true);
   const [isBlocked, setIsBlocking] = useState(true);
@@ -74,6 +74,7 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
               setIsBlocking(true);
               setIsLoading(true);
             },
+            onClose:()=>{logout();}
           });
         //invalid showtimeID error (impossiple since there is a previous chain of api calls with this id )| api error
         else if (err.response.status === 404 || err.response.status === 500) {
@@ -87,6 +88,7 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
             onClose: () => {
               setIsBlocking(false);
               setIsLoading(false);
+              logout();
             },
           });
         }
@@ -157,7 +159,7 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
             setIsLoading(true);
           },
           onClose: () => {
-            setIsBlocking(false); //keep him at this page untill network is restored ! so i will not make setIsloading(false)
+             logout();
           },
         });
       //api error
@@ -172,6 +174,7 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
           onClose: () => {
             setIsBlocking(false);
             setIsLoading(false);
+            logout();
           },
         });
       }

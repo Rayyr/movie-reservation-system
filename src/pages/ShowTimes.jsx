@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import api from "../services/api";
 import { toast } from "react-toastify";
 import {
@@ -16,7 +16,11 @@ import notFoundMovieBg from "../assests/Movie/notFoundMovieBg.avif";
 import { motion } from "framer-motion";
 import { CircularProgress } from "@mui/material";
 import RateModal from "../components/user-defined/RateModal";
+import { AuthContext } from "../context/AuthContext";
 function ShowTimes() {
+
+    const {logout}=useContext(AuthContext);
+    
   //exatrct movie from url path
   const { movieID } = useParams();
 
@@ -61,6 +65,7 @@ const handleOpen = (movie) => {
             onOpen: () => {
               setIsBlocking(true);
             },
+            onClose:()=>{logout();}
           });
         //api error || invalid movie id error
         else if (err.response.status === 400 || err.response.status === 500) {
@@ -105,6 +110,7 @@ const handleOpen = (movie) => {
             onOpen: () => {
               setIsBlocking(true);
             },
+            onClose:()=>{logout();}
           });
         //api error
         else if (err.response.status === 500) {
@@ -117,6 +123,7 @@ const handleOpen = (movie) => {
             },
             onClose: () => {
               setIsBlocking(false);
+              logout();
             },
           });
         }
