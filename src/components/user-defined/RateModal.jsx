@@ -3,6 +3,7 @@ import IconButton from "@mui/material/IconButton";
 import {Modal,
   Backdrop,Box,Typography} from '@mui/material';
 import { GoStar } from "react-icons/go";
+import { StarRating } from "../built-in/StarRating";
 
 function RateModal({open,handleClose}){
 
@@ -49,13 +50,10 @@ function RateModal({open,handleClose}){
           </IconButton>
 
           {/* content */}
-          <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
-            <GoStar />
-            <GoStar />
-            <GoStar />
-            <GoStar />
-            <GoStar />
-          </Typography>
+           <StarRating 
+        defaultValue={3}
+        onRate={(rating) => console.log(`Rated: ${rating}`)}
+      />
         </Box>
       </Modal>
 
