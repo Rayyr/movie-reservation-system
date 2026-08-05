@@ -1,13 +1,21 @@
 import { useState, useEffect } from "react";
 import api from "../services/api";
 import { toast } from "react-toastify";
-import { Box, Typography, Grid, Paper } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Grid,
+  Paper,
+  Button,
+  
+} from "@mui/material";
+
 import { useParams } from "react-router-dom";
 import ShowTimeCard from "../components/user-defined/ShowTimeCard";
 import notFoundMovieBg from "../assests/Movie/notFoundMovieBg.avif";
 import { motion } from "framer-motion";
 import { CircularProgress } from "@mui/material";
-
+import RateModal from "../components/user-defined/RateModal";
 function ShowTimes() {
   //exatrct movie from url path
   const { movieID } = useParams();
@@ -18,6 +26,21 @@ function ShowTimes() {
   const [isLoading, setIsLoading] = useState(false);
   const [isBlocked, setIsBlocking] = useState(false);
 
+  const [isPressed, setIsPressed] = useState(false);
+  
+  const [open, setOpen] = useState(false);
+  
+    const handleOpen = (movie) => {
+     
+    setOpen(true);
+    setIsPressed(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+      setIsPressed(false);
+  };
+ 
   //fetch movie obj
   useEffect(() => {
     const fetchMovie = async () => {
@@ -173,6 +196,33 @@ function ShowTimes() {
           >
             {movie?.title}
           </Typography>
+
+          <Button
+            sx={{
+              background: "var(--red)",
+              borderRadius: "999px",
+              textTransform: "none",
+              px: 2,
+              py: 0.25,
+              minHeight: 32,
+              fontSize: "0.8rem",
+              "&:hover": { background: "#e11d48" },
+              mt: 3.5,
+              color: "#fff",
+            }}
+            disabled={isBlocked || isLoading}
+            onClick={(e) => {
+              e.preventDefault();
+            handleOpen();
+               
+            }}
+          >
+            {isPressed ? (
+              <CircularProgress size={20} color="inherit" />
+            ) : (
+              "Rate now"
+            )}
+          </Button>
         </motion.div>
 
         <motion.div variants={itemVariants}>
@@ -227,6 +277,9 @@ function ShowTimes() {
           </Box>
         )}
       </Box>
+
+      <RateModal open={open}   handleClose={handleClose}  />
+     
     </MotionBox>
   );
 }
