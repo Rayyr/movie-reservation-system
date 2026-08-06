@@ -2,18 +2,20 @@ import Rating from "../models/Rating.js";
 
 export const getIfUserRate = async (req, res) => {
   try {
-    //movieID from req.params , user from req.body
-    const movieID = req.params.movieID; //id
-    const user = req.body.user; //user obj
+    const movieID = req.params.movieID;
+    const userId = req.user._id;
 
-    const result = await Rating.find({
+    
+
+    const result = await Rating.findOne({
       movie: movieID,
-      user: user._id,
+      user: userId,
     });
 
-    if (!result) {
-      return res.status(200).json(false); //true=res.data
-    } else return res.status(200).json(true);
+    if(result)
+    return res.status(200).json(true);//rated 
+
+    else return res.status(200).json(false);//not rated 
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
