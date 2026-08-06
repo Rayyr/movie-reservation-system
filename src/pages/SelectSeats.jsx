@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
 import { useState, useEffect, useContext, memo, useCallback } from "react";
 import { toast } from "react-toastify";
@@ -7,6 +7,7 @@ import notFoundMovieBg from "../assests/Movie/notFoundMovieBg.avif";
 import { CircularProgress } from "@mui/material";
 import { AuthContext } from "../context/AuthContext";
 import { motion } from "framer-motion";
+import { GoChevronLeft } from "react-icons/go";
 
 const SelectSeats = ({ setRemountKey, remountKey }) => {
   const { user,logout } = useContext(AuthContext);
@@ -212,6 +213,8 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
 
   const MotionBox = motion(Box);
 
+  const navigate=useNavigate();
+
   return isLoading || isBlocked ? (
     <Box
       sx={{
@@ -253,6 +256,38 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
       {/* Content */}
 
       <Box sx={{ position: "relative", zIndex: 1 }}>
+
+            {/* Back  */}
+              <motion.div
+                variants={itemVariants}
+                style={{
+                  textAlign: "left",
+                  alignItems: "center",
+                  justifyContent: "start",
+                }}
+              >
+                <Box
+                  onClick={() => navigate(`/show-times/${movie._id}`)}
+                  sx={{
+                    display: "inline-flex",
+        
+                    gap: "6px",
+                    cursor: "pointer",
+                    textAlign: "center",
+                    mt: 3,
+                    marginLeft: 3,
+                    color: "var(--red)",
+                    pointerEvents: isLoading || isBlocked ? "none" : "auto", // ✅ (actually as a disable prop it is not disabled but as style ) disables click
+                  }}
+                >
+                  <GoChevronLeft size={18} style={{ display: "block" }} />
+                  <Typography variant="body1" sx={{ lineHeight: 1, fontWeight: 500 }}>
+                    Back
+                  </Typography>
+                </Box>
+              </motion.div>
+
+              
         <motion.div variants={itemVariants}>
           <Typography variant="h4" gutterBottom>
             {movie?.title}
