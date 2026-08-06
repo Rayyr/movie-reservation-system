@@ -3,13 +3,14 @@ import api from "../services/api";
 import { toast } from "react-toastify";
 import { Box, Typography, Grid, Paper, Button } from "@mui/material";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ShowTimeCard from "../components/user-defined/ShowTimeCard";
 import notFoundMovieBg from "../assests/Movie/notFoundMovieBg.avif";
 import { motion } from "framer-motion";
 import { CircularProgress } from "@mui/material";
 import RateModal from "../components/user-defined/RateModal";
 import { AuthContext } from "../context/AuthContext";
+import { GoChevronLeft } from "react-icons/go";
 function ShowTimes() {
   const { logout, user } = useContext(AuthContext);
 
@@ -34,6 +35,7 @@ function ShowTimes() {
     setOpen(false);
   };
 
+  
   //fetch if user rate this movie or no
   useEffect(() => {
     const fetchIfRate = async () => {
@@ -176,6 +178,8 @@ function ShowTimes() {
 
   const MotionBox = motion(Box);
 
+  const navigate=useNavigate();
+
   return isLoading || isBlocked ? (
     <Box
       sx={{
@@ -214,8 +218,44 @@ function ShowTimes() {
         }}
       />
 
+         
+
+
       {/* 🎯 Content */}
       <Box sx={{ position: "relative", zIndex: 1 }}>
+
+         {/* Back  */}
+            <motion.div
+              variants={itemVariants}
+              style={{
+                textAlign: "left",
+                alignItems: "center",
+                justifyContent: "start",
+                 
+              }}
+            >
+              <Box
+                onClick={() => navigate("/movie-list")}
+                sx={{
+                  display: "inline-flex",
+      
+                  gap: "6px",
+                  cursor: "pointer",
+                  textAlign: "center",
+                  mt: 3,
+                  marginLeft: 3,
+                  color: "var(--red)",
+                  pointerEvents: isLoading || isBlocked ? "none" : "auto", // ✅ (actually as a disable prop it is not disabled but as style ) disables click
+                }}
+              >
+                <GoChevronLeft size={18} style={{ display: "block" }} />
+                <Typography variant="body1" sx={{ lineHeight: 1, fontWeight: 500 }}>
+                  Back
+                </Typography>
+              </Box>
+            </motion.div>
+
+
         {/* 🎬 Title */}
         <motion.div variants={itemVariants}>
           <Typography

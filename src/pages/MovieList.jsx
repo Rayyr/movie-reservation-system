@@ -155,7 +155,7 @@ export default function MovieList() {
         flexDirection: "column",
       }}
     >
-      {/* Back to Home */}
+      {/* Back  */}
       <motion.div
         variants={itemVariants}
         style={{
@@ -174,7 +174,7 @@ export default function MovieList() {
             textAlign: "center",
             mt: 3,
             marginLeft: 3,
-            color: "var(--blue)",
+            color: "var(--red)",
             pointerEvents: isLoading || isBlocked ? "none" : "auto", // ✅ (actually as a disable prop it is not disabled but as style ) disables click
           }}
         >
