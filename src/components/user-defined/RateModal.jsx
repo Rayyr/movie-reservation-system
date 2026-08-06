@@ -9,9 +9,10 @@ import { useState } from "react";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
+//this is component not route
 function RateModal({ open, handleClose, movieID }) {
 
-    const {logout}=useContext(AuthContext);
+    const {logout,user}=useContext(AuthContext);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isBlocked, setIsBlocking] = useState(false);
@@ -21,7 +22,22 @@ function RateModal({ open, handleClose, movieID }) {
    setIsLoading(true);
 
     try {
-        
+        const res=await api.post(`/api/ratings/submitRating/${movieID}`,{rating})
+ toast.success(res.data.message, {
+          style: {
+            width: "500px",
+          },
+          onOpen: () => {
+            setIsBlocking(true);
+
+          },
+          onClose: () => {
+            setIsBlocking(false);
+         setIsLoading(false);
+            
+          },
+        });
+
     } catch (err) {
       // api network error connection
       if (err.code === "ERR_NETWORK")
@@ -56,9 +72,10 @@ function RateModal({ open, handleClose, movieID }) {
     }
   };
 
-  const [rating, setRating] = useState(4.3);
+  const [rating, setRating] = useState(0);
 
   return (
+    user &&(
     <Modal
       open={open}
       onClose={() => handleClose()}
@@ -137,6 +154,7 @@ function RateModal({ open, handleClose, movieID }) {
         </Button>
       </Box>
     </Modal>
+        )
   );
 }
 
