@@ -90,6 +90,7 @@ function App() {
               }
             ></Route>
 
+
             <Route path="/movie-list" element={<MovieList ></MovieList >}> </Route>
 {/*             <Route path="/movie-list" element={<ProtectedRoute allowedRoles={[roles.user,roles.admin]}><MovieList ></MovieList ></ProtectedRoute>}> </Route>
  */}

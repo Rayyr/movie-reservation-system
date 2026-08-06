@@ -19,6 +19,7 @@ import IconButton from "@mui/material/IconButton";
 import { Navigate, useNavigate } from "react-router-dom";
 import movieAlt from "../assests/Movie/movieAlt.png";
 import { motion } from "framer-motion";
+import { GoChevronLeft } from "react-icons/go";
 
 export default function MovieList() {
   const { logout } = useContext(AuthContext);
@@ -129,6 +130,12 @@ export default function MovieList() {
     navigate(`/show-times/${movie._id}`);
   };
 
+  const handleNav = () => {
+    if (localStorage.getItem("user"))
+      navigate("/user-dashboard"); //there is logged in user
+    else navigate("/login"); //not logged in user
+  };
+
   return isLoading || isBlocked ? (
     <Box
       sx={{
@@ -148,6 +155,36 @@ export default function MovieList() {
         flexDirection: "column",
       }}
     >
+      {/* Back to Home */}
+      <motion.div
+        variants={itemVariants}
+        style={{
+          textAlign: "left",
+          alignItems: "center",
+          justifyContent: "start",
+        }}
+      >
+        <Box
+          onClick={() => handleNav()}
+          sx={{
+            display: "inline-flex",
+
+            gap: "6px",
+            cursor: "pointer",
+            textAlign: "center",
+            mt: 3,
+            marginLeft: 3,
+            color: "var(--blue)",
+            pointerEvents: isLoading || isBlocked ? "none" : "auto", // ✅ (actually as a disable prop it is not disabled but as style ) disables click
+          }}
+        >
+          <GoChevronLeft size={18} style={{ display: "block" }} />
+          <Typography variant="body1" sx={{ lineHeight: 1, fontWeight: 500 }}>
+            Back
+          </Typography>
+        </Box>
+      </motion.div>
+
       {displayedMovies.length !== 0 ? (
         <>
           <Container maxWidth="m" sx={{ mt: 4, flexGrow: 1 }}>

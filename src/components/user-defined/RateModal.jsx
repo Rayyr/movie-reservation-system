@@ -8,38 +8,36 @@ import api from "../../services/api";
 import { useState } from "react";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import {CircularProgress} from '@mui/material';
+import { CircularProgress } from "@mui/material";
 
 //this is component not route
 function RateModal({ open, handleClose, movieID }) {
-
-    const {logout,user}=useContext(AuthContext);
+  const { logout, user } = useContext(AuthContext);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isBlocked, setIsBlocking] = useState(false);
 
   const handleRating = async () => {
-   setIsBlocking(true);
-   setIsLoading(true);
+    setIsBlocking(true);
+    setIsLoading(true);
 
     try {
-        const res=await api.post(`/api/ratings/submitRating/${movieID}`,{rating})
- toast.success(res.data.message, {
-          style: {
-            width: "500px",
-          },
-          onOpen: () => {
-            setIsBlocking(true);
-
-          },
-          onClose: () => {
-            setIsBlocking(false);
-         setIsLoading(false);
-            handleClose();
-          },
-        });
-
-       
+      const res = await api.post(`/api/ratings/submitRating/${movieID}`, {
+        rating,
+      });
+      toast.success(res.data.message, {
+        style: {
+          width: "500px",
+        },
+        onOpen: () => {
+          setIsBlocking(true);
+        },
+        onClose: () => {
+          setIsBlocking(false);
+          setIsLoading(false);
+          handleClose();
+        },
+      });
     } catch (err) {
       // api network error connection
       if (err.code === "ERR_NETWORK")
@@ -52,8 +50,7 @@ function RateModal({ open, handleClose, movieID }) {
           },
           onClose: () => {
             setIsBlocking(false);
-           logout();
-            
+            logout();
           },
         });
       //api error
@@ -63,11 +60,10 @@ function RateModal({ open, handleClose, movieID }) {
             width: "500px",
           },
           onOpen: () => {
-               setIsBlocking(true);
+            setIsBlocking(true);
           },
           onClose: () => {
-              setIsBlocking(false);
-             
+            setIsBlocking(false);
           },
         });
       }
@@ -77,90 +73,90 @@ function RateModal({ open, handleClose, movieID }) {
   const [rating, setRating] = useState(0);
 
   return (
-    user &&(
-    <Modal
-      open={open}
-      onClose={() => handleClose()}
-      closeAfterTransition
-      slots={{ backdrop: Backdrop }}
-      slotProps={{ backdrop: { timeout: 300 } }}
-    >
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: { xs: "90%", sm: 500 },
-          bgcolor: "#020617",
-          color: "#fff",
-
-          borderRadius: 3,
-          boxShadow: 24,
-          p: 3,
-        }}
+    user && (
+      <Modal
+        open={open}
+        onClose={() => handleClose()}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{ backdrop: { timeout: 300 } }}
       >
-        <IconButton
-          aria-label="Close movie overview"
-          onClick={() => handleClose()}
+        <Box
           sx={{
             position: "absolute",
-            top: 10,
-            right: 10,
-            zIndex: 1,
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: { xs: "90%", sm: 500 },
+            bgcolor: "#020617",
             color: "#fff",
-            backgroundColor: "rgba(2, 6, 23, 0.55)",
-            "&:hover": { backgroundColor: "rgba(2, 6, 23, 0.8)" },
+
+            borderRadius: 3,
+            boxShadow: 24,
+            p: 3,
           }}
         >
-          <CloseIcon />
-        </IconButton>
+          <IconButton
+            aria-label="Close movie overview"
+            onClick={() => handleClose()}
+            sx={{
+              position: "absolute",
+              top: 10,
+              right: 10,
+              zIndex: 1,
+              color: "#fff",
+              backgroundColor: "rgba(2, 6, 23, 0.55)",
+              "&:hover": { backgroundColor: "rgba(2, 6, 23, 0.8)" },
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
 
-        {/* content */}
-        {/* 🎬 Title */}
-        <Typography
-          variant="h6"
-          sx={{ mb: 2, textAlign: "center", fontWeight: "bold" }}
-        >
-          Rate this movie
-        </Typography>
+          {/* content */}
+          {/* 🎬 Title */}
+          <Typography
+            variant="h6"
+            sx={{ mb: 2, textAlign: "center", fontWeight: "bold" }}
+          >
+            Rate this movie
+          </Typography>
 
-        {/* ⭐ Rating */}
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <StarRating value={rating}   onChange={setRating} maxStars={5} />
-          <p>{rating}</p>
-        </Box>
+          {/* ⭐ Rating */}
+          <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+            <StarRating value={rating} onChange={setRating} maxStars={5} />
+            <p>{rating}</p>
+          </Box>
 
-        {/* 🎯 Button */}
-        <Button
-          fullWidth
-          onClick={(e) => {
-            e.preventDefault();
-            handleRating();
-          }}
-          disabled={isBlocked || isLoading}
-          sx={{
-            background: "var(--red)",
-            borderRadius: "999px",
-            textTransform: "none",
-            px: 2,
-            py: 0.25,
-            minHeight: 32,
-            fontSize: "0.8rem",
-            "&:hover": { background: "#e11d48" },
-            mt: 3.5,
-            color: "#fff",
-          }}
-        >
+          {/* 🎯 Button */}
+          <Button
+            fullWidth
+            onClick={(e) => {
+              e.preventDefault();
+              handleRating();
+            }}
+            disabled={isBlocked || isLoading}
+            sx={{
+              background: "var(--red)",
+              borderRadius: "999px",
+              textTransform: "none",
+              px: 2,
+              py: 0.25,
+              minHeight: 32,
+              fontSize: "0.8rem",
+              "&:hover": { background: "#e11d48" },
+              mt: 3.5,
+              color: "#fff",
+            }}
+          >
             {isLoading ? (
-                              <CircularProgress size={20} color="inherit" />
-                            ) : (
-                              "Submit Rate"
-                            )}
-        </Button>
-      </Box>
-    </Modal>
-        )
+              <CircularProgress size={20} color="inherit" />
+            ) : (
+              "Submit Rate"
+            )}
+          </Button>
+        </Box>
+      </Modal>
+    )
   );
 }
 
