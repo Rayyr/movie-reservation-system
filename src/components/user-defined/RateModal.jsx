@@ -8,6 +8,7 @@ import api from "../../services/api";
 import { useState } from "react";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import {CircularProgress} from '@mui/material';
 
 //this is component not route
 function RateModal({ open, handleClose, movieID }) {
@@ -34,10 +35,11 @@ function RateModal({ open, handleClose, movieID }) {
           onClose: () => {
             setIsBlocking(false);
          setIsLoading(false);
-            
+            handleClose();
           },
         });
 
+       
     } catch (err) {
       // api network error connection
       if (err.code === "ERR_NETWORK")
@@ -54,18 +56,18 @@ function RateModal({ open, handleClose, movieID }) {
             
           },
         });
-      //user exists error | api error
-      else if (err.response.status === 400 || err.response.status === 500) {
+      //api error
+      else if (err.response.status === 500) {
         toast.error(err.response.data.message, {
           style: {
             width: "500px",
           },
           onOpen: () => {
-            /*    setIsBlocking(true); */
+               setIsBlocking(true);
           },
           onClose: () => {
-            /*   setIsBlocking(false); */
-            //  navigate("/login",{ replace: true });
+              setIsBlocking(false);
+             
           },
         });
       }
@@ -125,7 +127,7 @@ function RateModal({ open, handleClose, movieID }) {
 
         {/* ⭐ Rating */}
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <StarRating value={rating} onChange={setRating} maxStars={5} />
+          <StarRating value={rating}   onChange={setRating} maxStars={5} />
           <p>{rating}</p>
         </Box>
 
@@ -150,7 +152,11 @@ function RateModal({ open, handleClose, movieID }) {
             color: "#fff",
           }}
         >
-          {isLoading ? "Submitting..." : "Submit Rating"}
+            {isLoading ? (
+                              <CircularProgress size={20} color="inherit" />
+                            ) : (
+                              "Submit Rate"
+                            )}
         </Button>
       </Box>
     </Modal>

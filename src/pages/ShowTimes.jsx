@@ -64,7 +64,7 @@ function ShowTimes() {
       }
     };
     fetchIfRate();
-  }, [movieID,user]);
+  }, [movieID,user,handleClose]);//handleClose when the modal is closed so the user submit rating or not since the api which check if he rate or not not as same as the one which it will submit rating 
 
   //fetch movie obj
   useEffect(() => {
