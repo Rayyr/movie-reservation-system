@@ -9,6 +9,10 @@ const ratingSchema=new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"User"
     },
+    value:{
+        type:Number,
+        required:true
+    }
 
 },{timestamps:true});
 
