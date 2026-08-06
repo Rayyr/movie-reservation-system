@@ -1,14 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import api from "../services/api";
 import { toast } from "react-toastify";
-import {
-  Box,
-  Typography,
-  Grid,
-  Paper,
-  Button,
-  
-} from "@mui/material";
+import { Box, Typography, Grid, Paper, Button } from "@mui/material";
 
 import { useParams } from "react-router-dom";
 import ShowTimeCard from "../components/user-defined/ShowTimeCard";
@@ -18,9 +11,8 @@ import { CircularProgress } from "@mui/material";
 import RateModal from "../components/user-defined/RateModal";
 import { AuthContext } from "../context/AuthContext";
 function ShowTimes() {
+  const { logout, user } = useContext(AuthContext);
 
-    const {logout}=useContext(AuthContext);
-    
   //exatrct movie from url path
   const { movieID } = useParams();
 
@@ -30,19 +22,50 @@ function ShowTimes() {
   const [isLoading, setIsLoading] = useState(false);
   const [isBlocked, setIsBlocking] = useState(false);
 
-   
+  const [isUserRate, setIsUserRate] = useState(false);
+
   const [open, setOpen] = useState(false);
-  
-const handleOpen = (movie) => {
+
+  const handleOpen = (movie) => {
     setOpen(true);
-    
   };
 
   const handleClose = () => {
     setOpen(false);
-      
   };
- 
+
+  //fetch if user rate this movie or no
+  useEffect(() => {
+    const fetchIfRate = async () => {
+      try {
+        //if no logged in user then you cant rate
+        if(user){
+            
+        const res = await api.get(`/api/ratings/IfUserRate/${movieID}` );
+        if (res.data === true) setIsUserRate(true); //user already previouslly rate for this movie
+        if (res.data === false) setIsUserRate(false); //user not ..
+        }
+      } catch (error) {
+        // api error
+        if (error.response.status === 500) {
+          toast.error(error.response.data.message, {
+            style: {
+              width: "500px",
+            },
+            onOpen: () => {
+              setIsBlocking(true);
+            },
+            onClose: () => {
+              setIsBlocking(false);
+              logout();
+            },
+          });
+        }
+      }
+    };
+    fetchIfRate();
+  }, [movieID,user]);
+
   //fetch movie obj
   useEffect(() => {
     const fetchMovie = async () => {
@@ -65,7 +88,9 @@ const handleOpen = (movie) => {
             onOpen: () => {
               setIsBlocking(true);
             },
-            onClose:()=>{logout();}
+            onClose: () => {
+              logout();
+            },
           });
         //api error || invalid movie id error
         else if (err.response.status === 400 || err.response.status === 500) {
@@ -110,7 +135,9 @@ const handleOpen = (movie) => {
             onOpen: () => {
               setIsBlocking(true);
             },
-            onClose:()=>{logout();}
+            onClose: () => {
+              logout();
+            },
           });
         //api error
         else if (err.response.status === 500) {
@@ -201,31 +228,31 @@ const handleOpen = (movie) => {
           >
             {movie?.title}
           </Typography>
-
-          <Button
-            sx={{
-              background: "var(--red)",
-              borderRadius: "999px",
-              textTransform: "none",
-              px: 2,
-              py: 0.25,
-              minHeight: 32,
-              fontSize: "0.8rem",
-              "&:hover": { background: "#e11d48" },
-              mt: 3.5,
-              color: "#fff",
-            }}
-            disabled={isBlocked || isLoading}
-            onClick={(e) => {
-              e.preventDefault();
-            handleOpen();
-               
-            }}
-          >
-            
+          {/*           display the btn if user not rate this movie otherwise hide it
+           */}
+          {isUserRate === false && user ? (
+            <Button
+              sx={{
+                background: "var(--red)",
+                borderRadius: "999px",
+                textTransform: "none",
+                px: 2,
+                py: 0.25,
+                minHeight: 32,
+                fontSize: "0.8rem",
+                "&:hover": { background: "#e11d48" },
+                mt: 3.5,
+                color: "#fff",
+              }}
+              disabled={isBlocked || isLoading}
+              onClick={(e) => {
+                e.preventDefault();
+                handleOpen();
+              }}
+            >
               Rate now
-           
-          </Button>
+            </Button>
+          ) : null}
         </motion.div>
 
         <motion.div variants={itemVariants}>
@@ -281,8 +308,7 @@ const handleOpen = (movie) => {
         )}
       </Box>
 
-      <RateModal movieID={movieID} open={open}   handleClose={handleClose}  />
-     
+      <RateModal movieID={movieID} open={open} handleClose={handleClose} />
     </MotionBox>
   );
 }

@@ -35,7 +35,7 @@ function RateModal({ open, handleClose, movieID }) {
           onClose: () => {
             setIsBlocking(false);
            logout();
-            // navigate("/login",{ replace: true });
+            
           },
         });
       //user exists error | api error
