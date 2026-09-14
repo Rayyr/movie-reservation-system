@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
-import { useState, useEffect, useContext, memo, useCallback } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import { toast } from "react-toastify";
 import api from "../services/api";
 import notFoundMovieBg from "../assests/Movie/notFoundMovieBg.avif";
@@ -9,7 +9,7 @@ import { AuthContext } from "../context/AuthContext";
 import { motion } from "framer-motion";
 import { GoChevronLeft } from "react-icons/go";
 
-const SelectSeats = ({ setRemountKey, remountKey }) => {
+const SelectSeats = () => {
   const { user,logout } = useContext(AuthContext);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -31,7 +31,7 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
       grouped[seat.row].push(seat);
     });
     setGroupedSeats(grouped);
-  });
+  }, []);
 
   //check if there is available seats IOW not all are RESERVED status
   const checkSeats = useCallback((seats) => {
@@ -41,7 +41,7 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
 
     if (atLeastOne) return true;
     return false;
-  });
+  }, []);
 
   //fetch seats related to this screen of this showtime  and their status
   useEffect(() => {
@@ -104,18 +104,16 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
   const toggleSeat = useCallback((seat) => {
     if (seat.status === "RESERVED") return;
 
-    const alreadySelected = selectedSeats.some(
-      (selected) => selected._id === seat._id,
-    );
-
-    if (alreadySelected) {
-      setSelectedSeats((prev) =>
-        prev.filter((selected) => selected._id !== seat._id),
+    setSelectedSeats((previousSeats) => {
+      const alreadySelected = previousSeats.some(
+        (selected) => selected._id === seat._id,
       );
-    } else {
-      setSelectedSeats((prev) => [...prev, seat]);
-    }
-  });
+
+      return alreadySelected
+        ? previousSeats.filter((selected) => selected._id !== seat._id)
+        : [...previousSeats, seat];
+    });
+  }, []);
 
   const flattenSeatsIds = useCallback((seats) => {
     //return only seat ids
@@ -123,7 +121,7 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
       return s._id;
     }); //[seat1Id,seat2Id...]
     return flatten;
-  });
+  }, []);
 
   //for confirm booking btn
   const [isPressed, setIsPressed] = useState(false);
@@ -136,7 +134,27 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
 
       const res = await api.post("/api/bookings/create", data);
 
-      setRemountKey(remountKey + 1); //or we can directlly call again fetchSeats api
+      const bookedSeatIds = new Set(seats);
+      const hasRemainingAvailableSeat = Object.values(groupedSeats)
+        .flat()
+        .some(
+          (seat) =>
+            seat.status === "AVAILABLE" && !bookedSeatIds.has(seat._id),
+        );
+      setGroupedSeats((previousGroups) =>
+        Object.fromEntries(
+          Object.entries(previousGroups).map(([row, rowSeats]) => [
+            row,
+            rowSeats.map((seat) =>
+              bookedSeatIds.has(seat._id)
+                ? { ...seat, status: "RESERVED" }
+                : seat,
+            ),
+          ]),
+        ),
+      );
+      setSelectedSeats([]);
+      setSeatsExist(hasRemainingAvailableSeat);
       toast.success(res.data.message, {
         style: {
           width: "500px",
@@ -180,36 +198,17 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
         });
       }
     }
-  });
+  }, [
+    flattenSeatsIds,
+    groupedSeats,
+    selectedSeats,
+    showtime?._id,
+    user?._id,
+    logout,
+  ]);
 
-  // Animations
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 },
-    },
-  };
-
+ 
   
-  const seatVariants = {
-    hidden: { scale: 0.8, opacity: 0 },
-    visible: {
-      scale: 1,
-      opacity: 1,
-      transition: { duration: 0.2 },
-    },
-  };
-
-  const buttonVariants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0 },
-  };
-
-  const itemVariants ={
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1 },
-  };
 
   const MotionBox = motion(Box);
 
@@ -228,7 +227,7 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
     </Box>
   ) : (
     <MotionBox
-      variants={containerVariants}
+       
       initial="hidden"
       animate="visible"
       sx={{
@@ -259,7 +258,7 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
 
             {/* Back  */}
               <motion.div
-                variants={itemVariants}
+               
                 style={{
                   textAlign: "left",
                   alignItems: "center",
@@ -288,13 +287,13 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
               </motion.div>
 
               
-        <motion.div variants={itemVariants}>
+        <motion.div >
           <Typography variant="h4" gutterBottom>
             {movie?.title}
           </Typography>
         </motion.div>
 
-        <motion.div variants={itemVariants}>
+        <motion.div  >
           <Typography sx={{ mb: 3 }}>
             {new Date(showtime?.startTime).toLocaleTimeString([], {
               hour: "2-digit",
@@ -309,7 +308,7 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
         </motion.div>
 
         {/* 🎬 SCREEN */}
-        <motion.div variants={itemVariants}>
+        <motion.div  >
           <Box
             sx={{
               width: "100%",
@@ -325,7 +324,7 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
             SCREEN
           </Box>
         </motion.div>
-        <motion.div variants={itemVariants}>
+        <motion.div  >
           {!seatsExist && (
             <Typography sx={{ mb: 3 }}>
               Sorry there is no available seats currentlly !
@@ -354,7 +353,7 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
 
                   return (
                     <MotionBox
-                      variants={seatVariants}
+                      
                       key={seat._id}
                       onClick={() => toggleSeat(seat)}
                       sx={{
@@ -385,7 +384,7 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
         </Box>
 
         {/* 🎟️ Selected Info */}
-        <motion.div variants={itemVariants}>
+        <motion.div  >
           <Typography sx={{ mt: 3 }}>
             Selected Seats:{" "}
             {selectedSeats.length > 0
@@ -397,7 +396,7 @@ const SelectSeats = ({ setRemountKey, remountKey }) => {
         </motion.div>
 
         {/* 🎟️ Button */}
-        <MotionBox variants={buttonVariants}>
+        <MotionBox  >
           <Button
             sx={{
               background: "var(--red)",
