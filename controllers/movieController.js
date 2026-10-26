@@ -9,7 +9,7 @@ export const createMovie = async (req, res) => {
   try {
     const newMovie = await Movie.create({
       ...req.body,
-      createdBy: req.user._id,
+      createdBy: req.user._id,//get it from protection middleware
     });
     return res.status(201).json(newMovie);
   } catch (error) {
