@@ -9,11 +9,24 @@ import { AuthContext } from "../context/AuthContext";
 import { Pagination } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import movieAlt from "../assests/Movie/movieAlt.png";
 import { motion } from "framer-motion";
 import { GoChevronLeft } from "react-icons/go";
 import MovieCardAdmin from "../components/user-defined/MovieCardAdmin";
+import { Plus, X } from "lucide-react";
+import addMovieStyles from "../styles/AddMovie/AddMovie.module.css";
+
+const emptyMovieForm = {
+  title: "",
+  genre: "",
+  releaseDate: "",
+  duration_min: "",
+  overview: "",
+  language: "english",
+  poster_path: "",
+  backdrop_path: "",
+};
 
 export default function MovieList() {
   const { logout } = useContext(AuthContext);
@@ -41,6 +54,10 @@ export default function MovieList() {
     setSelectedMovie(null);
   };
   const [selectedMovie, setSelectedMovie] = useState(null);
+
+  const [isAddMovieOpen, setIsAddMovieOpen] = useState(false);
+  const [newMovie, setNewMovie] = useState(emptyMovieForm);
+  const [isCreatingMovie, setIsCreatingMovie] = useState(false);
 
   // Animations
   const containerVariants = {
@@ -124,6 +141,39 @@ export default function MovieList() {
     navigate(`/show-times/${movie._id}`);
   };
 
+  const handleNewMovieChange = (event) => {
+    const { name, value } = event.target;
+    setNewMovie((currentMovie) => ({ ...currentMovie, [name]: value }));
+  };
+
+  const handleCreateMovie = async (event) => {
+    event.preventDefault();
+    setIsCreatingMovie(true);
+
+    try {
+      const response = await api.post("/api/movies/create", {
+        ...newMovie,
+        duration_min: Number(newMovie.duration_min),
+        releaseDate: new Date(newMovie.releaseDate).toISOString(),
+      });
+      setMovies((currentMovies) => [...currentMovies, response.data]);
+      setCurrentPage(Math.ceil((movies.length + 1) / moviesPerPage));
+      setNewMovie(emptyMovieForm);
+      setIsAddMovieOpen(false);
+      toast.success("Movie added successfully.");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Unable to add this movie.");
+    } finally {
+      setIsCreatingMovie(false);
+    }
+  };
+
+  const handleCloseAddMovie = () => {
+    if (isCreatingMovie) return;
+    setIsAddMovieOpen(false);
+    setNewMovie(emptyMovieForm);
+  };
+
   const handleNav = () => {
     if (localStorage.getItem("user")) {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -182,6 +232,24 @@ export default function MovieList() {
         </Box>
       </motion.div>
 
+      <motion.div
+        className={addMovieStyles.listActions}
+        variants={itemVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {localStorage.getItem("user") &&
+          JSON.parse(localStorage.getItem("user")).role === "ADMIN" && (
+            <button
+              className={addMovieStyles.addButton}
+              type="button"
+              onClick={() => setIsAddMovieOpen(true)}
+            >
+              <Plus size={18} />
+              <span>Add movie</span>
+            </button>
+          )}
+      </motion.div>
       {displayedMovies.length !== 0 ? (
         <>
           <Container maxWidth="m" sx={{ mt: 4, flexGrow: 1 }}>
@@ -251,7 +319,7 @@ export default function MovieList() {
               />
             </Box>
           )}
-       {/*    <Outlet/> */}
+          {/*    <Outlet/> */}
         </>
       ) : (
         <Box
@@ -267,6 +335,168 @@ export default function MovieList() {
           </motion.div>
         </Box>
       )}
+      <Modal
+        open={isAddMovieOpen}
+        onClose={handleCloseAddMovie}
+        aria-labelledby="add-movie-title"
+        aria-describedby="add-movie-description"
+      >
+        <Box className={addMovieStyles.modal}>
+          <div className={addMovieStyles.modalHeader}>
+            <div>
+              <span className={addMovieStyles.modalEyebrow}>ADMIN TOOLS</span>
+              <h2 id="add-movie-title">Add a movie</h2>
+              <p id="add-movie-description">
+                Add a title to the catalog for moviegoers to discover.
+              </p>
+            </div>
+            <button
+              className={addMovieStyles.closeButton}
+              type="button"
+              aria-label="Close add movie form"
+              onClick={handleCloseAddMovie}
+              disabled={isCreatingMovie}
+            >
+              <X size={19} />
+            </button>
+          </div>
+
+          <form className={addMovieStyles.form} onSubmit={handleCreateMovie}>
+            <div className={addMovieStyles.fields}>
+              <label
+                className={`${addMovieStyles.field} ${addMovieStyles.fullWidth}`}
+              >
+                <span>
+                  Movie title <b>*</b>
+                </span>
+                <input
+                  name="title"
+                  value={newMovie.title}
+                  onChange={handleNewMovieChange}
+                  placeholder="Enter movie title"
+                  required
+                  maxLength={120}
+                />
+              </label>
+
+              <label className={addMovieStyles.field}>
+                <span>
+                  Genre <b>*</b>
+                </span>
+                <input
+                  name="genre"
+                  value={newMovie.genre}
+                  onChange={handleNewMovieChange}
+                  placeholder="e.g. Action, Drama"
+                  required
+                />
+              </label>
+
+              <label className={addMovieStyles.field}>
+                <span>
+                  Release date <b>*</b>
+                </span>
+                <input
+                  name="releaseDate"
+                  type="date"
+                  value={newMovie.releaseDate}
+                  onChange={handleNewMovieChange}
+                  required
+                />
+              </label>
+
+              <label className={addMovieStyles.field}>
+                <span>
+                  Duration <b>*</b>
+                </span>
+                <div className={addMovieStyles.durationInput}>
+                  <input
+                    name="duration_min"
+                    type="number"
+                    min="1"
+                    step="0.01"
+                    value={newMovie.duration_min}
+                    onChange={handleNewMovieChange}
+                    placeholder="Runtime"
+                    required
+                  />
+                  <span>min</span>
+                </div>
+              </label>
+
+              <label className={addMovieStyles.field}>
+                <span>Language</span>
+                <input
+                  name="language"
+                  value={newMovie.language}
+                  onChange={handleNewMovieChange}
+                  placeholder="English"
+                />
+              </label>
+
+              <label
+                className={`${addMovieStyles.field} ${addMovieStyles.fullWidth}`}
+              >
+                <span>
+                  Overview <b>*</b>
+                </span>
+                <textarea
+                  name="overview"
+                  value={newMovie.overview}
+                  onChange={handleNewMovieChange}
+                  placeholder="Write a short synopsis"
+                  rows={4}
+                  required
+                />
+              </label>
+
+              <label
+                className={`${addMovieStyles.field} ${addMovieStyles.fullWidth}`}
+              >
+                <span>Poster image path</span>
+                <input
+                  name="poster_path"
+                  value={newMovie.poster_path}
+                  onChange={handleNewMovieChange}
+                  placeholder="Enter the poster path from your movie catalog"
+                />
+              </label>
+
+              <label
+                className={`${addMovieStyles.field} ${addMovieStyles.fullWidth}`}
+              >
+                <span>Backdrop image path</span>
+                <input
+                  name="backdrop_path"
+                  value={newMovie.backdrop_path}
+                  onChange={handleNewMovieChange}
+                  placeholder="Optional backdrop path from your movie catalog"
+                />
+              </label>
+            </div>
+
+            <div className={addMovieStyles.formActions}>
+              <button
+                className={addMovieStyles.cancelButton}
+                type="button"
+                onClick={handleCloseAddMovie}
+                disabled={isCreatingMovie}
+              >
+                Cancel
+              </button>
+              <button
+                className={addMovieStyles.submitButton}
+                type="submit"
+                disabled={isCreatingMovie}
+              >
+                <Plus size={17} />
+                {isCreatingMovie ? "Adding movie…" : "Add movie"}
+              </button>
+            </div>
+          </form>
+        </Box>
+      </Modal>
+
       <Modal
         open={open}
         onClose={handleClose}
