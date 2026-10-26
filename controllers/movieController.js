@@ -1,5 +1,7 @@
 import Movie from "../models/Movie.js";
-
+import ShowTime from "../models/ShowTime.js";
+import Booking from "../models/Booking.js";
+import Rating from "../models/Rating.js";
 
 //basic CRUD ops for movie model
 
@@ -81,10 +83,21 @@ export const updateMovieById = async (req, res) => {
 export const deleteMovieById = async (req, res) => {
   try {
     const id = req.params.id;
-    const deletedMovie = await Movie.findByIdAndDelete(id);
-    if (!deletedMovie) {
+    const movie = await Movie.findById(id);
+
+    if (!movie) {
       return res.status(404).json({ message: "Movie not found" });
-    } else return res.status(200).json(deletedMovie);
+    }
+
+    const showtimes = await ShowTime.find({ movie: id }).select("_id");
+    const showtimeIds = showtimes.map((showtime) => showtime._id);
+
+    await Booking.deleteMany({ showTime: { $in: showtimeIds } });
+    await ShowTime.deleteMany({ movie: id });
+    await Rating.deleteMany({ movie: id });
+    await Movie.findByIdAndDelete(id);
+
+    return res.status(200).json({ message: "Movie and related data deleted" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
