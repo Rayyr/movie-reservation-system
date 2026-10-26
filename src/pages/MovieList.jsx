@@ -1,11 +1,4 @@
-import {
-  Container,
-  Box,
-  Typography,
-  Modal,
-  Backdrop,
-  Fade,
-} from "@mui/material";
+import { Container, Box, Typography, Modal, Backdrop } from "@mui/material";
 import { useState, useEffect, useContext, useMemo } from "react";
 import api from "../services/api";
 import { toast } from "react-toastify";
@@ -16,10 +9,11 @@ import { AuthContext } from "../context/AuthContext";
 import { Pagination } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import movieAlt from "../assests/Movie/movieAlt.png";
 import { motion } from "framer-motion";
 import { GoChevronLeft } from "react-icons/go";
+import MovieCardAdmin from "../components/user-defined/MovieCardAdmin";
 
 export default function MovieList() {
   const { logout } = useContext(AuthContext);
@@ -131,9 +125,12 @@ export default function MovieList() {
   };
 
   const handleNav = () => {
-    if (localStorage.getItem("user"))
-      navigate("/user-dashboard"); //there is logged in user
-    else navigate("/login"); //not logged in user
+    if (localStorage.getItem("user")) {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user.role === "USER")
+        navigate("/user-dashboard"); //there is logged in user
+      else navigate("/admin-dashboard");
+    } else navigate("/login"); //not logged in user
   };
 
   return isLoading || isBlocked ? (
@@ -142,7 +139,7 @@ export default function MovieList() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh", // or "100vh" for full screen
+        height: "100vh",
       }}
     >
       <CircularProgress sx={{ color: "var(--blue)" }} size={40} />
@@ -208,12 +205,27 @@ export default function MovieList() {
                   component={motion.div}
                   variants={itemVariants}
                 >
-                  {/* //movie card */}
-                  <MovieCard
-                    movie={movie}
-                    handleOpen={() => handleOpen(movie)}
-                    handleBuyTicket={handleBuyTicket}
-                  ></MovieCard>
+                  {}
+                  {/* //movie card for logged in users role or not logged in */}
+                  {(!localStorage.getItem("user") ||
+                    (localStorage.getItem("user") &&
+                      JSON.parse(localStorage.getItem("user")).role !==
+                        "ADMIN")) && (
+                    <MovieCard
+                      movie={movie}
+                      handleOpen={() => handleOpen(movie)}
+                      handleBuyTicket={handleBuyTicket}
+                    ></MovieCard>
+                  )}
+                  {/* //movie card for admin */}
+                  {localStorage.getItem("user") &&
+                    JSON.parse(localStorage.getItem("user")).role ===
+                      "ADMIN" && (
+                      <MovieCardAdmin
+                        movie={movie}
+                        handleOpen={() => handleOpen(movie)}
+                      ></MovieCardAdmin>
+                    )}
                 </Grid>
               ))}
             </Grid>
@@ -239,6 +251,7 @@ export default function MovieList() {
               />
             </Box>
           )}
+       {/*    <Outlet/> */}
         </>
       ) : (
         <Box

@@ -138,7 +138,7 @@ export default function MovieCard({ movie, handleOpen, handleBuyTicket }) {
           {/* Rating */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
             <StarIcon sx={{ color: "var(--red)", fontSize: 18 }} />
-            <Typography variant="body2">{movie.rating}</Typography>
+            <Typography variant="body2">{movie.rating.toFixed(2)}</Typography>
           </Box>
         </Box>
       </CardContent>

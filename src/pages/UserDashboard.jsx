@@ -57,9 +57,7 @@ function UserDashboard() {
         >
           {/* Left Links */}
           <motion.div className={styles.navLinks} variants={containerVariants}>
-            <motion.div variants={itemVariants}>
-              <Link to="/">Home</Link>
-            </motion.div>
+           
 
             <motion.div variants={itemVariants}>
               <Link to="/movie-list">Movies</Link>
@@ -119,8 +117,7 @@ function UserDashboard() {
         </motion.div>
       </motion.div>
 
-      {/* Welcome text */}
-      <h1 className={styles.title}>Welcome {user?.username}</h1>
+     
     </div>
   );
 }
