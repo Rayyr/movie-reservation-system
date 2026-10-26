@@ -6,7 +6,7 @@ import userRoutes from "./routes/userRoutes.js";
 import movieRoutes from "./routes/movieRoutes.js";
 import { protect } from "./middlewares/authMiddleWare.js";
 import { adminOnly, userOnly } from "./middlewares/roleMiddleWare.js";
- import bookingRoutes from "./routes/bookingRoutes.js";
+import bookingRoutes from "./routes/bookingRoutes.js";
 import showTimesRoutes from './routes/showTimesRoutes.js';
 import theaterRoutes from './routes/theaterRoutes.js';
 import screenRoutes from './routes/screenRoutes.js';
@@ -47,6 +47,6 @@ app.use("/api/seats",seatRoutes);
 
 app.use("/api/ratings",ratingsRoutes);
  
- export default app;
+export default app;
 
  

@@ -29,7 +29,7 @@ export const getMovies = async (req, res) => {
 
 
 
-//get singke movie by id
+//get single movie by id
 export const getMovieById = async (req, res) => {
   try {
     const id = req.params.id;
@@ -66,10 +66,8 @@ export const updateMovieById = async (req, res) => {
   try {
     const id = req.params.id;
     const newMovie = req.body;
-    const updatedMovie = await Movie.findByIdAndUpdate(id, newMovie, {
-      new: true,
-      runValidators: true,
-    });
+     
+    const updatedMovie = await Movie.findByIdAndUpdate(id,newMovie);
 
     if (!updatedMovie ) {
       return res.status(404).json({ message: "Movie not found" });
