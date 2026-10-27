@@ -1,5 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, CalendarDays, Clock3, MapPin, Search, Ticket } from "lucide-react";
+import {
+  ArrowLeft,
+  CalendarDays,
+  Clock3,
+  MapPin,
+  Plus,
+  Search,
+  Ticket,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
 import styles from "../styles/ShowTime/ShowTime.module.css";
@@ -16,6 +24,17 @@ function ShowTime() {
   const [movieTitle, setMovieTitle] = useState("");
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [showTimes, setShowTimes] = useState([]);
+  const [screens, setScreens] = useState([]);
+  const [isLoadingScreens, setIsLoadingScreens] = useState(true);
+  const [screenLoadError, setScreenLoadError] = useState("");
+  const [newShowTime, setNewShowTime] = useState({
+    screen: "",
+    startTime: "",
+    price: "",
+  });
+  const [isCreatingShowTime, setIsCreatingShowTime] = useState(false);
+  const [createError, setCreateError] = useState("");
+  const [createSuccess, setCreateSuccess] = useState("");
   const [isLoadingMovies, setIsLoadingMovies] = useState(true);
   const [isSearching, setIsSearching] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -39,7 +58,23 @@ function ShowTime() {
       }
     };
 
+    const fetchScreens = async () => {
+      try {
+        const response = await api.get("/api/screens");
+        if (isMounted) setScreens(response.data.screens || []);
+      } catch (error) {
+        if (isMounted) {
+          setScreenLoadError(
+            error.response?.data?.message || "Unable to load available screens.",
+          );
+        }
+      } finally {
+        if (isMounted) setIsLoadingScreens(false);
+      }
+    };
+
     fetchMovies();
+    fetchScreens();
     return () => {
       isMounted = false;
     };
@@ -59,6 +94,8 @@ function ShowTime() {
       setHasSearched(false);
       setSelectedMovie(null);
       setShowTimes([]);
+      setCreateError("");
+      setCreateSuccess("");
       return;
     }
 
@@ -92,6 +129,47 @@ function ShowTime() {
       setHasSearched(false);
     } finally {
       setIsSearching(false);
+    }
+  };
+
+  const handleCreateFieldChange = (event) => {
+    const { name, value } = event.target;
+    setNewShowTime((current) => ({ ...current, [name]: value }));
+    setCreateError("");
+    setCreateSuccess("");
+  };
+
+  const handleCreateShowTime = async (event) => {
+    event.preventDefault();
+    if (!selectedMovie) return;
+
+    setIsCreatingShowTime(true);
+    setCreateError("");
+    setCreateSuccess("");
+
+    try {
+      const response = await api.post("/api/showTimes/create", {
+        movie: selectedMovie._id,
+        screen: newShowTime.screen,
+        startTime: new Date(newShowTime.startTime).toISOString(),
+        price: Number(newShowTime.price),
+      });
+
+      setShowTimes((current) =>
+        [...current, response.data].sort(
+          (first, second) =>
+            new Date(first.startTime).getTime() -
+            new Date(second.startTime).getTime(),
+        ),
+      );
+      setNewShowTime({ screen: "", startTime: "", price: "" });
+      setCreateSuccess("Showtime created and added to the schedule.");
+    } catch (error) {
+      setCreateError(
+        error.response?.data?.message || "Unable to create this showtime.",
+      );
+    } finally {
+      setIsCreatingShowTime(false);
     }
   };
 
@@ -177,6 +255,119 @@ function ShowTime() {
                 {showTimes.length} {showTimes.length === 1 ? "screening" : "screenings"}
               </span>
             </div>
+
+            <form
+              className={styles.createPanel}
+              onSubmit={handleCreateShowTime}
+            >
+              <div className={styles.createHeading}>
+                <div className={styles.createIcon}>
+                  <Plus size={18} />
+                </div>
+                <div>
+                  <h3>Add a showtime</h3>
+                  <p>Schedule a screening for {selectedMovie.title}.</p>
+                </div>
+              </div>
+
+              {screenLoadError ? (
+                <p className={styles.errorMessage} role="alert">
+                  {screenLoadError}
+                </p>
+              ) : (
+                <div className={styles.createFields}>
+                  <label className={styles.createField}>
+                    <span>Screen</span>
+                    <select
+                      name="screen"
+                      value={newShowTime.screen}
+                      onChange={handleCreateFieldChange}
+                      required
+                      disabled={
+                        isLoadingScreens ||
+                        screens.length === 0 ||
+                        isCreatingShowTime
+                      }
+                    >
+                      <option value="">
+                        {isLoadingScreens
+                          ? "Loading screens…"
+                          : screens.length
+                            ? "Choose a screen"
+                            : "No screens available"}
+                      </option>
+                      {screens.map((screen) => (
+                        <option key={screen._id} value={screen._id}>
+                          {screen.theater?.name || "Theater"} — {screen.name}
+                          {screen.theater?.location
+                            ? ` · ${screen.theater.location}`
+                            : ""}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className={styles.createField}>
+                    <span>Start date &amp; time</span>
+                    <input
+                      name="startTime"
+                      type="datetime-local"
+                      value={newShowTime.startTime}
+                      onChange={handleCreateFieldChange}
+                      required
+                      disabled={isCreatingShowTime}
+                    />
+                  </label>
+
+                  <label className={styles.createField}>
+                    <span>Ticket price</span>
+                    <div className={styles.priceInput}>
+                      <span>$</span>
+                      <input
+                        name="price"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={newShowTime.price}
+                        onChange={handleCreateFieldChange}
+                        placeholder="0.00"
+                        required
+                        disabled={isCreatingShowTime}
+                      />
+                    </div>
+                  </label>
+
+                  <button
+                    className={styles.createButton}
+                    type="submit"
+                    disabled={
+                      isCreatingShowTime ||
+                      isLoadingScreens ||
+                      screens.length === 0 ||
+                      !newShowTime.screen
+                    }
+                  >
+                    <Plus size={17} />
+                    {isCreatingShowTime ? "Creating…" : "Create showtime"}
+                  </button>
+                </div>
+              )}
+              {createError && (
+                <p className={styles.errorMessage} role="alert">
+                  {createError}
+                </p>
+              )}
+              {createSuccess && (
+                <p className={styles.successMessage} role="status">
+                  {createSuccess}
+                </p>
+              )}
+              {!isLoadingScreens && !screenLoadError && screens.length === 0 && (
+                <p className={styles.searchHint}>
+                  Create a screen before scheduling a showtime.
+                </p>
+              )}
+            </form>
 
             {showTimes.length > 0 ? (
               <div className={styles.showtimeGrid}>

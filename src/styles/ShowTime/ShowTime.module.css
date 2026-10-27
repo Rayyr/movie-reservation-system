@@ -199,6 +199,163 @@
   letter-spacing: -0.03em;
 }
 
+.createPanel {
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 15px;
+  padding: 21px;
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(123, 16, 37, 0.12), transparent 42%),
+    rgba(17, 20, 29, 0.86);
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.16);
+}
+
+.createHeading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 19px;
+}
+
+.createIcon {
+  display: inline-flex;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(231, 76, 102, 0.2);
+  border-radius: 11px;
+  color: #f08a9c;
+  background: rgba(123, 16, 37, 0.18);
+}
+
+.createHeading h3 {
+  margin: 0;
+  color: #f2f3f6;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.createHeading p {
+  margin: 4px 0 0;
+  color: #8991a0;
+  font-size: 11px;
+}
+
+.createFields {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1.15fr) minmax(110px, 0.7fr) auto;
+  align-items: end;
+  gap: 12px;
+}
+
+.createField {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
+  color: #c7cbd4;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.createField select,
+.createField input {
+  width: 100%;
+  min-height: 43px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9px;
+  outline: none;
+  padding: 0 11px;
+  color: #f5f6fa;
+  background: #171a24;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.createField select:focus,
+.createField input:focus {
+  border-color: rgba(231, 76, 102, 0.72);
+  box-shadow: 0 0 0 3px rgba(231, 76, 102, 0.11);
+}
+
+.createField input[type="datetime-local"] {
+  color-scheme: dark;
+}
+
+.createField input::placeholder {
+  color: #737b8a;
+}
+
+.createField select:disabled,
+.createField input:disabled {
+  opacity: 0.6;
+}
+
+.priceInput {
+  position: relative;
+}
+
+.priceInput > span {
+  position: absolute;
+  top: 50%;
+  left: 11px;
+  transform: translateY(-50%);
+  color: #8d95a4;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.priceInput input {
+  padding-left: 25px;
+}
+
+.createButton {
+  display: inline-flex;
+  min-height: 43px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid #9d233b;
+  border-radius: 9px;
+  padding: 0 14px;
+  color: #fff;
+  background: linear-gradient(135deg, #a8203c, #761329);
+  box-shadow: 0 7px 18px rgba(123, 16, 37, 0.2);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    background 160ms ease,
+    opacity 160ms ease;
+}
+
+.createButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, #bd2a49, #8a1730);
+}
+
+.createButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.successMessage {
+  margin: 12px 0 0;
+  color: #86efac;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
 .countBadge {
   flex: 0 0 auto;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -391,6 +548,14 @@
 }
 
 @media (max-width: 800px) {
+  .createFields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .createButton {
+    align-self: end;
+  }
+
   .showtimeGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -420,6 +585,18 @@
 
   .results {
     margin-top: 32px;
+  }
+
+  .createPanel {
+    padding: 17px;
+  }
+
+  .createFields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .createButton {
+    width: 100%;
   }
 
   .showtimeGrid {
