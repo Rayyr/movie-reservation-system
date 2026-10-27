@@ -1,6 +1,7 @@
 import ShowTime from "../models/ShowTime.js";
 import Movie from "../models/Movie.js";
 import Screen from "../models/Screen.js";
+import Booking from "../models/Booking.js";
 
 export const createShowTime = async (req, res) => {
   try {
@@ -80,6 +81,24 @@ export const getMovieShowTimes = async (req, res) => {
 
     res.status(200).json({
       showtimes,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const deleteShowTimeById = async (req, res) => {
+  try {
+    const showTime = await ShowTime.findById(req.params.id);
+    if (!showTime) {
+      return res.status(404).json({ message: "Showtime not found" });
+    }
+
+    await Booking.deleteMany({ showTime: showTime._id });
+    await ShowTime.findByIdAndDelete(showTime._id);
+
+    return res.status(200).json({
+      message: "Showtime and related bookings deleted",
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
