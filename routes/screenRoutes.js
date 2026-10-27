@@ -1,5 +1,6 @@
 import {
     createScreen,
+    getAllScreens,
     getScreenSeats
 } from '../controllers/screenController.js';
 
@@ -12,6 +13,8 @@ const router=express.Router();
 
 //create screen by admin only
 //router.post('/create',protect,adminOnly,createScreen);
+
+router.get("/",protect,adminOnly,getAllScreens);
 
 //just to add dummy data
 router.post('/create',createScreen);

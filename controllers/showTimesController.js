@@ -1,33 +1,35 @@
 import ShowTime from "../models/ShowTime.js";
 import Movie from "../models/Movie.js";
+import Screen from "../models/Screen.js";
 
 export const createShowTime = async (req, res) => {
   try {
-    //movie,scree, : IDs (FKs)
     const { movie, screen, startTime, price } = req.body;
+    const start = new Date(startTime);
+    const ticketPrice = Number(price);
 
-    /*    //validate time
-    if (new Date(startTime) >= new Date(endTime)) {
-      return res
-        .status(400)
-        .json({ message: "End time must be after start time" });
-    } */
+    if (!movie || !screen || Number.isNaN(start.getTime()) || !Number.isFinite(ticketPrice) || ticketPrice < 0) {
+      return res.status(400).json({
+        message: "Movie, screen, a valid start time, and a non-negative price are required",
+      });
+    }
 
     const movieX = await Movie.findById(movie);
+    if (!movieX) {
+      return res.status(404).json({ message: "Movie not found" });
+    }
 
-    const start = new Date(startTime);
+    const selectedScreen = await Screen.findById(screen);
+    if (!selectedScreen) {
+      return res.status(404).json({ message: "Screen not found" });
+    }
 
     const endTime = new Date(start.getTime() + movieX.duration_min * 60000);
 
-    //check if there is other movie at same screen or at same time
     const existing = await ShowTime.findOne({
       screen: screen,
-      $or: [
-        {
-          startTime: { $lt: endTime },
-          endTime: { $gt: startTime },
-        },
-      ],
+      startTime: { $lt: endTime },
+      endTime: { $gt: start },
     });
 
     if (existing) {
@@ -39,9 +41,18 @@ export const createShowTime = async (req, res) => {
     const showTime = await ShowTime.create({
       movie: movie,
       screen: screen,
-      startTime: startTime,
+      startTime: start,
       endTime: endTime,
-      price: price,
+      price: ticketPrice,
+    });
+
+    await showTime.populate({
+      path: "screen",
+      select: "name",
+      populate: {
+        path: "theater",
+        select: "name location",
+      },
     });
 
     return res.status(201).json(showTime);

@@ -38,6 +38,18 @@ export const createScreen = async (req, res) => {
   }
 };
 
+export const getAllScreens = async (req, res) => {
+  try {
+    const screens = await Screen.find()
+      .populate("theater", "name location")
+      .sort({ name: 1 });
+
+    return res.status(200).json({ screens });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 export const getScreenSeats = async (req, res) => {
   try {
     const id = req.params.id;
