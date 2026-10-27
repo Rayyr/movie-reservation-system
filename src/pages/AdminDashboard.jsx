@@ -72,10 +72,7 @@ function AdminDashboard() {
   <motion.div variants={itemVariants}>
               <Link to="/theaters">Theaters</Link>
             </motion.div>
-            {/*
-            <motion.div variants={itemVariants}>
-              <Link to="/releases">Releases</Link>
-            </motion.div> */}
+           
           </motion.div>
 
           {/* RIGHT SECTION */}
@@ -83,14 +80,7 @@ function AdminDashboard() {
             className={styles.rightSection}
             variants={containerVariants}
           >
-            {/* Search */}
-            <motion.span
-              className={styles.searchIcon}
-              variants={itemVariants}
-              whileHover={{ scale: 1.2 }}
-            >
-              🔍
-            </motion.span>
+           
 
             {/* 🔥 RADIX DROPDOWN */}
             <DropdownMenu modal={false}>
