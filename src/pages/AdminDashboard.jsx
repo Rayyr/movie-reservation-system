@@ -69,6 +69,9 @@ function AdminDashboard() {
               <Link to="/screens">Screens</Link>
             </motion.div>
 
+  <motion.div variants={itemVariants}>
+              <Link to="/theaters">Theaters</Link>
+            </motion.div>
             {/*
             <motion.div variants={itemVariants}>
               <Link to="/releases">Releases</Link>

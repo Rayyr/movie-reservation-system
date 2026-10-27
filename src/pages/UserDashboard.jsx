@@ -63,13 +63,7 @@ function UserDashboard() {
               <Link to="/movie-list">Movies</Link>
             </motion.div>
 
-            <motion.div variants={itemVariants}>
-              <Link to="/theaters">Theatres</Link>
-            </motion.div>
-
-            <motion.div variants={itemVariants}>
-              <Link to="/releases">Releases</Link>
-            </motion.div>
+            
           </motion.div>
 
           {/* RIGHT SECTION */}
