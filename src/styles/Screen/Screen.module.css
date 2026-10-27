@@ -1,0 +1,473 @@
+.page {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 38px 24px 64px;
+  color: #f8fafc;
+  background:
+    radial-gradient(ellipse at 82% 0%, rgba(123, 16, 37, 0.2), transparent 35%),
+    #080a10;
+}
+
+.glow {
+  position: absolute;
+  z-index: -1;
+  top: 280px;
+  left: -230px;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: rgba(66, 153, 225, 0.08);
+  filter: blur(105px);
+  pointer-events: none;
+}
+
+.content {
+  width: min(1050px, 100%);
+  margin: 0 auto;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #a6adbb;
+  font-size: 13px;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.backLink:hover {
+  color: #fff;
+}
+
+.header {
+  margin: 42px 0 27px;
+}
+
+.eyebrow,
+.panelKicker {
+  color: #e58698;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.header h1 {
+  margin: 9px 0 7px;
+  font-size: clamp(32px, 5vw, 46px);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+}
+
+.header p {
+  margin: 0;
+  color: #9299a8;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.createPanel {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 16px;
+  padding: 23px;
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(123, 16, 37, 0.12), transparent 42%),
+    rgba(17, 20, 29, 0.86);
+  box-shadow: 0 15px 44px rgba(0, 0, 0, 0.18);
+}
+
+.panelHeading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 21px;
+}
+
+.headingIcon,
+.screenIcon,
+.emptyIcon {
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(231, 76, 102, 0.2);
+  border-radius: 11px;
+  color: #f08a9c;
+  background: rgba(123, 16, 37, 0.17);
+}
+
+.panelHeading h2,
+.listHeading h2 {
+  margin: 6px 0 0;
+  color: #f2f3f6;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.panelHeading p {
+  margin: 5px 0 0;
+  color: #8991a0;
+  font-size: 11px;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr) minmax(100px, 0.65fr) minmax(120px, 0.8fr) auto;
+  align-items: end;
+  gap: 13px;
+}
+
+.field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
+  color: #c7cbd4;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-height: 43px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9px;
+  outline: none;
+  padding: 0 11px;
+  color: #f5f6fa;
+  background: #171a24;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.field input::placeholder {
+  color: #737b8a;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: rgba(231, 76, 102, 0.72);
+  box-shadow: 0 0 0 3px rgba(231, 76, 102, 0.11);
+}
+
+.field input:disabled,
+.field select:disabled {
+  opacity: 0.6;
+}
+
+.field small {
+  color: #767e8d;
+  font-size: 10px;
+  font-weight: 400;
+}
+
+.createButton {
+  display: inline-flex;
+  min-height: 43px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid #9d233b;
+  border-radius: 9px;
+  padding: 0 14px;
+  color: #fff;
+  background: linear-gradient(135deg, #a8203c, #761329);
+  box-shadow: 0 7px 18px rgba(123, 16, 37, 0.2);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    background 160ms ease,
+    opacity 160ms ease;
+}
+
+.createButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, #bd2a49, #8a1730);
+}
+
+.createButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.infoMessage,
+.errorMessage,
+.successMessage {
+  margin: 13px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.infoMessage {
+  color: #c5cad4;
+}
+
+.errorMessage {
+  color: #fda4af;
+}
+
+.successMessage {
+  color: #86efac;
+}
+
+.screenSection {
+  margin-top: 40px;
+}
+
+.listHeading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.listHeading h2 {
+  font-size: 21px;
+}
+
+.countBadge {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  padding: 7px 11px;
+  color: #c1c6d0;
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 11px;
+}
+
+.screenGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.screenCard {
+  min-width: 0;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  padding: 18px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.045), transparent 60%),
+    rgba(17, 20, 29, 0.88);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.17);
+  transition:
+    transform 170ms ease,
+    border-color 170ms ease;
+}
+
+.screenCard:hover {
+  transform: translateY(-3px);
+  border-color: rgba(231, 76, 102, 0.3);
+}
+
+.screenCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.deleteButton {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(251, 113, 133, 0.22);
+  border-radius: 9px;
+  color: #fb7185;
+  background: rgba(244, 63, 94, 0.08);
+  cursor: pointer;
+  transition:
+    color 150ms ease,
+    border-color 150ms ease,
+    background-color 150ms ease,
+    opacity 150ms ease;
+}
+
+.deleteButton:hover:not(:disabled) {
+  border-color: rgba(251, 113, 133, 0.5);
+  color: #fff;
+  background: rgba(244, 63, 94, 0.24);
+}
+
+.deleteButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.screenCard h3 {
+  overflow: hidden;
+  margin: 0;
+  color: #f2f3f6;
+  font-size: 16px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.theaterInfo {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 9px 0 0;
+  color: #9299a8;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.theaterInfo svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  color: #e58698;
+}
+
+.capacity {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 16px;
+  padding-top: 13px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: #c5cad4;
+  font-size: 11px;
+}
+
+.capacity svg {
+  color: #e58698;
+}
+
+.emptyPanel,
+.errorPanel {
+  display: flex;
+  min-height: 180px;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 15px;
+  padding: 24px;
+  background: rgba(17, 20, 29, 0.65);
+  text-align: center;
+}
+
+.emptyPanel p {
+  margin: 13px 0 0;
+  color: #9aa1af;
+  font-size: 13px;
+}
+
+.emptyPanel h3 {
+  margin: 14px 0 5px;
+  color: #e4e6eb;
+  font-size: 16px;
+}
+
+.emptyPanel h3 + p {
+  margin-top: 0;
+}
+
+.emptyIcon {
+  width: 42px;
+  height: 42px;
+}
+
+.errorPanel {
+  min-height: 120px;
+  color: #fda4af;
+}
+
+.errorPanel p {
+  margin: 0 0 12px;
+  font-size: 13px;
+}
+
+.errorPanel button {
+  border: 1px solid rgba(251, 113, 133, 0.28);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #ffd1d8;
+  background: rgba(244, 63, 94, 0.1);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.spinner {
+  width: 19px;
+  height: 19px;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  border-top-color: #e58698;
+  border-radius: 50%;
+  animation: spin 750ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 900px) {
+  .form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .createButton {
+    align-self: end;
+  }
+
+  .screenGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .page {
+    padding: 27px 16px 42px;
+  }
+
+  .header {
+    margin: 33px 0 22px;
+  }
+
+  .createPanel {
+    padding: 18px 16px;
+  }
+
+  .form,
+  .screenGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .createButton {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 1.5s;
+  }
+
+  .backLink,
+  .createButton,
+  .screenCard {
+    transition: none;
+  }
+}
