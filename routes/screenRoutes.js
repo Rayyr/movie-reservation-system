@@ -1,6 +1,7 @@
 import {
     createScreen,
     getAllScreens,
+    deleteScreenById,
     getScreenSeats
 } from '../controllers/screenController.js';
 
@@ -11,15 +12,11 @@ import express from 'express';
 
 const router=express.Router();
 
-//create screen by admin only
-//router.post('/create',protect,adminOnly,createScreen);
-
 router.get("/",protect,adminOnly,getAllScreens);
-
-//just to add dummy data
-router.post('/create',createScreen);
+router.post('/create',protect,adminOnly,createScreen);
+router.delete('/:id',protect,adminOnly,deleteScreenById);
 
 //get screen' seats  
-router.get("/:screenId/seats/getSeats",protect,getScreenSeats);
+router.get("/:id/seats/getSeats",protect,adminOnly,getScreenSeats);
 
 export default router; 
