@@ -58,6 +58,7 @@ export default function MovieList() {
   const [isAddMovieOpen, setIsAddMovieOpen] = useState(false);
   const [newMovie, setNewMovie] = useState(emptyMovieForm);
   const [isCreatingMovie, setIsCreatingMovie] = useState(false);
+  const [deletingMovieId, setDeletingMovieId] = useState(null);
 
   // Animations
   const containerVariants = {
@@ -165,6 +166,28 @@ export default function MovieList() {
       toast.error(error.response?.data?.message || "Unable to add this movie.");
     } finally {
       setIsCreatingMovie(false);
+    }
+  };
+
+  const handleDeleteMovie = async (movie) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${movie.title}"? This action cannot be undone.`,
+    );
+    if (!confirmed) return;
+
+    setDeletingMovieId(movie._id);
+    try {
+      await api.delete(`/api/movies/deleteOne/${movie._id}`);
+      setMovies((currentMovies) =>
+        currentMovies.filter((currentMovie) => currentMovie._id !== movie._id),
+      );
+      toast.success(`"${movie.title}" was deleted.`);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Unable to delete this movie.",
+      );
+    } finally {
+      setDeletingMovieId(null);
     }
   };
 
@@ -292,6 +315,8 @@ export default function MovieList() {
                       <MovieCardAdmin
                         movie={movie}
                         handleOpen={() => handleOpen(movie)}
+                        handleDelete={handleDeleteMovie}
+                        isDeleting={deletingMovieId === movie._id}
                       ></MovieCardAdmin>
                     )}
                 </Grid>

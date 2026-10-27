@@ -5,12 +5,19 @@ import {
   Typography,
   Box,
   Button,
+  IconButton,
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
+import { Trash2 } from "lucide-react";
 import movieAlt from "../../assests/Movie/movieAlt.png";
 import { useNavigate } from "react-router";
 
-export default function MovieCardAdmin({ movie, handleOpen}) {
+export default function MovieCardAdmin({
+  movie,
+  handleOpen,
+  handleDelete,
+  isDeleting = false,
+}) {
  
     const navigate=useNavigate();
 
@@ -119,26 +126,48 @@ export default function MovieCardAdmin({ movie, handleOpen}) {
             alignItems: "center",
           }}
         >
-          {/* Button */}
-          <Button
-            variant="contained"
-            sx={{
-              background: "var(--red)",
-              borderRadius: "999px",
-              textTransform: "none",
-              px: 2,
-              py: 0.25,
-              minHeight: 32,
-              fontSize: "0.8rem",
-              "&:hover": { background: "#e11d48" },
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleEdit();
-            }}
-          >
-           Edit
-          </Button>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+            <Button
+              variant="contained"
+              sx={{
+                background: "var(--red)",
+                borderRadius: "999px",
+                textTransform: "none",
+                px: 2,
+                py: 0.25,
+                minHeight: 32,
+                fontSize: "0.8rem",
+                "&:hover": { background: "#e11d48" },
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleEdit();
+              }}
+            >
+              Edit
+            </Button>
+            <IconButton
+              aria-label={`Delete ${movie.title}`}
+              title={`Delete ${movie.title}`}
+              disabled={isDeleting}
+              onClick={(event) => {
+                event.stopPropagation();
+                handleDelete(movie);
+              }}
+              sx={{
+                width: 34,
+                height: 34,
+                color: "#fb7185",
+                "&:hover": {
+                  color: "#fff",
+                  backgroundColor: "rgba(244, 63, 94, 0.2)",
+                },
+                "&.Mui-disabled": { color: "rgba(251, 113, 133, 0.45)" },
+              }}
+            >
+              <Trash2 size={17} />
+            </IconButton>
+          </Box>
 
           {/* Rating */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>

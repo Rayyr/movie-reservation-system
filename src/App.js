@@ -18,6 +18,8 @@ import MovieList from "./pages/MovieList.jsx";
 import ShowTimes from "./pages/ShowTimes.jsx";
 import SelectSeats from './pages/SelectSeats.jsx';
 import EditMovie from "./pages/EditMovie.jsx";
+import ShowTime from "./pages/ShowTime.jsx";
+
 
 function App() {
   return (
@@ -91,6 +93,8 @@ function App() {
             <Route path="/movie-list-dashboard" element={<ProtectedRoute allowedRoles={[roles.admin]}><MovieList ></MovieList ></ProtectedRoute>}> 
 
 </Route>
+                        <Route path="/ShowTimes" element={<ProtectedRoute allowedRoles={[roles.admin]}><ShowTime></ShowTime></ProtectedRoute>}></Route>
+
                         <Route path="/edit-movie/:movieID" element={<ProtectedRoute allowedRoles={[roles.admin]}><EditMovie></EditMovie></ProtectedRoute>}></Route>
 
             <Route path="/profile" element={<ProtectedRoute allowedRoles={[roles.user,roles.admin]}><Profile></Profile></ProtectedRoute>}> </Route>

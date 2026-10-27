@@ -1,4 +1,4 @@
-import { useContext, useState,useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import styles from "../styles/UserDashboard/userDashboard.module.css";
@@ -57,16 +57,15 @@ function AdminDashboard() {
         >
           {/* Left Links */}
           <motion.div className={styles.navLinks} variants={containerVariants}>
-           
-
             <motion.div variants={itemVariants}>
               <Link to="/movie-list-dashboard">Movies</Link>
             </motion.div>
 
-           {/*  <motion.div variants={itemVariants}>
-              <Link to="/theaters">Theatres</Link>
+            <motion.div variants={itemVariants}>
+              <Link to="/ShowTimes">ShowTimes</Link>
             </motion.div>
 
+            {/*
             <motion.div variants={itemVariants}>
               <Link to="/releases">Releases</Link>
             </motion.div> */}
@@ -100,7 +99,11 @@ function AdminDashboard() {
 
               <DropdownMenuContent className={styles.dropdown} sideOffset={8}>
                 <DropdownMenuItem asChild>
-                  <Link to="/profile" className={styles.dropdownItem} replace={false}>
+                  <Link
+                    to="/profile"
+                    className={styles.dropdownItem}
+                    replace={false}
+                  >
                     Profile
                   </Link>
                 </DropdownMenuItem>
@@ -116,8 +119,6 @@ function AdminDashboard() {
           </motion.div>
         </motion.div>
       </motion.div>
-
-     
     </div>
   );
 }
