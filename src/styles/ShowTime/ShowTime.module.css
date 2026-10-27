@@ -401,6 +401,41 @@
   margin-bottom: 17px;
 }
 
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.deleteButton {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(251, 113, 133, 0.22);
+  border-radius: 9px;
+  color: #fb7185;
+  background: rgba(244, 63, 94, 0.08);
+  cursor: pointer;
+  transition:
+    color 150ms ease,
+    border-color 150ms ease,
+    background-color 150ms ease,
+    opacity 150ms ease;
+}
+
+.deleteButton:hover:not(:disabled) {
+  border-color: rgba(251, 113, 133, 0.5);
+  color: #fff;
+  background: rgba(244, 63, 94, 0.24);
+}
+
+.deleteButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .theaterIcon,
 .emptyIcon {
   display: inline-flex;

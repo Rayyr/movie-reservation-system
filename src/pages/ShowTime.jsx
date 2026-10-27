@@ -7,6 +7,7 @@ import {
   Plus,
   Search,
   Ticket,
+  Trash2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
@@ -35,6 +36,8 @@ function ShowTime() {
   const [isCreatingShowTime, setIsCreatingShowTime] = useState(false);
   const [createError, setCreateError] = useState("");
   const [createSuccess, setCreateSuccess] = useState("");
+  const [deletingShowTimeId, setDeletingShowTimeId] = useState(null);
+  const [deleteError, setDeleteError] = useState("");
   const [isLoadingMovies, setIsLoadingMovies] = useState(true);
   const [isSearching, setIsSearching] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -170,6 +173,29 @@ function ShowTime() {
       );
     } finally {
       setIsCreatingShowTime(false);
+    }
+  };
+
+  const handleDeleteShowTime = async (showTime) => {
+    const confirmed = window.confirm(
+      `Delete this screening on ${new Date(showTime.startTime).toLocaleString()}? Any bookings for it will also be permanently deleted.`,
+    );
+    if (!confirmed) return;
+
+    setDeletingShowTimeId(showTime._id);
+    setDeleteError("");
+
+    try {
+      await api.delete(`/api/showTimes/${showTime._id}`);
+      setShowTimes((current) =>
+        current.filter((item) => item._id !== showTime._id),
+      );
+    } catch (error) {
+      setDeleteError(
+        error.response?.data?.message || "Unable to delete this showtime.",
+      );
+    } finally {
+      setDeletingShowTimeId(null);
     }
   };
 
@@ -369,6 +395,12 @@ function ShowTime() {
               )}
             </form>
 
+            {deleteError && (
+              <p className={styles.errorMessage} role="alert">
+                {deleteError}
+              </p>
+            )}
+
             {showTimes.length > 0 ? (
               <div className={styles.showtimeGrid}>
                 {showTimes.map((showtime) => (
@@ -377,10 +409,22 @@ function ShowTime() {
                       <div className={styles.theaterIcon}>
                         <Ticket size={18} />
                       </div>
-                      <span className={styles.price}>
-                        ${Number(showtime.price).toFixed(2)}
-                        <small> / seat</small>
-                      </span>
+                      <div className={styles.cardActions}>
+                        <span className={styles.price}>
+                          ${Number(showtime.price).toFixed(2)}
+                          <small> / seat</small>
+                        </span>
+                        <button
+                          className={styles.deleteButton}
+                          type="button"
+                          aria-label={`Delete ${selectedMovie.title} screening`}
+                          title="Delete showtime"
+                          disabled={deletingShowTimeId === showtime._id}
+                          onClick={() => handleDeleteShowTime(showtime)}
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                     </div>
                     <h3>{showtime.screen?.theater?.name || "Theater"}</h3>
                     {showtime.screen?.theater?.location && (
